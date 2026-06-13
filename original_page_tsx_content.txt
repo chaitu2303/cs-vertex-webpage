@@ -1,0 +1,63 @@
+Created At: 2026-06-11T17:34:34Z
+Completed At: 2026-06-11T17:34:35Z
+File Path: `file:///e:/CS-vertex/src/app/page.tsx`
+Total Lines: 295
+Total Bytes: 17522
+Showing lines 1 to 295
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: import { prisma } from "@/lib/prisma";
+2: import Link from "next/link";
+3: 
+4: export default async function Home() {
+5:   const heroSetting = await prisma.heroSetting.findFirst();
+6:   const services = await prisma.service.findMany({ where: { published: true }, orderBy: { order: "asc" } });
+7:   const projects = await prisma.project.findMany({ where: { published: true }, orderBy: { order: "asc" } });
+8:   const teamMembers = await prisma.teamMember.findMany({ where: { published: true }, orderBy: { order: "asc" } });
+9:   const technologies = await prisma.technology.findMany({ where: { published: true }, orderBy: { order: "asc" } });
+10:   const internships = await prisma.internship.findMany({ where: { published: true } });
+11:   const courses = await prisma.course.findMany({ where: { published: true } });
+12:   const webinars = await prisma.webinar.findMany({ where: { published: true } });
+13:   const testimonials = await prisma.testimonial.findMany({ where: { published: true } });
+14: 
+15:   // Group technologies by category
+16:   const techCategories: Record<string, typeof technologies> = {};
+17:   for (const tech of technologies) {
+18:     if (!techCategories[tech.category]) techCategories[tech.category] = [];
+19:     techCategories[tech.category].push(tech);
+20:   }
+21: 
+22:   return (
+23:     <>
+24:       <header className="site-header">
+25:         <Link className="brand" href="#top">
+26:           <img src="/assets/logo.png" alt="CS Vertex Logo" style={{ height: "30px", width: "auto" }} />
+27:         </Link>
+28:         <nav className="desktop-nav">
+29:           <Link href="#approach">Abo
+<truncated 15296 bytes>
+rehensive software platform, an AI initiative, a specialized embedded product, or an industrial automation workflow, CS Vertex is ready to deliver a dependable working solution.</p>
+272:           <form className="reveal" action="/api/quote" method="POST" style={{ marginTop: "40px", display: "grid", gap: "20px", maxWidth: "500px" }}>
+273:              <input type="text" name="name" placeholder="Name" required style={{ padding: "15px", background: "#111", border: "1px solid #333", color: "#fff", font: "12px var(--mono)" }} />
+274:              <input type="email" name="email" placeholder="Email Address" required style={{ padding: "15px", background: "#111", border: "1px solid #333", color: "#fff", font: "12px var(--mono)" }} />
+275:              <textarea name="requirements" placeholder="Project Requirements" required rows={4} style={{ padding: "15px", background: "#111", border: "1px solid #333", color: "#fff", font: "12px var(--mono)", resize: "vertical" }}></textarea>
+276:              <button type="submit" className="footer-cta magnetic" style={{ position: "relative", bottom: "0", right: "0", width: "100%", marginTop: "10px" }}><span>Submit Request</span><b>↗</b></button>
+277:           </form>
+278:         </div>
+279:         <div className="footer-bottom">
+280:           <Link className="brand" href="#top">
+281:             <img src="/assets/logo.png" alt="CS Vertex Logo" style={{ height: "30px", width: "auto", filter: "brightness(0) invert(1)", opacity: 0.8 }} />
+282:           </Link>
+283:           <div className="footer-links">
+284:             <Link href="#approach">About</Link>
+285:             <Link href="#projects">Projects</Link>
+286:             <Link href="#capabilities">Services</Link>
+287:             <a href="mailto:hello@csvertex.com">Email</a>
+288:           </div>
+289:           <p>© 2026 CS VERTEX<br />ENGINEERED WITH PURPOSE.</p>
+290:         </div>
+291:       </footer>
+292:     </>
+293:   );
+294: }
+295: 
+The above content shows the entire, complete file contents of the requested file.

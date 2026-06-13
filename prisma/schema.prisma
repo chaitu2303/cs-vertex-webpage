@@ -1,0 +1,393 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String   @default("Admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HeroSetting {
+  id               String   @id @default(cuid())
+  positioningText  String
+  ledeText         String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Service {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  businessValue String?
+  icon          String?
+  deliverables  String?  // JSON or comma separated
+  industries    String?  // JSON or comma separated
+  published     Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  title         String
+  category      String?
+  shortSummary  String?
+  challenge     String
+  solution      String
+  technologies  String   // Comma separated list
+  impact        String
+  objectives    String?
+  features      String?
+  outcomes      String?
+  useCase       String?
+  image         String?  // Main image placeholder URL
+  published     Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model TeamMember {
+  id          String   @id @default(cuid())
+  name        String
+  role        String
+  expertise   String?
+  bio         String
+  image       String?
+  linkedinUrl String?
+  githubUrl   String?
+  email       String?
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Technology {
+  id          String   @id @default(cuid())
+  name        String
+  category    String   // e.g., "Software & Web", "AI & Data"
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Internship {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  duration     String
+  mode         String
+  location     String
+  requirements String
+  benefits     String
+  lastDate     DateTime
+  seats        Int
+  status       String   @default("Open") // Open, Closed
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  applications InternshipApplication[]
+}
+
+model Course {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  duration     String
+  level        String
+  syllabus     String
+  price        String
+  trainer      String
+  banner       String?
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  registrations CourseRegistration[]
+}
+
+model Workshop {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  date         DateTime
+  time         String
+  speaker      String
+  mode         String
+  seats        Int
+  banner       String?
+  status       String   @default("Upcoming") // Upcoming, Past
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  registrations WorkshopRegistration[]
+}
+
+model InternshipApplication {
+  id           String     @id @default(cuid())
+  userId       String
+  customer     Customer   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  internshipId String
+  internship   Internship @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  fullName     String
+  email        String
+  phone        String
+  college      String
+  branch       String
+  year         String
+  skills       String
+  linkedin     String?
+  github       String?
+  resumeUrl    String?
+  coverLetter  String?
+  status       String     @default("Pending") // Pending, Approved, Rejected, Waitlisted
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model CourseRegistration {
+  id            String   @id @default(cuid())
+  userId        String
+  customer      Customer @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId      String
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  fullName      String
+  email         String
+  phone         String
+  college       String
+  qualification String
+  linkedin      String?
+  status        String   @default("Pending") // Pending, Approved, Rejected
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model WorkshopRegistration {
+  id            String   @id @default(cuid())
+  userId        String
+  customer      Customer @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workshopId    String
+  workshop      Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  fullName      String
+  email         String
+  phone         String
+  organization  String?
+  college       String?
+  linkedin      String?
+  status        String   @default("Pending") // Pending, Approved, Rejected
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  clientName  String
+  company     String?
+  email       String?
+  feedback    String
+  rating      Int      @default(5)
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Advertisement {
+  id            String   @id @default(cuid())
+  title         String
+  link          String?
+  image         String?
+  placementArea String   // e.g., "Sidebar", "Footer", "Internships"
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model FAQ {
+  id          String   @id @default(cuid())
+  question    String
+  answer      String
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  author      String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FormSubmission {
+  id          String   @id @default(cuid())
+  formType    String   // "Contact", "Quote", "Internship", "Course", "Webinar", "Enquiry"
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  data        String?  // JSON string storing dynamic form fields
+  status      String   @default("New") // "New", "Reviewed", "Responded"
+  notes       String?
+  tags        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  title       String
+  category    String   // "Company Update", "Recruitment", "Brochure", "Offer"
+  content     String
+  fileUrl     String?  // URL to PDF brochure or details
+  isPinned    Boolean  @default(false)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -------------------------------------------------------------
+// Customer Portal Models
+// -------------------------------------------------------------
+
+model Customer {
+  id            String          @id // Maps to Supabase auth.users.id
+  email         String          @unique
+  name          String?
+  company       String?
+  phone         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  quotes        Quote[]
+  consults      Consultation[]
+  documents     Document[]
+  tickets       SupportTicket[]
+  projects               ClientProject[]
+  internshipApplications InternshipApplication[]
+  courseRegistrations    CourseRegistration[]
+  workshopRegistrations  WorkshopRegistration[]
+}
+
+model Quote {
+  id            String   @id @default(cuid())
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  service       String
+  budget        String?
+  description   String
+  status        String   @default("Pending Review") // Pending Review, Under Discussion, Proposal Sent, Approved, In Progress, Completed, Rejected
+  proposalUrl   String?
+  estimatedCost String?
+  timeline      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  messages      QuoteMessage[]
+}
+
+model Consultation {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  date        DateTime
+  notes       String?
+  status      String   @default("Scheduled") // Scheduled, Completed, Cancelled
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  title       String
+  type        String   // Proposal, Brochure, Quotation, Invoice
+  fileUrl     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SupportTicket {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  subject     String
+  message     String
+  status      String   @default("Open") // Open, In Progress, Resolved
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String   // Can be Customer.id or Admin.id
+  title       String
+  message     String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model ClientProject {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  name        String
+  status      String   @default("Active") // Active, On Hold, Completed
+  progress    Int      @default(0) // 0-100
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  milestones  ProjectMilestone[]
+  messages    ProjectMessage[]
+}
+
+model ProjectMilestone {
+  id              String   @id @default(cuid())
+  clientProjectId String
+  project         ClientProject @relation(fields: [clientProjectId], references: [id], onDelete: Cascade)
+  title           String
+  status          String   @default("Pending") // Pending, In Progress, Completed
+  dueDate         DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ProjectMessage {
+  id              String   @id @default(cuid())
+  clientProjectId String
+  project         ClientProject @relation(fields: [clientProjectId], references: [id], onDelete: Cascade)
+  sender          String   // "Admin" or "Customer"
+  text            String
+  fileUrl         String?
+  createdAt       DateTime @default(now())
+}
+
+model QuoteMessage {
+  id        String   @id @default(cuid())
+  quoteId   String
+  quote     Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  sender    String   // "Admin" or "Customer"
+  text      String
+  fileUrl   String?
+  createdAt DateTime @default(now())
+}
