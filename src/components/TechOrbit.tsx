@@ -231,7 +231,7 @@ export function TechOrbit() {
         let y1 = py * robotCosX - z1 * robotSinX;
         let z2 = py * robotSinX + z1 * robotCosX;
 
-        const scale = focalLength / (focalLength + z2);
+        const scale = (focalLength / (focalLength + z2)) * (width < 600 ? width / 550 : 1);
         return {
           x: x1, y: y1, z: z2,
           projX: centerX + x1 * scale,
@@ -260,7 +260,7 @@ export function TechOrbit() {
         let ry = oy * cosX - rz * sinX;
         let rz2 = oy * sinX + rz * cosX;
 
-        const scale = focalLength / (focalLength + rz2);
+        const scale = (focalLength / (focalLength + rz2)) * (width < 600 ? width / 550 : 1);
         node.projX = centerX + rx * scale;
         node.projY = centerY + ry * scale;
         node.projZ = rz2;

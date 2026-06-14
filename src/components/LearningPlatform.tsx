@@ -9,7 +9,7 @@ const PLATFORMS = [
     id: 'internships',
     title: 'Internships',
     description: 'Gain practical industry experience by working on real-world software, AI, IoT, robotics, and enterprise development projects under the guidance of experienced mentors.',
-    button: 'Coming Soon',
+    button: 'OPENING SOON',
     icon: Clock,
     path: '#'
   },
@@ -17,7 +17,7 @@ const PLATFORMS = [
     id: 'courses',
     title: 'Courses',
     description: 'Structured technology learning programs designed to help students and professionals build strong foundations in modern software engineering, AI, cybersecurity, cloud technologies, and embedded systems.',
-    button: 'Coming Soon',
+    button: 'OPENING SOON',
     icon: GraduationCap,
     path: '#'
   },
@@ -25,7 +25,7 @@ const PLATFORMS = [
     id: 'workshops',
     title: 'Workshops',
     description: 'Hands-on technical workshops focused on real-world implementation, problem-solving, engineering best practices, and emerging technologies.',
-    button: 'Coming Soon',
+    button: 'OPENING SOON',
     icon: Wrench,
     path: '#'
   }
@@ -70,7 +70,7 @@ export function LearningPlatform() {
               {/* Subtle Glow */}
               <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '150px', height: '150px', background: 'var(--acid)', filter: 'blur(80px)', opacity: 0.15, zIndex: -1 }} />
               
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '25px' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', marginBottom: '25px' }}>
                 <motion.div 
                   animate={{ y: [0, -6, 0] }} 
                   transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: i }}
@@ -78,62 +78,43 @@ export function LearningPlatform() {
                 >
                   <platform.icon color="var(--acid)" size={28} />
                 </motion.div>
-                <motion.div 
-                  animate={{ 
-                    rotateX: [0, 15, 0, -15, 0],
-                    rotateY: [0, 10, 0, -10, 0],
-                    scale: [1, 1.05, 1],
-                    boxShadow: [
-                      "0 5px 15px rgba(255,90,42,0.2)",
-                      "0 10px 25px rgba(255,90,42,0.6)",
-                      "0 5px 15px rgba(255,90,42,0.2)"
-                    ]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-                  style={{ 
-                    background: 'linear-gradient(135deg, var(--acid) 0%, #ff8a00 100%)', 
-                    padding: '6px 14px', 
-                    borderRadius: '20px', 
-                    font: '10px var(--mono)', 
-                    textTransform: 'uppercase', 
-                    letterSpacing: '0.1em', 
-                    color: '#000',
-                    fontWeight: 800,
-                    border: '1px solid rgba(255,255,255,0.4)',
-                    transformStyle: 'preserve-3d',
-                    perspective: '1000px'
-                  }}
-                >
-                  Opening Soon
-                </motion.div>
               </div>
               
               <h3 style={{ color: '#FFFFFF', margin: '0 0 15px', fontSize: '26px', fontWeight: 500 }}>{platform.title}</h3>
               <p style={{ color: '#F5F1EA', fontSize: '15px', marginBottom: '40px', lineHeight: 1.7, flexGrow: 1 }}>{platform.description}</p>
               
-              <Link 
+              <motion.a 
                 href={platform.path}
+                animate={{ 
+                  rotateX: [0, 8, 0, -8, 0],
+                  scale: [1, 1.02, 1],
+                  boxShadow: [
+                    "0 5px 15px rgba(255,90,42,0.15)",
+                    "0 12px 25px rgba(255,90,42,0.4)",
+                    "0 5px 15px rgba(255,90,42,0.15)"
+                  ]
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
                 style={{ 
                   display: 'block',
                   textAlign: 'center',
+                  background: 'linear-gradient(135deg, var(--acid) 0%, #ff8a00 100%)', 
                   padding: '16px 20px', 
-                  background: 'transparent', 
-                  border: '1px solid #333', 
-                  color: '#fff', 
+                  color: '#000', 
                   borderRadius: '8px',
-                  font: '12px var(--mono)',
+                  font: '14px var(--mono)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
+                  letterSpacing: '0.15em',
                   textDecoration: 'none',
-                  transition: 'all 0.3s ease',
                   width: '100%',
-                  fontWeight: 600
+                  fontWeight: 800,
+                  border: '1px solid rgba(255,255,255,0.4)',
+                  transformStyle: 'preserve-3d',
+                  perspective: '1000px'
                 }}
-                onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--acid)'; e.currentTarget.style.color = 'var(--acid)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#fff'; }}
               >
                 {platform.button}
-              </Link>
+              </motion.a>
             </motion.div>
           ))}
         </div>
