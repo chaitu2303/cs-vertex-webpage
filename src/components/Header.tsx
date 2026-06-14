@@ -42,8 +42,8 @@ export function Header({ user }: { user: any }) {
 
   return (
     <header className="site-header">
-      <div className="brand">
-        <img src="/assets/logo/csvertex-logo.png" alt="Logo" style={{ width: 140, height: 140, objectFit: 'contain' }} />
+      <div className="brand" style={{ display: 'flex', alignItems: 'center' }}>
+        <img src="/logo-nav.png" alt="CS Vertex Logo" style={{ height: '80px', width: 'auto', objectFit: 'contain', transform: 'scale(1.2)', transformOrigin: 'left center' }} />
       </div>
       
       <nav className={`desktop-nav ${mobileMenuOpen ? 'mobile-open' : ''}`}>
