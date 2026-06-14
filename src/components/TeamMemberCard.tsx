@@ -91,7 +91,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
   // Custom Image Override
   let imageSrc = member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=222222&color=ffffff&size=500`;
   if (displayName.toLowerCase().includes('harish')) {
-    imageSrc = '/assets/team/harish.jpg';
+    imageSrc = '/assets/team/harish.jpeg';
   }
 
   let objectPosition = 'center top';
