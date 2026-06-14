@@ -23,9 +23,7 @@ import Link from 'next/link'
 
 import { EmptyState } from '../components/EmptyState'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
+export const revalidate = 60
 export default async function Home() {
   const [services, projects, team, announcements, testimonials] = await Promise.all([
     prisma.service.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
@@ -34,10 +32,6 @@ export default async function Home() {
     prisma.announcement.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } }),
     prisma.testimonial.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } })
   ])
-
-  // Supabase Auth checks for dynamic portal navigation
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
 
   const FORMSPREE_NEWSLETTER = "https://formspree.io/f/placeholder-newsletter"
 
@@ -59,7 +53,7 @@ export default async function Home() {
       </div>
 
       {/* Main Header with dynamic Portal Dropdown */}
-      <Header user={user} />
+      <Header />
 
       {/* 01. HERO SECTION */}
       <section id="home" className="hero">

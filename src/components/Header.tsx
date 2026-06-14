@@ -3,12 +3,18 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-export function Header({ user }: { user: any }) {
+export function Header() {
+  const [user, setUser] = useState<any>(null)
   const [activeSection, setActiveSection] = useState('home')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
+    // Fetch User
+    import('@/utils/supabase/client').then(({ createClient }) => {
+      const supabase = createClient()
+      supabase.auth.getUser().then(({ data }) => setUser(data?.user || null))
+    })
     const sections = ['home', 'about', 'services', 'projects', 'why-choose-us', 'team', 'learning']
     
     const observerOptions = {
