@@ -88,6 +88,19 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
     .map(s => s.trim().replace(/^and\s+/i, '').replace(/\.$/, ''))
     .filter(s => s.length > 0);
 
+  // Custom Image Override
+  let imageSrc = member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=222222&color=ffffff&size=500`;
+  if (displayName.toLowerCase().includes('harish')) {
+    imageSrc = '/assets/team/harish.jpg';
+  }
+
+  let objectPosition = 'center top';
+  if (displayName.toLowerCase().includes('nithish') || displayName.toLowerCase().includes('chaitanya')) {
+    objectPosition = 'center 15%';
+  } else if (displayName.toLowerCase().includes('harish')) {
+    objectPosition = 'center 15%';
+  }
+
   return (
     <>
       <div 
@@ -101,11 +114,11 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
         <div className="card-inner">
           <div className="image-wrapper">
             <Image 
-              src={member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=222222&color=ffffff&size=500`}
+              src={imageSrc}
               alt={displayName}
               fill
               className="team-image"
-              style={(displayName.toLowerCase().includes('nithish') || displayName.toLowerCase().includes('chaitanya')) ? { objectPosition: 'center 15%' } : undefined}
+              style={{ objectPosition }}
             />
           </div>
           
@@ -501,10 +514,10 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
             <div className="modal-split-v2">
               <div className="modal-img-col-v2">
                 <Image 
-                  src={member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=222222&color=ffffff&size=500`}
+                  src={imageSrc}
                   alt={displayName}
                   fill
-                  style={{ objectFit: 'cover', objectPosition: (displayName.toLowerCase().includes('nithish') || displayName.toLowerCase().includes('chaitanya')) ? 'center 15%' : 'center center' }}
+                  style={{ objectFit: 'cover', objectPosition }}
                 />
               </div>
               <div className="modal-info-col-v2">

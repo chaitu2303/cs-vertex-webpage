@@ -222,7 +222,7 @@ export default async function Home() {
           <div className="section-index" style={{marginBottom: 40}}><i></i> <span>10</span> <span>/</span> <span>ANNOUNCEMENTS & OFFERS</span></div>
           <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', marginBottom: '40px' }}>Exclusive <em>Offers</em></h2>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', alignItems: 'flex-start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: '40px', alignItems: 'flex-start' }}>
              <div style={{ background: '#111111', borderRadius: '12px', border: '1px solid #222', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                <img src="/assets/brochures/cs-vertex-packages.png" alt="Pricing Plan Offer" style={{ width: '100%', height: 'auto', display: 'block' }} />
              </div>
@@ -241,7 +241,7 @@ export default async function Home() {
           <h2>Let&apos;s build <em>together</em></h2>
           <ContactUsButton />
         </div>
-        <div className="footer-bottom" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '30px' }}>
+        <div className="footer-bottom">
           <div className="footer-col">
             <h4>Company</h4>
             <Link href="#about">About Us</Link>
