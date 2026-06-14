@@ -23,8 +23,13 @@ import Link from 'next/link'
 
 import { EmptyState } from '../components/EmptyState'
 
+import { redirect } from 'next/navigation'
+
 export const revalidate = 60
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  if (searchParams.code) {
+    redirect(`/auth/callback?code=${searchParams.code}&next=/portal`)
+  }
   const [services, projects, team, announcements, testimonials] = await Promise.all([
     prisma.service.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
     prisma.project.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),

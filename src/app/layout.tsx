@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   },
   description: "Enterprise AI, IoT networks, custom hardware, and scalable web solutions delivered with zero compromise. Trusted by enterprises, startups, and governments.",
   metadataBase: new URL('https://csvertex.com'),
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
+  },
   alternates: {
     canonical: '/',
   },
