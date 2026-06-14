@@ -90,14 +90,19 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
 
   // Custom Image Override
   let imageSrc = member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=222222&color=ffffff&size=500`;
-  if (displayName.toLowerCase().includes('harish')) {
-    imageSrc = '/assets/team/harish.jpeg';
-  }
+  const nameLower = displayName.toLowerCase();
+  
+  if (nameLower.includes('chaitanya')) imageSrc = '/assets/team/founder_chaitanya.jpg';
+  else if (nameLower.includes('harish')) imageSrc = '/assets/team/founder_harish.jpeg';
+  else if (nameLower.includes('mahendra')) imageSrc = '/assets/team/founder_mahendra.jpg';
+  else if (nameLower.includes('nithish')) imageSrc = '/assets/team/founder_nithish.jpeg';
+  else if (nameLower.includes('sateesh')) imageSrc = '/assets/team/founder_sateesh.jpeg';
+  else if (nameLower.includes('vasant')) imageSrc = '/assets/team/founder_vasant.jpeg';
 
   let objectPosition = 'center top';
-  if (displayName.toLowerCase().includes('nithish') || displayName.toLowerCase().includes('chaitanya')) {
+  if (nameLower.includes('nithish') || nameLower.includes('chaitanya')) {
     objectPosition = 'center 15%';
-  } else if (displayName.toLowerCase().includes('harish')) {
+  } else if (nameLower.includes('harish')) {
     objectPosition = 'center 15%';
   }
 
