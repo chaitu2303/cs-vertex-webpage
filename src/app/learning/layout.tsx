@@ -8,7 +8,7 @@ export default async function LearningLayout({ children }: { children: React.Rea
 
   return (
     <>
-      <Header user={user} />
+      <Header />
       
       <div style={{ paddingTop: '100px', background: '#050505', minHeight: '100vh', color: '#fff' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 4vw' }}>
