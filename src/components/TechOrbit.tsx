@@ -96,6 +96,8 @@ export function TechOrbit() {
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
+      canvas.style.left = '0';
+      canvas.style.top = '0';
       
       ctx.scale(dpr, dpr);
     };
