@@ -88,16 +88,19 @@ export function TechOrbit() {
 
     const resize = () => {
       const parent = canvas.parentElement;
-      width = parent?.clientWidth || 550;
-      height = parent?.clientHeight || 550;
+      // Use the actual CSS size of the canvas, which is 140% of parent due to CSS rules
+      width = canvas.clientWidth || (parent ? parent.clientWidth * 1.4 : 550);
+      height = canvas.clientHeight || (parent ? parent.clientHeight * 1.4 : 550);
       
       const dpr = window.devicePixelRatio || 1;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      canvas.style.left = '0';
-      canvas.style.top = '0';
+      
+      // Let globals.css completely control the position and dimensions (inset: -20%, width: 140%)
+      canvas.style.width = '';
+      canvas.style.height = '';
+      canvas.style.left = '';
+      canvas.style.top = '';
       
       ctx.scale(dpr, dpr);
     };
