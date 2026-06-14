@@ -82,8 +82,19 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
     )
   }
 
+  let rawExpertise = member.expertise || getDefaultExpertise(member.role);
+  let displayBio = member.bio;
+
+  if (displayName.toLowerCase().includes('harish')) {
+    rawExpertise = "UI/UX Design, Product Design, Brand Identity, Full Stack Developer, Machine Learning & AI, Python Developer, User Experience Strategy, Software Architecture, Product Innovation, Digital Transformation";
+    displayBio = "Leading product innovation, design strategy, full-stack software development, machine learning initiatives, user experience architecture, and brand development while driving digital transformation and scalable technology solutions.";
+  }
+
+  // Enforce Development -> Developer for everyone
+  rawExpertise = rawExpertise.replace(/Development/gi, 'Developer');
+
   // Parse skills
-  const skillsArray = (member.expertise || getDefaultExpertise(member.role))
+  const skillsArray = rawExpertise
     .split(',')
     .map(s => s.trim().replace(/^and\s+/i, '').replace(/\.$/, ''))
     .filter(s => s.length > 0);
@@ -96,7 +107,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
   else if (nameLower.includes('harish')) imageSrc = '/assets/team/founder_harish.jpeg';
   else if (nameLower.includes('mahendra')) imageSrc = '/assets/team/founder_mahendra.jpg';
   else if (nameLower.includes('nithish')) imageSrc = '/assets/team/founder_nithish.jpeg';
-  else if (nameLower.includes('sateesh')) imageSrc = '/assets/team/founder_sateesh.jpeg';
+  else if (nameLower.includes('sateesh') || nameLower.includes('satish')) imageSrc = '/assets/team/founder_sateesh2.jpeg';
   else if (nameLower.includes('vasant')) imageSrc = '/assets/team/founder_vasant.jpeg';
 
   let objectPosition = 'center top';
@@ -130,7 +141,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
           <div className="card-content">
             <h3 className="member-name">{displayName}</h3>
             <p className="member-role">{member.role}</p>
-            <p className="member-bio line-clamp-2">{member.bio}</p>
+            <p className="member-bio line-clamp-2">{displayBio}</p>
             
             <div className="card-actions">
               <button onClick={() => setModalOpen(true)} className="action-btn outline">
@@ -165,23 +176,24 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
       <style>{`
         .premium-team-card {
           position: relative;
-          background: rgba(15, 15, 15, 0.6);
-          border: 1px solid rgba(255, 255, 255, 0.05);
+          background: rgba(255, 255, 255, 0.75);
+          border: 1px solid rgba(255, 255, 255, 0.4);
           border-radius: 20px;
           overflow: hidden;
           transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
           display: flex;
           flex-direction: column;
           height: 100%;
           cursor: default;
+          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
         }
 
         .premium-team-card:hover {
           transform: translateY(-8px);
-          border-color: rgba(255, 180, 0, 0.4);
-          box-shadow: 0 20px 40px -10px rgba(0,0,0,0.8), 0 0 20px rgba(255, 180, 0, 0.1);
+          border-color: rgba(255, 255, 255, 0.8);
+          box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15), 0 0 20px rgba(255, 180, 0, 0.1);
         }
 
         .card-inner {
@@ -224,24 +236,24 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
 
         .member-name {
           font-size: 22px;
-          color: #fff;
+          color: #111;
           margin: 0 0 6px;
-          font-weight: 600;
+          font-weight: 700;
           letter-spacing: -0.02em;
         }
 
         .member-role {
           font-size: 13px;
-          color: var(--acid);
+          color: #e64a19;
           text-transform: uppercase;
           letter-spacing: 0.08em;
           margin: 0 0 16px;
-          font-weight: 500;
+          font-weight: 600;
         }
 
         .member-bio {
           font-size: 14px;
-          color: #F5F1EA;
+          color: #333;
           line-height: 1.6;
           margin: 0 0 24px;
           flex: 1;
@@ -258,19 +270,19 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          border-top: 1px solid rgba(0, 0, 0, 0.1);
           padding-top: 20px;
           margin-top: auto;
         }
 
         .action-btn {
           background: none;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          color: #fff;
+          border: 1px solid rgba(0, 0, 0, 0.2);
+          color: #111;
           padding: 8px 16px;
           border-radius: 6px;
           font-size: 13px;
-          font-weight: 500;
+          font-weight: 600;
           cursor: pointer;
           transition: all 0.2s ease;
           text-decoration: none;
@@ -278,8 +290,8 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
         }
 
         .action-btn:hover {
-          background: #fff;
-          color: #000;
+          background: #111;
+          color: #fff;
         }
 
         .social-links {
@@ -293,9 +305,9 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
           justify-content: center;
           width: 32px;
           height: 32px;
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(0, 0, 0, 0.05);
           border-radius: 6px;
-          color: #aaa;
+          color: #444;
           text-decoration: none;
           font-size: 13px;
           transition: all 0.2s ease;
@@ -303,7 +315,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
 
         .social-icon:hover {
           background: var(--acid);
-          color: #000;
+          color: #fff;
         }
 
         .social-icon.disabled {
@@ -529,7 +541,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
                 <h2 className="modal-member-name-v2" style={{ fontSize: '32px', margin: '0 0 8px', color: '#FFFFFF', fontWeight: 500, letterSpacing: '-0.02em' }}>{displayName}</h2>
                 <p className="modal-member-role-v2" style={{ color: '#FF5A2A', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 24px', fontWeight: 600 }}>{member.role}</p>
                 <p style={{ fontSize: '15px', color: '#F5F1EA', lineHeight: 1.8, marginBottom: '35px' }}>
-                  {member.bio}
+                  {displayBio}
                 </p>
                 
                 <div style={{ marginBottom: '40px', flexGrow: 1 }}>

@@ -90,8 +90,14 @@ export function TechOrbit() {
       const parent = canvas.parentElement;
       width = parent?.clientWidth || 550;
       height = parent?.clientHeight || 550;
-      canvas.width = width;
-      canvas.height = height;
+      
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      
+      ctx.scale(dpr, dpr);
     };
     
     window.addEventListener("resize", resize);

@@ -9,25 +9,25 @@ const PLATFORMS = [
     id: 'internships',
     title: 'Internships',
     description: 'Gain practical industry experience by working on real-world software, AI, IoT, robotics, and enterprise development projects under the guidance of experienced mentors.',
-    button: 'Apply Now',
+    button: 'Coming Soon',
     icon: Clock,
-    path: '/learning/internships'
+    path: '#'
   },
   {
     id: 'courses',
     title: 'Courses',
     description: 'Structured technology learning programs designed to help students and professionals build strong foundations in modern software engineering, AI, cybersecurity, cloud technologies, and embedded systems.',
-    button: 'Explore Courses',
+    button: 'Coming Soon',
     icon: GraduationCap,
-    path: '/learning/courses'
+    path: '#'
   },
   {
     id: 'workshops',
     title: 'Workshops',
     description: 'Hands-on technical workshops focused on real-world implementation, problem-solving, engineering best practices, and emerging technologies.',
-    button: 'View Workshops',
+    button: 'Coming Soon',
     icon: Wrench,
-    path: '/learning/workshops'
+    path: '#'
   }
 ]
 
@@ -78,9 +78,34 @@ export function LearningPlatform() {
                 >
                   <platform.icon color="var(--acid)" size={28} />
                 </motion.div>
-                <span style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid #333', padding: '6px 12px', borderRadius: '20px', font: '10px var(--mono)', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#aaa' }}>
-                  Open
-                </span>
+                <motion.div 
+                  animate={{ 
+                    rotateX: [0, 15, 0, -15, 0],
+                    rotateY: [0, 10, 0, -10, 0],
+                    scale: [1, 1.05, 1],
+                    boxShadow: [
+                      "0 5px 15px rgba(255,90,42,0.2)",
+                      "0 10px 25px rgba(255,90,42,0.6)",
+                      "0 5px 15px rgba(255,90,42,0.2)"
+                    ]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
+                  style={{ 
+                    background: 'linear-gradient(135deg, var(--acid) 0%, #ff8a00 100%)', 
+                    padding: '6px 14px', 
+                    borderRadius: '20px', 
+                    font: '10px var(--mono)', 
+                    textTransform: 'uppercase', 
+                    letterSpacing: '0.1em', 
+                    color: '#000',
+                    fontWeight: 800,
+                    border: '1px solid rgba(255,255,255,0.4)',
+                    transformStyle: 'preserve-3d',
+                    perspective: '1000px'
+                  }}
+                >
+                  Opening Soon
+                </motion.div>
               </div>
               
               <h3 style={{ color: '#FFFFFF', margin: '0 0 15px', fontSize: '26px', fontWeight: 500 }}>{platform.title}</h3>
