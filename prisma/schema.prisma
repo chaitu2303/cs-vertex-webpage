@@ -391,3 +391,10 @@ model QuoteMessage {
   fileUrl   String?
   createdAt DateTime @default(now())
 }
+
+model LaunchRegistration {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  isFounder Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

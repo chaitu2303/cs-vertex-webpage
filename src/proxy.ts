@@ -3,11 +3,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { decrypt } from './lib/auth'
 
 export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+  let response = NextResponse.next()
 
   const { pathname } = request.nextUrl
 

@@ -24,11 +24,14 @@ import Link from 'next/link'
 import { EmptyState } from '../components/EmptyState'
 
 import { redirect } from 'next/navigation'
+import { LaunchGate } from '../components/launch/LaunchGate'
+import { OpeningDayBanner } from '../components/launch/OpeningDayBanner'
 
 export const revalidate = 60
-export default async function Home({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  if (searchParams.code) {
-    redirect(`/auth/callback?code=${searchParams.code}&next=/portal`)
+export default async function Home({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const params = await searchParams
+  if (params.code) {
+    redirect(`/auth/callback?code=${params.code}&next=/portal`)
   }
   const [services, projects, team, announcements, testimonials] = await Promise.all([
     prisma.service.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
@@ -41,7 +44,8 @@ export default async function Home({ searchParams }: { searchParams: { [key: str
   const FORMSPREE_NEWSLETTER = "https://formspree.io/f/placeholder-newsletter"
 
   return (
-    <>
+    <LaunchGate>
+      <OpeningDayBanner />
       <QuoteFlowModal />
       <FloatingActions />
       
@@ -302,7 +306,7 @@ export default async function Home({ searchParams }: { searchParams: { [key: str
           &copy; 2026 CS Vertex. All Rights Reserved.
         </div>
       </footer>
-    </>
+    </LaunchGate>
   )
 }
 
