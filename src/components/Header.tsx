@@ -70,7 +70,7 @@ export function Header() {
           onMouseEnter={() => setDropdownOpen(true)}
           onMouseLeave={() => setDropdownOpen(false)}
         >
-          <Link href="/portal" onClick={() => setMobileMenuOpen(false)} style={{ opacity: 1, color: 'var(--acid)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <Link href="/portal" onClick={() => setMobileMenuOpen(false)} style={{ opacity: 1, color: '#000', background: 'var(--acid)', padding: '6px 16px', borderRadius: '30px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Customer Portal {user ? '✓' : ''}
           </Link>
           {dropdownOpen && user && (

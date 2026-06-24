@@ -237,7 +237,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
                  <div style={{ display: 'inline-block', background: '#FF5A2A', color: '#000', fontSize: '12px', fontWeight: 700, padding: '4px 10px', borderRadius: '4px', letterSpacing: '0.1em', marginBottom: '12px' }}>EARLY BIRD OFFER</div>
                  <h3 style={{ color: '#fff', fontSize: '24px', margin: '0 0 8px', fontWeight: 600 }}>Get 1 Year Free Maintenance</h3>
                  <p style={{ color: '#aaa', fontSize: '15px', lineHeight: 1.6, margin: '0 0 20px' }}>Sign up now to grab our exclusive early bird offer. Secure, scalable, and fully maintained for a whole year at zero additional cost.</p>
-                 <a href="#contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#FF5A2A', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s' }}>
+                 <a href="#quote" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#FF5A2A', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s' }}>
                    GRAB NOW <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                  </a>
                </div>
