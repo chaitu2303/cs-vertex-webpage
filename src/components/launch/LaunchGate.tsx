@@ -71,7 +71,6 @@ function computeInitialPhase(targetMs: number): Phase {
   if (!TEST_MODE && typeof sessionStorage !== 'undefined' &&
       sessionStorage.getItem(SESSION_REVEAL_DONE) === 'true') return 'LOADING'
   if (Date.now() < targetMs) return 'COUNTDOWN'
-  if (isLaunchDay()) return 'CURTAIN'
   return 'LOADING'
 }
 
@@ -724,16 +723,10 @@ export function LaunchGate({ children }: { children: React.ReactNode }) {
     return (
       <CountdownScreen
         onComplete={() => {
-          if (isLaunchDay()) goTo('CURTAIN')
-          else goTo('LOADING')
+          goTo('LOADING')
         }}
       />
     )
-  }
-
-  /* ── CURTAIN + LOGO REVIVAL ── */
-  if (phase === 'CURTAIN') {
-    return <CurtainReveal onComplete={handleRevealComplete} />
   }
 
   /* ── LOADING → WEBSITE ── */

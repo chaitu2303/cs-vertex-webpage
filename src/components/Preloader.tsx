@@ -19,12 +19,12 @@ export function Preloader({ onComplete, children }: PreloaderProps) {
   // 1. Resource Loading & Timer Logic
   useEffect(() => {
     // Skip preloader completely if already shown in this session
-    if (typeof window !== 'undefined' && sessionStorage.getItem('csvertex_preloader_done') === 'true') {
-      setLoading(false)
-      setVisible(true)
-      if (onComplete) onComplete()
-      return
-    }
+    // if (typeof window !== 'undefined' && sessionStorage.getItem('csvertex_preloader_done') === 'true') {
+    //   setLoading(false)
+    //   setVisible(true)
+    //   if (onComplete) onComplete()
+    //   return
+    // }
 
     const startTime = Date.now()
     let progressVal = 0
