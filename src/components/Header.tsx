@@ -116,8 +116,10 @@ export function Header() {
             top: 100px;
             left: 0;
             width: 100%;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
             background: #050505;
-            padding: 20px 4vw;
+            padding: 20px 4vw 60px 4vw;
             border-bottom: 1px solid #333;
             z-index: 49;
           }
