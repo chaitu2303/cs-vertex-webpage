@@ -15,7 +15,7 @@ export function Header() {
       const supabase = createClient()
       supabase.auth.getUser().then(({ data }) => setUser(data?.user || null))
     })
-    const sections = ['home', 'about', 'services', 'projects', 'why-choose-us', 'team', 'learning']
+    const sections = ['home', 'about', 'services', 'projects', 'why-choose-us', 'learning', 'quote', 'team']
     
     const observerOptions = {
       root: null,
@@ -49,7 +49,9 @@ export function Header() {
   return (
     <header className="site-header">
       <div className="brand" style={{ display: 'flex', alignItems: 'center' }}>
-        <img src="/logo-nav.png" alt="CS Vertex Logo" style={{ height: '80px', width: 'auto', objectFit: 'contain', transform: 'scale(1.2)', transformOrigin: 'left center' }} />
+        <Link href="/" className="logo">
+          <img src="/logo-nav.png" alt="CS Vertex Logo" style={{ height: '80px', width: 'auto', objectFit: 'contain', transform: 'scale(1.2)', transformOrigin: 'left center' }} />
+        </Link>
       </div>
       
       <nav className={`desktop-nav ${mobileMenuOpen ? 'mobile-open' : ''}`}>
@@ -59,6 +61,7 @@ export function Header() {
         <a href="#projects" onClick={() => setMobileMenuOpen(false)} className={activeSection === 'projects' ? 'active' : ''}>Projects</a>
         <a href="#why-choose-us" onClick={() => setMobileMenuOpen(false)} className={activeSection === 'why-choose-us' ? 'active' : ''}>Why Choose Us</a>
         <a href="#learning" onClick={() => setMobileMenuOpen(false)} className={activeSection === 'learning' ? 'active' : ''}>Learning</a>
+        <a href="#quote" onClick={() => setMobileMenuOpen(false)} className={activeSection === 'quote' ? 'active' : ''}>Quote</a>
         <a href="#team" onClick={() => setMobileMenuOpen(false)} className={activeSection === 'team' ? 'active' : ''}>Team</a>
         
         <div 

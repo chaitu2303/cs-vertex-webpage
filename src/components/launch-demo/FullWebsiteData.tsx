@@ -1,50 +1,37 @@
-import { prisma } from '@/lib/prisma'
-import { Header } from '../components/Header'
-import { ProjectCard } from '../components/ProjectCard'
-import { ProjectsShowcase } from '../components/ProjectsShowcase'
-import { ServiceCard } from '../components/ServiceCard'
-import { FormspreeForm } from '../components/FormspreeForm'
-import { LearningPlatform } from '../components/LearningPlatform'
-import { TechOrbit } from '../components/TechOrbit'
-import { NoticeBoard } from '../components/NoticeBoard'
-import { FloatingActions } from '../components/FloatingActions'
-import { FeedbackForm } from '../components/FeedbackForm'
-import { DevelopmentProcess } from '../components/DevelopmentProcess'
-import { Newsletter } from '../components/Newsletter'
-import { TeamMemberCard } from '../components/TeamMemberCard'
-import { AnnouncementBanner } from '../components/AnnouncementBanner'
-import { QuoteFlowModal } from '../components/QuoteFlowModal'
-import { MultiStepQuoteForm } from '../components/MultiStepQuoteForm'
-import { ContactUsButton } from '../components/ContactUsButton'
-import { WhyChooseUs } from '../components/WhyChooseUs'
-import { LeadershipStats } from '../components/LeadershipStats'
-import { createClient } from '@/utils/supabase/server'
-import Link from 'next/link'
+"use client"
 
-import { EmptyState } from '../components/EmptyState'
+import React from 'react'
+import { Header } from '@/components/Header'
+import { ProjectsShowcase } from '@/components/ProjectsShowcase'
+import { LearningPlatform } from '@/components/LearningPlatform'
+import { TechOrbit } from '@/components/TechOrbit'
+import { FloatingActions } from '@/components/FloatingActions'
+import { FeedbackForm } from '@/components/FeedbackForm'
+import { Newsletter } from '@/components/Newsletter'
+import { QuoteFlowModal } from '@/components/QuoteFlowModal'
+import { MultiStepQuoteForm } from '@/components/MultiStepQuoteForm'
+import { ContactUsButton } from '@/components/ContactUsButton'
+import { WhyChooseUs } from '@/components/WhyChooseUs'
+import { LeadershipStats } from '@/components/LeadershipStats'
+import { TeamMemberCard } from '@/components/TeamMemberCard'
+import { EmptyState } from '@/components/EmptyState'
 
-import { redirect } from 'next/navigation'
-import { LaunchGate } from '../components/launch/LaunchGate'
-import { OpeningDayBanner } from '../components/launch/OpeningDayBanner'
-
-export const revalidate = 60
-export default async function Home({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
-  const params = await searchParams
-  if (params.code) {
-    redirect(`/auth/callback?code=${params.code}&next=/portal`)
+interface FullWebsiteDataProps {
+  data: {
+    services: any[]
+    projects: any[]
+    team: any[]
+    announcements: any[]
+    testimonials: any[]
   }
-  const [services, projects, team, announcements, testimonials] = await Promise.all([
-    prisma.service.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
-    prisma.project.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
-    prisma.teamMember.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
-    prisma.announcement.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } }),
-    prisma.testimonial.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } })
-  ])
+}
 
+export function FullWebsiteData({ data }: FullWebsiteDataProps) {
+  const { services, projects, team, testimonials } = data
   const FORMSPREE_NEWSLETTER = "https://formspree.io/f/placeholder-newsletter"
 
   return (
-    <LaunchGate>
+    <div className="website-container" style={{ position: 'relative', width: '100%', background: '#030303', color: '#fff' }}>
       <QuoteFlowModal />
       <FloatingActions />
       
@@ -60,7 +47,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         </div>
       </div>
 
-      {/* Main Header with dynamic Portal Dropdown */}
+      {/* Main Header */}
       <Header />
 
       {/* 01. HERO SECTION */}
@@ -76,7 +63,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
             <p className="hero-lede">
               Enterprise AI, IoT networks, custom hardware, and scalable web solutions delivered with zero compromise.
             </p>
-
           </div>
         </div>
       </section>
@@ -124,11 +110,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
             <h2>Our <em>Services & Technology</em></h2>
             <p>End-to-End Delivery. Quality & Scalability. Long-Term Support across Software, AI, and Hardware.</p>
           </div>
-          {services.length > 0 ? (
+          {services && services.length > 0 ? (
             <div className="cap-stage">
               <TechOrbit />
               <div className="cap-list">
-                 {services.map((service, index) => (
+                 {services.map((service: any, index: number) => (
                    <article key={service.id} className="cap-item">
                       <span>0{index + 1}</span>
                       <h3>{service.title}</h3>
@@ -154,7 +140,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
             <h2 style={{ color: 'var(--acid)' }}>Featured <span style={{ color: 'var(--ink)' }}>Projects</span></h2>
             <p>A portfolio of rigorous software implementations, smart IoT ecosystems, and autonomous robotic solutions deployed globally.</p>
           </div>
-          {projects.length > 0 ? (
+          {projects && projects.length > 0 ? (
             <ProjectsShowcase projects={projects} />
           ) : (
             <EmptyState message="Projects Showcase Coming Soon" height="300px" />
@@ -176,10 +162,34 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
       {/* 06. LEARNING PLATFORM */}
       <LearningPlatform />
 
-      {/* 07. REQUEST A QUOTE */}
+      {/* 07. LEADERSHIP TEAM */}
+      <section id="team" className="team section-gap">
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+          <div className="team-heading">
+            <div className="section-index"><i></i> <span>07</span> <span>/</span> <span>LEADERSHIP TEAM</span></div>
+            <h2>Meet The Leadership Team Behind <em>CS Vertex</em></h2>
+            <p>Software engineers, embedded systems specialists, AI innovators and product builders driving the next generation of intelligent solutions.</p>
+          </div>
+
+          {team && team.length > 0 ? (
+            <div className="leadership-grid" style={{ display: 'grid', gap: '30px', margin: '0 auto', maxWidth: '1200px', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+              {team.map((member: any) => (
+                <TeamMemberCard key={member.id} member={member} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState message="Team Roster Coming Soon" height="300px" />
+          )}
+        </div>
+      </section>
+
+      {/* 08. FEEDBACK */}
+      <FeedbackForm testimonials={testimonials} />
+
+      {/* 09. REQUEST A QUOTE */}
       <section id="quote" style={{ background: '#050505', padding: '80px 4vw' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-          <div className="section-index" style={{marginBottom: 20}}><i></i> <span>07</span> <span>/</span> <span>REQUEST QUOTE</span></div>
+          <div className="section-index" style={{marginBottom: 20}}><i></i> <span>09</span> <span>/</span> <span>REQUEST QUOTE</span></div>
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '40px' }}>
               <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', marginBottom: '10px' }}>Start a <em>Project</em></h2>
@@ -190,67 +200,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         </div>
       </section>
 
-      {/* 08. FEEDBACK */}
-      <FeedbackForm testimonials={testimonials} />
-
-      {/* 09. LEADERSHIP TEAM */}
-      <section id="team" className="team section-gap">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-          <div className="team-heading">
-            <div className="section-index"><i></i> <span>09</span> <span>/</span> <span>LEADERSHIP TEAM</span></div>
-            <h2>Meet The Leadership Team Behind <em>CS Vertex</em></h2>
-            <p>Software engineers, embedded systems specialists, AI innovators and product builders driving the next generation of intelligent solutions.</p>
-          </div>
-
-          {team.length > 0 ? (
-            <div className="leadership-grid" style={{ display: 'grid', gap: '30px', margin: '0 auto', maxWidth: '1200px' }}>
-              {team.map(member => (
-                <TeamMemberCard key={member.id} member={member} />
-              ))}
-            </div>
-          ) : (
-            <EmptyState message="Team Roster Coming Soon" height="300px" />
-          )}
-        </div>
-        <style>{`
-          .leadership-grid {
-             grid-template-columns: 1fr;
-          }
-          @media (min-width: 768px) {
-             .leadership-grid {
-                grid-template-columns: repeat(3, 1fr);
-             }
-          }
-        `}</style>
-      </section>
-
-      {/* 10. ANNOUNCEMENTS & OFFERS */}
-      <section id="announcements" style={{ background: 'var(--paper)', color: 'var(--ink)', padding: '80px 4vw', borderTop: '1px solid #ddd', borderBottom: '1px solid #ddd' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-          <div className="section-index" style={{marginBottom: 40}}><i></i> <span>10</span> <span>/</span> <span>ANNOUNCEMENTS & OFFERS</span></div>
-          <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', marginBottom: '40px' }}>Announcements / Exclusive <em>Offers</em></h2>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: '40px', alignItems: 'flex-start' }}>
-             <div style={{ background: '#111111', borderRadius: '12px', border: '1px solid #222', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-               <img src="/assets/brochures/cs-vertex-packages.png" alt="Pricing Plan Offer" style={{ width: '100%', height: 'auto', display: 'block' }} />
-               <div style={{ padding: '24px', background: 'linear-gradient(to right, #111, #1a1a1a)', borderTop: '1px solid #333' }}>
-                 <div style={{ display: 'inline-block', background: '#FF5A2A', color: '#000', fontSize: '12px', fontWeight: 700, padding: '4px 10px', borderRadius: '4px', letterSpacing: '0.1em', marginBottom: '12px' }}>EARLY BIRD OFFER</div>
-                 <h3 style={{ color: '#fff', fontSize: '24px', margin: '0 0 8px', fontWeight: 600 }}>Get 1 Year Free Maintenance</h3>
-                 <p style={{ color: '#aaa', fontSize: '15px', lineHeight: 1.6, margin: '0 0 20px' }}>Sign up now to grab our exclusive early bird offer. Secure, scalable, and fully maintained for a whole year at zero additional cost.</p>
-                 <a href="#contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#FF5A2A', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s' }}>
-                   GRAB NOW <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                 </a>
-               </div>
-             </div>
-             
-             <div style={{ background: '#111111', borderRadius: '12px', border: '1px solid #222', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                 <img src="/assets/announcement.jpeg" alt="Latest Announcement" style={{ width: '100%', height: 'auto', display: 'block' }} />
-             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 11 & 12. FOOTER */}
+      {/* 10 & 11. FOOTER */}
       <footer>
         <div className="footer-main">
           <div className="footer-label">CS VERTEX</div>
@@ -260,25 +210,24 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         <div className="footer-bottom">
           <div className="footer-col">
             <h4>Company</h4>
-            <Link href="#about">About Us</Link>
-            <Link href="/careers">Careers</Link>
-            <Link href="#team">Leadership</Link>
+            <a href="#about">About Us</a>
+            <a href="/careers">Careers</a>
+            <a href="#team">Leadership</a>
           </div>
           <div className="footer-col">
             <h4>Services</h4>
-            <Link href="#services">Software Engineering</Link>
-            <Link href="#services">IoT & Embedded</Link>
-            <Link href="#services">AI & Robotics</Link>
-            <Link href="#learning">Learning Platform</Link>
+            <a href="#services">Software Engineering</a>
+            <a href="#services">IoT & Embedded</a>
+            <a href="#services">AI & Robotics</a>
+            <a href="#learning">Learning Platform</a>
           </div>
           <div className="footer-col">
             <h4>Legal</h4>
-            <Link href="/privacy">Privacy Policy</Link>
-            <Link href="/terms">Terms & Conditions</Link>
-            <Link href="/refund-policy">Refund Policy</Link>
-            <Link href="/disclaimer">Disclaimer</Link>
-            <Link href="/cookie-policy">Cookie Policy</Link>
-            <Link href="/admin/login" style={{ marginTop: '10px', color: '#666' }}>Admin Access</Link>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms & Conditions</a>
+            <a href="/refund-policy">Refund Policy</a>
+            <a href="/disclaimer">Disclaimer</a>
+            <a href="/cookie-policy">Cookie Policy</a>
           </div>
           <div className="footer-col">
             <h4>Office Info</h4>
@@ -290,10 +239,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
             <p style={{ fontSize: '12px', color: '#fff', margin: '0 0 10px', textTransform: 'none', letterSpacing: 'normal' }}>
               <strong>Location:</strong><br/>
               Visakhapatnam, Andhra Pradesh, India
-            </p>
-            <p style={{ fontSize: '12px', color: '#fff', margin: '0', textTransform: 'none', letterSpacing: 'normal' }}>
-              <strong>Online Support:</strong><br/>
-              24/7 Ticket & Email Assistance
             </p>
           </div>
           <div className="footer-col">
@@ -313,7 +258,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
           &copy; 2026 CS Vertex. All Rights Reserved.
         </div>
       </footer>
-    </LaunchGate>
+    </div>
   )
 }
-

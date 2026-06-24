@@ -562,14 +562,30 @@ export function TechOrbit() {
       // ----------------------------------------------------
       drawTechNodes(frontTechs);
 
-      animationFrameId = requestAnimationFrame(render);
+      if (isVisible) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
+
+    let isVisible = true;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0]) {
+        const wasVisible = isVisible;
+        isVisible = entries[0].isIntersecting;
+        if (isVisible && !wasVisible) {
+          render();
+        }
+      }
+    }, { rootMargin: '200px' }); // start rendering slightly before it enters view
+    
+    if (canvas) observer.observe(canvas);
 
     render();
 
     return () => {
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(animationFrameId);
+      if (canvas) observer.unobserve(canvas);
     };
   }, []);
 

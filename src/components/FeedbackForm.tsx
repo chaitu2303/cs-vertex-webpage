@@ -58,7 +58,7 @@ export function FeedbackForm({ testimonials = [] }: { testimonials?: any[] }) {
           <div>
             <div className="section-index" style={{marginBottom: 20}}><i></i> <span>08</span> <span>/</span> <span>FEEDBACK & REVIEWS</span></div>
             <h2 style={{ fontSize: 'clamp(40px, 6vw, 85px)', fontWeight: 500, letterSpacing: '-.065em', margin: 0, lineHeight: .93, color: 'var(--ink)' }}>
-              Your Voice <em style={{ fontWeight: 400, color: 'var(--ink)', fontStyle: 'normal' }}>Matters</em>
+              <span style={{ color: 'var(--acid)' }}>Your</span> Voice <em style={{ fontWeight: 400, color: 'var(--ink)', fontStyle: 'normal' }}>Matters</em>
             </h2>
             <p style={{ marginTop: '20px', maxWidth: '400px', color: '#555', lineHeight: 1.8 }}>
               Help us shape the future of enterprise software and IoT. Your insights drive our engineering excellence.

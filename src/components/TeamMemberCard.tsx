@@ -108,13 +108,36 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
   else if (nameLower.includes('mahendra')) imageSrc = '/assets/team/founder_mahendra.jpg';
   else if (nameLower.includes('nithish')) imageSrc = '/assets/team/founder_nithish.jpeg';
   else if (nameLower.includes('sateesh') || nameLower.includes('satish')) imageSrc = '/assets/team/founder_sateesh2.jpeg';
-  else if (nameLower.includes('vasant')) imageSrc = '/assets/team/founder_vasant.jpeg';
+  else if (nameLower.includes('vasant')) imageSrc = '/assets/team/founder_vasant_v2.jpeg';
 
   let objectPosition = 'center top';
-  if (nameLower.includes('nithish') || nameLower.includes('chaitanya')) {
+  let baseScale = '1';
+  let transformOrigin = 'center top';
+
+  if (nameLower.includes('chaitanya')) {
     objectPosition = 'center 15%';
+    baseScale = '1.05';
+    transformOrigin = 'center 15%';
+  } else if (nameLower.includes('nithish')) {
+    objectPosition = 'center 0%';
+    baseScale = '1.0';
+    transformOrigin = 'center 0%';
+  } else if (nameLower.includes('vasant')) {
+    objectPosition = 'center 0%';
+    baseScale = '1.0';
+    transformOrigin = 'center 0%';
   } else if (nameLower.includes('harish')) {
     objectPosition = 'center 15%';
+    baseScale = '1.05';
+    transformOrigin = 'center 15%';
+  } else if (nameLower.includes('mahendra')) {
+    objectPosition = 'center 15%';
+    baseScale = '1.05';
+    transformOrigin = 'center 15%';
+  } else if (nameLower.includes('sateesh') || nameLower.includes('satish')) {
+    objectPosition = 'center 15%';
+    baseScale = '1.25';
+    transformOrigin = 'center 15%';
   }
 
   return (
@@ -134,7 +157,11 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
               alt={displayName}
               fill
               className="team-image"
-              style={{ objectPosition }}
+              style={{
+                '--object-position': objectPosition,
+                '--base-scale': baseScale,
+                '--transform-origin': transformOrigin,
+              } as React.CSSProperties}
             />
           </div>
           
@@ -208,7 +235,8 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
         .image-wrapper {
           position: relative;
           width: 100%;
-          height: 320px;
+          aspect-ratio: 4 / 5;
+          height: auto;
           border-radius: 16px;
           overflow: hidden;
           margin-bottom: 20px;
@@ -219,12 +247,14 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center top;
+          object-position: var(--object-position, center top);
+          transform: scale(var(--base-scale, 1));
+          transform-origin: var(--transform-origin, center top);
           transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .premium-team-card:hover .team-image {
-          transform: scale(1.05);
+          transform: scale(calc(var(--base-scale, 1) * 1.05));
         }
 
         .card-content {
@@ -369,7 +399,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
           display: flex;
           flex-direction: column;
-          max-height: 85vh;
+          max-height: 90vh;
         }
 
         .modal-split-v2 {
@@ -537,19 +567,19 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
                   style={{ objectFit: 'cover', objectPosition }}
                 />
               </div>
-              <div className="modal-info-col-v2">
-                <h2 className="modal-member-name-v2" style={{ fontSize: '32px', margin: '0 0 8px', color: '#FFFFFF', fontWeight: 500, letterSpacing: '-0.02em' }}>{displayName}</h2>
-                <p className="modal-member-role-v2" style={{ color: '#FF5A2A', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 24px', fontWeight: 600 }}>{member.role}</p>
-                <p style={{ fontSize: '15px', color: '#F5F1EA', lineHeight: 1.8, marginBottom: '35px' }}>
+              <div className="modal-info-col-v2" style={{ padding: '30px' }}>
+                <h2 className="modal-member-name-v2" style={{ fontSize: '28px', margin: '0 0 6px', color: '#FFFFFF', fontWeight: 500, letterSpacing: '-0.02em' }}>{displayName}</h2>
+                <p className="modal-member-role-v2" style={{ color: '#FF5A2A', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 16px', fontWeight: 600 }}>{member.role}</p>
+                <p style={{ fontSize: '14px', color: '#F5F1EA', lineHeight: 1.6, marginBottom: '20px' }}>
                   {displayBio}
                 </p>
                 
-                <div style={{ marginBottom: '40px', flexGrow: 1 }}>
-                  <strong style={{ display: 'block', fontSize: '12px', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '12px' }}>Core Expertise</strong>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ marginBottom: '25px', flexGrow: 1 }}>
+                  <strong style={{ display: 'block', fontSize: '12px', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Core Expertise</strong>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {skillsArray.map((skill, idx) => (
-                       <div key={idx} style={{ color: '#F5F1EA', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                         <span style={{ color: '#FF5A2A', fontSize: '18px', lineHeight: 1 }}>•</span> {skill}
+                       <div key={idx} style={{ color: '#F5F1EA', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                         <span style={{ color: '#FF5A2A', fontSize: '16px', lineHeight: 1 }}>•</span> {skill}
                        </div>
                     ))}
                   </div>

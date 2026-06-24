@@ -1,38 +1,33 @@
 import { prisma } from '@/lib/prisma'
-import { Header } from '../components/Header'
-import { ProjectCard } from '../components/ProjectCard'
-import { ProjectsShowcase } from '../components/ProjectsShowcase'
-import { ServiceCard } from '../components/ServiceCard'
-import { FormspreeForm } from '../components/FormspreeForm'
-import { LearningPlatform } from '../components/LearningPlatform'
-import { TechOrbit } from '../components/TechOrbit'
-import { NoticeBoard } from '../components/NoticeBoard'
-import { FloatingActions } from '../components/FloatingActions'
-import { FeedbackForm } from '../components/FeedbackForm'
-import { DevelopmentProcess } from '../components/DevelopmentProcess'
-import { Newsletter } from '../components/Newsletter'
-import { TeamMemberCard } from '../components/TeamMemberCard'
-import { AnnouncementBanner } from '../components/AnnouncementBanner'
-import { QuoteFlowModal } from '../components/QuoteFlowModal'
-import { MultiStepQuoteForm } from '../components/MultiStepQuoteForm'
-import { ContactUsButton } from '../components/ContactUsButton'
-import { WhyChooseUs } from '../components/WhyChooseUs'
-import { LeadershipStats } from '../components/LeadershipStats'
-import { createClient } from '@/utils/supabase/server'
+import { Header } from '../../components/Header'
+import { ProjectCard } from '../../components/ProjectCard'
+import { ProjectsShowcase } from '../../components/ProjectsShowcase'
+import { ServiceCard } from '../../components/ServiceCard'
+import { FormspreeForm } from '../../components/FormspreeForm'
+import { LearningPlatform } from '../../components/LearningPlatform'
+import { TechOrbit } from '../../components/TechOrbit'
+import { NoticeBoard } from '../../components/NoticeBoard'
+import { FloatingActions } from '../../components/FloatingActions'
+import { FeedbackForm } from '../../components/FeedbackForm'
+import { DevelopmentProcess } from '../../components/DevelopmentProcess'
+import { Newsletter } from '../../components/Newsletter'
+import { TeamMemberCard } from '../../components/TeamMemberCard'
+import { AnnouncementBanner } from '../../components/AnnouncementBanner'
+import { QuoteFlowModal } from '../../components/QuoteFlowModal'
+import { MultiStepQuoteForm } from '../../components/MultiStepQuoteForm'
+import { ContactUsButton } from '../../components/ContactUsButton'
+import { WhyChooseUs } from '../../components/WhyChooseUs'
+import { LeadershipStats } from '../../components/LeadershipStats'
+import { EmptyState } from '../../components/EmptyState'
+import { Preloader } from '../../components/Preloader'
 import Link from 'next/link'
 
-import { EmptyState } from '../components/EmptyState'
+// Create a small client helper inline for replaying the demo loader
+import { ReplayButton } from './ReplayButton'
 
-import { redirect } from 'next/navigation'
-import { LaunchGate } from '../components/launch/LaunchGate'
-import { OpeningDayBanner } from '../components/launch/OpeningDayBanner'
+export const revalidate = 0 // Disable cache for demo page to test loaders cleanly
 
-export const revalidate = 60
-export default async function Home({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
-  const params = await searchParams
-  if (params.code) {
-    redirect(`/auth/callback?code=${params.code}&next=/portal`)
-  }
+export default async function LoaderDemoPage() {
   const [services, projects, team, announcements, testimonials] = await Promise.all([
     prisma.service.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
     prisma.project.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
@@ -44,9 +39,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
   const FORMSPREE_NEWSLETTER = "https://formspree.io/f/placeholder-newsletter"
 
   return (
-    <LaunchGate>
+    <>
+      <Preloader />
       <QuoteFlowModal />
       <FloatingActions />
+      <ReplayButton />
       
       {/* Top Utility Bar */}
       <div className="top-utility-bar" style={{ padding: '12px 4vw', background: '#050505', borderBottom: '1px solid #222', display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
@@ -60,7 +57,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         </div>
       </div>
 
-      {/* Main Header with dynamic Portal Dropdown */}
+      {/* Main Header */}
       <Header />
 
       {/* 01. HERO SECTION */}
@@ -76,7 +73,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
             <p className="hero-lede">
               Enterprise AI, IoT networks, custom hardware, and scalable web solutions delivered with zero compromise.
             </p>
-
           </div>
         </div>
       </section>
@@ -176,28 +172,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
       {/* 06. LEARNING PLATFORM */}
       <LearningPlatform />
 
-      {/* 07. REQUEST A QUOTE */}
-      <section id="quote" style={{ background: '#050505', padding: '80px 4vw' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-          <div className="section-index" style={{marginBottom: 20}}><i></i> <span>07</span> <span>/</span> <span>REQUEST QUOTE</span></div>
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-              <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', marginBottom: '10px' }}>Start a <em>Project</em></h2>
-              <p style={{ margin: '20px auto 0', maxWidth: '600px', color: '#888', lineHeight: 1.6 }}>Ready to build? Share your project details and our engineering team will provide a comprehensive technical assessment and budget estimate.</p>
-            </div>
-            <MultiStepQuoteForm />
-          </div>
-        </div>
-      </section>
-
-      {/* 08. FEEDBACK */}
-      <FeedbackForm testimonials={testimonials} />
-
-      {/* 09. LEADERSHIP TEAM */}
+      {/* 07. LEADERSHIP TEAM */}
       <section id="team" className="team section-gap">
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
           <div className="team-heading">
-            <div className="section-index"><i></i> <span>09</span> <span>/</span> <span>LEADERSHIP TEAM</span></div>
+            <div className="section-index"><i></i> <span>07</span> <span>/</span> <span>LEADERSHIP TEAM</span></div>
             <h2>Meet The Leadership Team Behind <em>CS Vertex</em></h2>
             <p>Software engineers, embedded systems specialists, AI innovators and product builders driving the next generation of intelligent solutions.</p>
           </div>
@@ -224,27 +203,36 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         `}</style>
       </section>
 
+      {/* 08. FEEDBACK */}
+      <FeedbackForm testimonials={testimonials} />
+
+      {/* 09. REQUEST A QUOTE */}
+      <section id="quote" style={{ background: '#050505', padding: '80px 4vw' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+          <div className="section-index" style={{marginBottom: 20}}><i></i> <span>09</span> <span>/</span> <span>REQUEST QUOTE</span></div>
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+              <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', marginBottom: '10px' }}>Start a <em>Project</em></h2>
+              <p style={{ margin: '20px auto 0', maxWidth: '600px', color: '#888', lineHeight: 1.6 }}>Ready to build? Share your project details and our engineering team will provide a comprehensive technical assessment and budget estimate.</p>
+            </div>
+            <MultiStepQuoteForm />
+          </div>
+        </div>
+      </section>
+
       {/* 10. ANNOUNCEMENTS & OFFERS */}
       <section id="announcements" style={{ background: 'var(--paper)', color: 'var(--ink)', padding: '80px 4vw', borderTop: '1px solid #ddd', borderBottom: '1px solid #ddd' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
           <div className="section-index" style={{marginBottom: 40}}><i></i> <span>10</span> <span>/</span> <span>ANNOUNCEMENTS & OFFERS</span></div>
-          <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', marginBottom: '40px' }}>Announcements / Exclusive <em>Offers</em></h2>
+          <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', marginBottom: '40px' }}>Exclusive <em>Offers</em></h2>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: '40px', alignItems: 'flex-start' }}>
-             <div style={{ background: '#111111', borderRadius: '12px', border: '1px solid #222', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+             <div style={{ background: '#111111', borderRadius: '12px', border: '1px solid #222', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                <img src="/assets/brochures/cs-vertex-packages.png" alt="Pricing Plan Offer" style={{ width: '100%', height: 'auto', display: 'block' }} />
-               <div style={{ padding: '24px', background: 'linear-gradient(to right, #111, #1a1a1a)', borderTop: '1px solid #333' }}>
-                 <div style={{ display: 'inline-block', background: '#FF5A2A', color: '#000', fontSize: '12px', fontWeight: 700, padding: '4px 10px', borderRadius: '4px', letterSpacing: '0.1em', marginBottom: '12px' }}>EARLY BIRD OFFER</div>
-                 <h3 style={{ color: '#fff', fontSize: '24px', margin: '0 0 8px', fontWeight: 600 }}>Get 1 Year Free Maintenance</h3>
-                 <p style={{ color: '#aaa', fontSize: '15px', lineHeight: 1.6, margin: '0 0 20px' }}>Sign up now to grab our exclusive early bird offer. Secure, scalable, and fully maintained for a whole year at zero additional cost.</p>
-                 <a href="#contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#FF5A2A', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s' }}>
-                   GRAB NOW <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                 </a>
-               </div>
              </div>
              
              <div style={{ background: '#111111', borderRadius: '12px', border: '1px solid #222', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                 <img src="/assets/announcement.jpeg" alt="Latest Announcement" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                  <img src="/assets/announcement.jpeg" alt="Latest Announcement" style={{ width: '100%', height: 'auto', display: 'block' }} />
              </div>
           </div>
         </div>
@@ -313,7 +301,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
           &copy; 2026 CS Vertex. All Rights Reserved.
         </div>
       </footer>
-    </LaunchGate>
+    </>
   )
 }
-

@@ -1,5 +1,5 @@
 :root{--ink:#0B0B0B;--paper:#FAF7F2;--acid:#FF5A2A;--acid-hover:#FF6A3D;--brand-blue:#5c7df8;--muted:#96968f;--line:rgba(255,255,255,.14);--mono:"DM Mono",monospace;--sans:"Manrope",sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw}body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);overflow-x:hidden;max-width:100vw}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}
+*{box-sizing:border-box}html{scroll-behavior:smooth;overflow-x:clip;max-width:100vw}body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);overflow-x:clip;max-width:100vw}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}
 
 /* Top Utility Bar */
 .top-utility-bar { background: #050505; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; padding: 8px 4vw; font: 9px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: #888; z-index: 51; position: relative; }

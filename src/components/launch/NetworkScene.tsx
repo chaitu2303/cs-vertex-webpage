@@ -17,16 +17,13 @@ interface Node3D {
 function NetworkBackground({ intensity = 0 }: { intensity: number }) {
   const pointsRef = useRef<THREE.Points>(null)
   const linesRef  = useRef<THREE.LineSegments>(null)
-  const nodesRef  = useRef<Node3D[]>([])
-  const initialized = useRef(false)
 
   const NODE_COUNT = 60
   const CONNECTION_DIST = 3.5
+  const MAX_LINES = NODE_COUNT * NODE_COUNT
 
-  // Build nodes once
-  if (!initialized.current) {
-    initialized.current = true
-    nodesRef.current = Array.from({ length: NODE_COUNT }, () => ({
+  const [nodes] = React.useState(() => 
+    Array.from({ length: NODE_COUNT }, () => ({
       x: (Math.random() - 0.5) * 16,
       y: (Math.random() - 0.5) * 9,
       z: (Math.random() - 0.5) * 6,
@@ -34,10 +31,20 @@ function NetworkBackground({ intensity = 0 }: { intensity: number }) {
       vy: (Math.random() - 0.5) * 0.002,
       vz: (Math.random() - 0.5) * 0.001,
     }))
-  }
+  )
+
+  const { pointPositions, linePositions } = React.useMemo(() => {
+    const p = new Float32Array(NODE_COUNT * 3)
+    const l = new Float32Array(MAX_LINES * 3 * 2)
+    nodes.forEach((n, i) => {
+      p[i * 3]     = n.x
+      p[i * 3 + 1] = n.y
+      p[i * 3 + 2] = n.z
+    })
+    return { pointPositions: p, linePositions: l }
+  }, [nodes, NODE_COUNT, MAX_LINES])
 
   useFrame(() => {
-    const nodes = nodesRef.current
     const baseSpeed = 0.15 + intensity * 0.6
 
     nodes.forEach(n => {
@@ -84,16 +91,6 @@ function NetworkBackground({ intensity = 0 }: { intensity: number }) {
       for (let k = maxPairs; k < arr.length; k++) arr[k] = 0
       linePos.needsUpdate = true
     }
-  })
-
-  // Allocate buffers for max connections
-  const MAX_LINES = NODE_COUNT * NODE_COUNT
-  const pointPositions = new Float32Array(NODE_COUNT * 3)
-  const linePositions  = new Float32Array(MAX_LINES * 3 * 2)
-  nodesRef.current.forEach((n, i) => {
-    pointPositions[i * 3]     = n.x
-    pointPositions[i * 3 + 1] = n.y
-    pointPositions[i * 3 + 2] = n.z
   })
 
   const lineOpacity = 0.06 + intensity * 0.14
