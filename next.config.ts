@@ -4,18 +4,9 @@ const nextConfig: NextConfig = {
   // Disabled in dev: StrictMode causes double-invocation of effects which
   // can surface as visible blinks during development.
   reactStrictMode: false,
-  
-  // Performance: tree-shake heavy icon and chart packages
-  experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts'],
-  },
-
-  // Compress responses
-  compress: true,
-
   images: {
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 86400, // 24 hours
+    minimumCacheTTL: 3600,
     remotePatterns: [
       {
         protocol: 'https',
@@ -29,20 +20,6 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      {
-        // Aggressive caching for static assets
-        source: '/static/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
-      {
-        // Cache Next.js static chunks
-        source: '/_next/static/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
       {
         source: '/(.*)',
         headers: [
