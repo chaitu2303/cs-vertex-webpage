@@ -324,7 +324,7 @@ export function Header() {
       <button className="menu-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
         <span style={{ transform: mobileMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }}></span>
         <span style={{ opacity: mobileMenuOpen ? 0 : 1 }}></span>
-        <span style={{ transform: mobileMenuOpen ? 'rotate(-45deg) translate(5px, -4px)' : 'none' }}></span>
+        <span style={{ transform: mobileMenuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }}></span>
       </button>
     </header>
   )

@@ -40,16 +40,16 @@ const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any })
       {status === 'success' ? (
         <p style={{ color: 'var(--acid)', fontWeight: 600 }}>Thank you! We'll notify you soon.</p>
       ) : (
-        <form onSubmit={handleNotify} style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+        <form onSubmit={handleNotify} style={{ display: 'flex', gap: '10px', marginTop: 'auto', flexWrap: 'wrap' }}>
           <input 
             type="email" 
             placeholder="Your email address" 
             value={email}
             onChange={e => setEmail(e.target.value)}
-            style={{ flex: 1, background: '#000', border: '1px solid #333', padding: '10px 15px', borderRadius: '8px', color: '#fff', outline: 'none' }}
+            style={{ flex: 1, minWidth: '150px', background: '#000', border: '1px solid #333', padding: '10px 15px', borderRadius: '8px', color: '#fff', outline: 'none' }}
             required
           />
-          <button type="submit" disabled={status === 'loading'} style={{ background: 'var(--acid)', color: '#000', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 600, cursor: status === 'loading' ? 'not-allowed' : 'pointer' }}>
+          <button type="submit" disabled={status === 'loading'} style={{ flex: '0 0 auto', background: 'var(--acid)', color: '#000', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 600, cursor: status === 'loading' ? 'not-allowed' : 'pointer' }}>
             {status === 'loading' ? '...' : 'Notify Me'}
           </button>
         </form>
