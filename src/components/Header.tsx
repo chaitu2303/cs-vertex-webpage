@@ -49,6 +49,17 @@ export function Header() {
     }
   }, [])
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    }
+  }, [mobileMenuOpen]);
+
   return (
     <header className="site-header">
       <div className="brand" style={{ display: 'flex', alignItems: 'center', marginLeft: '-15px' }}>
@@ -267,10 +278,10 @@ export function Header() {
             flex-direction: column;
             align-items: flex-start;
             position: absolute;
-            top: 100%;
+            top: 72px; /* Adjusted for 72px header */
             left: 0;
             width: 100%;
-            max-height: calc(100vh - 100px);
+            max-height: calc(100vh - 72px);
             overflow-y: auto;
             background: #050505;
             padding: 20px 4vw 60px 4vw;
@@ -317,6 +328,9 @@ export function Header() {
           .desktop-nav.mobile-open .mega-title {
             margin-bottom: 5px !important;
           }
+        }
+        @media(max-width: 768px) {
+          .brand a img { width: 140px !important; height: auto !important; }
         }
       `}</style>
       

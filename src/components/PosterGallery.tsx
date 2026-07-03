@@ -7,7 +7,11 @@ export function PosterGallery({ posters }: { posters: any[] }) {
   const [selectedPoster, setSelectedPoster] = useState<string | null>(null)
 
   if (!posters || posters.length === 0) {
-    return null;
+    return (
+      <div style={{ padding: '60px', textAlign: 'center', background: '#111', borderRadius: '16px', border: '1px solid #222', color: '#888' }}>
+        No announcements available.
+      </div>
+    )
   }
 
   return (
@@ -57,13 +61,18 @@ export function PosterGallery({ posters }: { posters: any[] }) {
       <style>{`
         .posters-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+          grid-template-columns: 1fr;
           gap: 40px;
-          align-items: flex-start;
+          align-items: start;
         }
         @media (min-width: 768px) {
           .posters-grid {
             grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (min-width: 1024px) {
+          .posters-grid {
+            grid-template-columns: repeat(3, 1fr);
           }
         }
         .poster-card {

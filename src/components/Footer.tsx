@@ -118,14 +118,14 @@ export default function Footer() {
           display: inline-block;
           margin-top: 4px;
           padding: 10px 20px;
-          background: #FF5A2A;
-          color: #fff;
+          background: #FF6A2A;
+          color: #000;
           font-size: 10px;
           font-family: var(--mono);
-          font-weight: 600;
+          font-weight: 700;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          border: 1px solid #FF5A2A;
+          border: 1px solid #FF6A2A;
           border-radius: 4px;
           text-align: center;
           text-decoration: none;
@@ -133,9 +133,9 @@ export default function Footer() {
           width: fit-content;
         }
         .footer-cta-link:hover {
-          background: #e64a19;
-          border-color: #e64a19;
-          color: #fff;
+          background: #FF7D44;
+          border-color: #FF7D44;
+          color: #000;
         }
       `}</style>
     </footer>

@@ -38,7 +38,7 @@ export default async function QuotesPage() {
         <p style={{ fontSize: '13px', color: '#555', marginTop: '6px' }}>Submit service requests and track your quote history.</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignItems: 'start' }}>
+      <div className="portal-grid" style={{ display: 'grid', gap: '20px', alignItems: 'start' }}>
 
         {/* New Quote Form */}
         <div style={{ background: '#0a0a0a', border: '1px solid #161616', borderRadius: '14px', overflow: 'hidden' }}>

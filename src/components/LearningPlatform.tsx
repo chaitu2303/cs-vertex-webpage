@@ -32,7 +32,7 @@ const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any })
   }
 
   return (
-    <motion.div style={{ background: '#111', padding: '40px', border: '1px solid #222', borderRadius: '16px', display: 'flex', flexDirection: 'column' }}>
+    <motion.div className="learning-card" style={{ background: '#111', padding: '40px', border: '1px solid #222', borderRadius: '16px', display: 'flex', flexDirection: 'column' }}>
       <Icon color="var(--acid)" size={28} style={{ marginBottom: '20px' }} />
       <h3 style={{ color: '#FFFFFF', margin: '0 0 15px', fontSize: '26px' }}>{title}</h3>
       <p style={{ color: '#888', marginBottom: '25px' }}>{title} will be announced soon. Get notified when we launch.</p>
@@ -40,7 +40,7 @@ const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any })
       {status === 'success' ? (
         <p style={{ color: 'var(--acid)', fontWeight: 600 }}>Thank you! We'll notify you soon.</p>
       ) : (
-        <form onSubmit={handleNotify} style={{ display: 'flex', gap: '10px', marginTop: 'auto', flexWrap: 'wrap' }}>
+        <form onSubmit={handleNotify} className="notify-form" style={{ display: 'flex', gap: '10px', marginTop: 'auto', flexWrap: 'wrap' }}>
           <input 
             type="email" 
             placeholder="Your email address" 
