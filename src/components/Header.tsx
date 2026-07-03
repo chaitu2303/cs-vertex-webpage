@@ -410,10 +410,10 @@ export function Header() {
       `}</style>
       
 
-      <button className="menu-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-        <span style={{ transform: mobileMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }}></span>
+      <button className="menu-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{ marginLeft: 'auto' }}>
+        <span style={{ transform: mobileMenuOpen ? 'translateY(8px) rotate(45deg)' : 'none' }}></span>
         <span style={{ opacity: mobileMenuOpen ? 0 : 1 }}></span>
-        <span style={{ transform: mobileMenuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }}></span>
+        <span style={{ transform: mobileMenuOpen ? 'translateY(-8px) rotate(-45deg)' : 'none' }}></span>
       </button>
     </header>
   )

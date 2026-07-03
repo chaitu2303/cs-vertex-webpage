@@ -199,7 +199,7 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
                           <button
                             onClick={() => setLightboxOpen(true)}
                             className="nb-cta nb-view-btn"
-                            style={{ '--cta-color': catColor, cursor: 'pointer', border: 'none', background: 'transparent' } as React.CSSProperties}
+                            style={{ '--cta-color': catColor, cursor: 'pointer', border: 'none' } as React.CSSProperties}
                           >
                             {ann.category === 'Brochure' ? 'View Brochure' : 'View Poster'}
                             <ZoomIn size={13} />
@@ -466,22 +466,19 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
           text-align: center;
         }
         .nb-nav {
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: transparent;
+          border: none;
           color: #888;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           transition: all 0.2s ease;
+          padding: 5px;
         }
         .nb-nav:hover {
-          background: #FF6B2C;
-          border-color: #FF6B2C;
-          color: #000;
+          color: #FF6B2C;
+          transform: scale(1.1);
         }
 
         /* Viewport */
