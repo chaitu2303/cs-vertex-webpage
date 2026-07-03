@@ -32,8 +32,8 @@ export default function AdminLogin() {
       clearTimeout(timeoutId)
 
       if (res.ok) {
-        // Fallback to hard redirect if client router hangs
-        window.location.href = '/admin'
+        // Use client router for instant SPA transition
+        router.push('/admin')
       } else {
         const data = await res.json()
         setError(data.error || 'Invalid credentials')

@@ -62,12 +62,12 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
   })
 
   return (
-    <section id="faq" className="section-gap" style={{ background: '#050505', color: '#fff' }}>
+    <section id="faq" className="section-gap" style={{ background: '#Fdfbf7', color: '#111' }}>
       <div className="container-1400">
-        <div className="section-index"><i></i> <span>11</span> <span>/</span> <span>FAQ</span></div>
+        <div className="section-index" style={{ color: '#555' }}><i><style>{`#faq .section-index i { background: #555 !important; } #faq .section-index span { color: #555 !important; }`}</style></i> <span>10</span> <span>/</span> <span>FAQ</span></div>
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
           <h2 style={{ fontSize: 'clamp(38px, 4.3vw, 70px)', color: 'var(--acid)', fontWeight: 500, letterSpacing: '-.065em', lineHeight: .93, marginBottom: '20px' }}>
-            Frequently Asked <span style={{ color: '#ffffff', fontWeight: 400, fontStyle: 'normal' }}>Questions</span>
+            Frequently Asked <span style={{ color: '#111', fontWeight: 400, fontStyle: 'normal' }}>Questions</span>
           </h2>
           <p style={{ color: '#888', maxWidth: '600px', margin: '0 auto' }}>
             Everything you need to know about our services, process, billing, and technology stack.
@@ -126,7 +126,7 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
               )
             })
           ) : (
-            <div className="empty-faq text-center text-gray-500 py-10">
+            <div className="empty-faq text-center text-gray-500 py-10" style={{ color: '#888' }}>
               No questions found matching your criteria.
             </div>
           )}
@@ -152,16 +152,16 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
           left: 20px;
           top: 50%;
           transform: translateY(-50%);
-          color: #666;
+          color: #888;
         }
 
         .search-input {
           width: 100%;
-          background: #111;
-          border: 1px solid #333;
+          background: #ffffff;
+          border: 1px solid #ddd;
           border-radius: 30px;
           padding: 16px 20px 16px 50px;
-          color: white;
+          color: #111;
           font-size: 16px;
           outline: none;
           transition: border-color 0.3s ease;
@@ -169,6 +169,10 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
 
         .search-input:focus {
           border-color: #FF6B2C;
+        }
+
+        .search-input::placeholder {
+          color: #aaa;
         }
 
         .category-filters {
@@ -180,8 +184,8 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
 
         .cat-btn {
           background: transparent;
-          border: 1px solid #333;
-          color: #aaa;
+          border: 1px solid #ddd;
+          color: #666;
           padding: 8px 16px;
           border-radius: 20px;
           font-size: 13px;
@@ -193,7 +197,7 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
 
         .cat-btn:hover {
           background: rgba(255, 107, 44, 0.1);
-          color: white;
+          color: #111;
           border-color: #FF6B2C;
         }
 
@@ -213,25 +217,25 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
         }
 
         .faq-item {
-          background: #111;
-          border: 1px solid #222;
+          background: #ffffff;
+          border: 1px solid #eee;
           border-radius: 12px;
           overflow: hidden;
           transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .faq-item.pinned {
-          border-color: rgba(212, 255, 62, 0.3);
-          background: linear-gradient(to right, #111, rgba(212, 255, 62, 0.02));
+          border-color: rgba(255, 107, 44, 0.4);
+          background: linear-gradient(to right, #fff, rgba(255, 107, 44, 0.03));
         }
 
         .faq-item:hover {
-          border-color: #444;
+          border-color: #ddd;
         }
 
         .faq-item.open {
           border-color: #FF6B2C;
-          box-shadow: 0 4px 20px rgba(255, 107, 44, 0.1);
+          box-shadow: 0 4px 20px rgba(255, 107, 44, 0.08);
         }
 
         .faq-question {
@@ -240,9 +244,9 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
           padding: 24px;
           background: transparent;
           border: none;
-          color: white;
+          color: #111;
           font-size: 18px;
-          font-weight: 500;
+          font-weight: 600;
           display: flex;
           justify-content: space-between;
           align-items: center;

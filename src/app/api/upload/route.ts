@@ -30,8 +30,8 @@ export async function POST(request: NextRequest) {
     await writeFile(filepath, buffer)
 
     return NextResponse.json({ success: true, url: `/uploads/${filename}` })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Upload error:', error)
-    return NextResponse.json({ success: false, message: 'File upload failed' }, { status: 500 })
+    return NextResponse.json({ success: false, message: `File upload failed: ${error.message}` }, { status: 500 })
   }
 }

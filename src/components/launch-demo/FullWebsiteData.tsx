@@ -172,7 +172,7 @@ export function FullWebsiteData({ data }: FullWebsiteDataProps) {
           </div>
 
           {team && team.length > 0 ? (
-            <div className="leadership-grid" style={{ display: 'grid', gap: '30px', margin: '0 auto', maxWidth: '1200px', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+            <div className="leadership-grid" style={{ display: 'grid', gap: '25px', margin: '0 auto', maxWidth: '1100px', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
               {team.map((member: any) => (
                 <TeamMemberCard key={member.id} member={member} />
               ))}

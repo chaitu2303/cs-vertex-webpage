@@ -15,6 +15,7 @@ interface TeamMember {
   linkedinUrl: string | null
   githubUrl: string | null
   email: string | null
+  portfolioUrl: string | null
   published: boolean
   order: number
 }
@@ -174,6 +175,17 @@ export default function TeamAdminPage() {
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#aaa' }}>GitHub</label>
                   <input type="url" value={formData.githubUrl || ''} onChange={e => setFormData({...formData, githubUrl: e.target.value})} style={{ width: '100%', padding: '10px', background: '#0a0a0a', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '15px' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#aaa' }}>Email</label>
+                  <input type="email" value={formData.email || ''} onChange={e => setFormData({...formData, email: e.target.value})} style={{ width: '100%', padding: '10px', background: '#0a0a0a', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#aaa' }}>Portfolio (Founder only)</label>
+                  <input type="url" value={formData.portfolioUrl || ''} onChange={e => setFormData({...formData, portfolioUrl: e.target.value})} style={{ width: '100%', padding: '10px', background: '#0a0a0a', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
                 </div>
               </div>
               

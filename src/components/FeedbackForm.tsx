@@ -56,7 +56,7 @@ export function FeedbackForm({ testimonials = [] }: { testimonials?: any[] }) {
         
         <div style={{ zIndex: 2, paddingRight: '40px', display: 'flex', flexDirection: 'column' }} className="feedback-copy">
           <div>
-            <div className="section-index" style={{marginBottom: 20}}><i></i> <span>08</span> <span>/</span> <span>FEEDBACK & REVIEWS</span></div>
+            <div className="section-index" style={{marginBottom: 20}}><i></i> <span>08</span> <span>/</span> <span>YOUR VOICE MATTERS</span></div>
             <h2 style={{ fontSize: 'clamp(40px, 6vw, 85px)', fontWeight: 500, letterSpacing: '-.065em', margin: 0, lineHeight: .93, color: 'var(--ink)' }}>
               <span style={{ color: 'var(--acid)' }}>Your</span> Voice <em style={{ fontWeight: 400, color: 'var(--ink)', fontStyle: 'normal' }}>Matters</em>
             </h2>

@@ -8,7 +8,7 @@ import { FormspreeForm } from '../../components/FormspreeForm'
 import { LearningPlatform } from '../../components/LearningPlatform'
 import { TechOrbit } from '../../components/TechOrbit'
 import { NoticeBoard } from '../../components/NoticeBoard'
-import { FloatingActions } from '../../components/FloatingActions'
+
 import { FeedbackForm } from '../../components/FeedbackForm'
 import { DevelopmentProcess } from '../../components/DevelopmentProcess'
 import { Newsletter } from '../../components/Newsletter'
@@ -44,7 +44,7 @@ export default async function LoaderDemoPage() {
     <>
       <Preloader />
       <QuoteFlowModal />
-      <FloatingActions />
+
       <ReplayButton />
       
       {/* Top Utility Bar */}

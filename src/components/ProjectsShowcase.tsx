@@ -31,27 +31,41 @@ type Project = {
 export function ProjectsShowcase({ projects }: { projects: any[] }) {
   const [activeFilter, setActiveFilter] = useState<string>('All')
 
-  const filters = [
-    'All', 'AI', 'IoT / Embedded / Robotics', 'Web', 'Mobile'
-  ]
+  // Grouped and Base Filters
+  const baseFilters = ['All', 'Web', 'Mobile', 'AI', 'IoT / Embedded / Robotics']
+  const dynamicFilters = new Set<string>()
+
+  projects.forEach(p => {
+    if (p.published && p.status !== 'Archived' && p.status !== 'Draft' && p.category) {
+      p.category.split(',').forEach((c: string) => {
+        const cat = c.trim()
+        if (!cat) return
+        
+        const lowerCat = cat.toLowerCase()
+        if (['web', 'mobile', 'ai'].includes(lowerCat)) return
+        if (['iot', 'embedded', 'robotics'].includes(lowerCat)) return
+        
+        dynamicFilters.add(cat)
+      })
+    }
+  })
+
+  const filters = [...baseFilters, ...Array.from(dynamicFilters).sort()]
   
   const activeProjects = projects.filter(p => {
-    if (!p.published) return false
+    if (!p.published || p.status === 'Archived' || p.status === 'Draft') return false
     
-    // Category match
     if (activeFilter === 'All') return true
     if (!p.category) return false
     
-    const cat = p.category.toLowerCase()
+    const catsString = p.category.toLowerCase()
     
     if (activeFilter === 'IoT / Embedded / Robotics') {
-      return cat.includes('iot') || cat.includes('embedded') || cat.includes('robotics')
+      return catsString.includes('iot') || catsString.includes('embedded') || catsString.includes('robotics')
     }
     
-    const filter = activeFilter.toLowerCase()
-    if (filter === 'web' && cat.includes('software')) return true
-    
-    return cat.includes(filter)
+    const catsArray = p.category.split(',').map((c: string) => c.trim().toLowerCase())
+    return catsArray.includes(activeFilter.toLowerCase())
   })
 
   return (
@@ -130,17 +144,20 @@ export function ProjectsShowcase({ projects }: { projects: any[] }) {
         }
 
         .projects-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
           gap: 30px;
         }
         
         .project-wrapper {
           animation: fadeInUp 0.6s ease-out forwards;
+          width: calc(25% - 22.5px); /* (100% / 4 cols) - (gap * (4-1) / 4) */
+          max-width: 400px; /* Cap width for very large screens */
         }
         
         .empty-state {
-          grid-column: 1 / -1;
+          width: 100%;
           text-align: center;
           padding: 60px 20px;
           color: #888;
@@ -162,15 +179,15 @@ export function ProjectsShowcase({ projects }: { projects: any[] }) {
 
         /* Responsive Breakpoints matching strict requirements */
         @media (max-width: 1440px) {
-          .projects-grid { grid-template-columns: repeat(3, 1fr); }
+          .project-wrapper { width: calc(33.333% - 20px); }
         }
         
         @media (max-width: 1024px) {
-          .projects-grid { grid-template-columns: repeat(2, 1fr); }
+          .project-wrapper { width: calc(50% - 15px); }
         }
 
         @media (max-width: 640px) {
-          .projects-grid { grid-template-columns: 1fr; }
+          .project-wrapper { width: 100%; max-width: 100%; }
           .filters-container {
             justify-content: flex-start;
             overflow-x: auto;

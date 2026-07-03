@@ -26,6 +26,7 @@ export async function POST(request: Request) {
         linkedinUrl: body.linkedinUrl,
         githubUrl: body.githubUrl,
         email: body.email,
+        portfolioUrl: body.portfolioUrl,
         published: body.published ?? true,
         order: body.order ?? 0
       }

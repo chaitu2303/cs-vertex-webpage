@@ -16,11 +16,12 @@ const WhyChooseUs = dynamic(() => import('../components/WhyChooseUs').then(m => 
 import Footer from '@/components/Footer'
 import { HeroLogoAnimation } from '../components/HeroLogoAnimation'
 import { NoticeBoard } from '../components/NoticeBoard'
-import { FloatingActions } from '../components/FloatingActions'
+
 import { DevelopmentProcess } from '../components/DevelopmentProcess'
 import { Newsletter } from '../components/Newsletter'
 import { TeamMemberCard } from '../components/TeamMemberCard'
 import { AnnouncementBanner } from '../components/AnnouncementBanner'
+import { AnnouncementsSlider } from '../components/AnnouncementsSlider'
 import { QuoteFlowModal } from '../components/QuoteFlowModal'
 import { ContactUsButton } from '../components/ContactUsButton'
 import { ServiceCard } from '../components/ServiceCard'
@@ -40,9 +41,9 @@ import { FAQSection } from '../components/FAQ'
 
 import { readFromJSON } from '@/lib/cms'
 
-export const revalidate = 60; // force rebuild
+export const revalidate = 0; // force dynamic rendering
 export default async function Home({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
-  const params = await searchParams
+  const params = await searchParams;
   if (params.code) {
     redirect(`/auth/callback?code=${params.code}&next=/portal`)
   }
@@ -50,7 +51,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
     readFromJSON('services', () => prisma.service.findMany({ where: { published: true }, orderBy: { order: 'asc' } })),
     readFromJSON('projects', () => prisma.project.findMany({ where: { published: true }, orderBy: { order: 'asc' } })),
     readFromJSON('team', () => prisma.teamMember.findMany({ where: { published: true }, orderBy: { order: 'asc' } })),
-    readFromJSON('announcements', () => prisma.announcement.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } })),
+    readFromJSON('announcements', () => prisma.announcement.findMany({ where: { published: true, status: { not: 'Archived' } }, orderBy: [{ priority: 'desc' }, { order: 'asc' }, { createdAt: 'desc' }] })),
     readFromJSON('testimonials', () => prisma.testimonial.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } })),
     readFromJSON('internships', () => prisma.internship.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } })),
     readFromJSON('courses', () => prisma.course.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } })),
@@ -68,7 +69,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
   return (
     <>
       <QuoteFlowModal />
-      <FloatingActions />
+
       
       {/* Top Utility Bar */}
       <div className="top-utility-bar" style={{ padding: '12px 4vw', background: '#050505', borderBottom: '1px solid #222', display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
@@ -177,7 +178,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
           </div>
         </div>
       </section>
-
 
       {/* 02. ABOUT CS VERTEX */}
 
@@ -295,26 +295,17 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         </div>
       </section>
 
-      {/* 08. CLIENT REVIEWS */}
-      <ClientReviews testimonials={testimonials} />
-
-      {/* 09. FEEDBACK */}
+      {/* 08. YOUR VOICE MATTERS (FEEDBACK) */}
       <FeedbackForm testimonials={testimonials} />
-      {/* 09. LEADERSHIP TEAM MOVED TO ABOUT SECTION */}
+
+      {/* 09. NOTICE BOARD */}
+      <AnnouncementsSlider announcements={announcements} />
 
       {/* 10. FAQ SECTION */}
       <FAQSection initialFaqs={faqs} />
 
 
-      {/* 10. ANNOUNCEMENTS & OFFERS */}
-      <section id="announcements" className="section-gap" style={{ background: 'var(--paper)', color: 'var(--ink)', borderTop: '1px solid #ddd', borderBottom: '1px solid #ddd' }}>
-        <div className="container-1400">
-          <div className="section-index" style={{marginBottom: 40}}><i></i> <span>10</span> <span>/</span> <span>ANNOUNCEMENTS & OFFERS</span></div>
-          <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', marginBottom: '40px' }}>Announcements / Exclusive <em>Offers</em></h2>
-          
-          <PosterGallery posters={posters} />
-        </div>
-      </section>
+
 
       {/* FOOTER */}
       <Footer />

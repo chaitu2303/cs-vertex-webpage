@@ -63,13 +63,31 @@ export function Header() {
   return (
     <header className="site-header">
       <div className="brand" style={{ display: 'flex', alignItems: 'center' }}>
-        <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+        <Link 
+          href="/" 
+          className="logo" 
+          style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.location.pathname === '/') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+        >
           <Image src="/logo-nav.png" alt="CS Vertex Logo" width={140} height={50} priority style={{ objectFit: 'contain' }} />
         </Link>
       </div>
       
       <nav className={`desktop-nav ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-        <Link href="/#home" onClick={() => setMobileMenuOpen(false)} className={activeSection === 'home' ? 'active' : ''}>Home</Link>
+        <Link 
+          href="/" 
+          onClick={() => {
+            setMobileMenuOpen(false);
+            if (typeof window !== 'undefined' && window.location.pathname === '/') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }} 
+          className={activeSection === 'home' ? 'active' : ''}
+        >Home</Link>
         <div 
           className="nav-dropdown-wrapper" 
           style={{ display: 'inline-block', position: 'relative' }}
@@ -116,7 +134,10 @@ export function Header() {
                 setDropdownOpen(dropdownOpen === 'services' ? '' : 'services');
               } else {
                 setMobileMenuOpen(false);
-                document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+                if (window.location.pathname === '/') {
+                  e.preventDefault();
+                  document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+                }
               }
             }} 
             className={activeSection === 'services' ? 'active' : ''}
@@ -127,7 +148,7 @@ export function Header() {
             <div className="nav-dropdown mega-dropdown">
               <div className="mega-col">
                 <span className="mega-title">Core Services</span>
-                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }); }}>All Services</Link>
+                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>All Services</Link>
                 <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Software Engineering</Link>
                 <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>AI Solutions</Link>
                 <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Cybersecurity</Link>
@@ -139,8 +160,20 @@ export function Header() {
           )}
         </div>
 
-        <Link href="/#projects" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }} className={activeSection === 'projects' ? 'active' : ''}>Projects</Link>
-        <Link href="/#why-choose-us" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); document.getElementById('why-choose-us')?.scrollIntoView({ behavior: 'smooth' }); }} className={activeSection === 'why-choose-us' ? 'active' : ''}>Why Choose Us</Link>
+        <Link href="/#projects" onClick={(e) => { 
+          setMobileMenuOpen(false); 
+          if (typeof window !== 'undefined' && window.location.pathname === '/') {
+            e.preventDefault();
+            document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); 
+          }
+        }} className={activeSection === 'projects' ? 'active' : ''}>Projects</Link>
+        <Link href="/#why-choose-us" onClick={(e) => { 
+          setMobileMenuOpen(false); 
+          if (typeof window !== 'undefined' && window.location.pathname === '/') {
+            e.preventDefault();
+            document.getElementById('why-choose-us')?.scrollIntoView({ behavior: 'smooth' }); 
+          }
+        }} className={activeSection === 'why-choose-us' ? 'active' : ''}>Why Choose Us</Link>
         
         <div 
           className="nav-dropdown-wrapper" 
@@ -156,7 +189,10 @@ export function Header() {
                 setDropdownOpen(dropdownOpen === 'learning' ? '' : 'learning');
               } else {
                 setMobileMenuOpen(false);
-                document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' });
+                if (window.location.pathname === '/') {
+                  e.preventDefault();
+                  document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' });
+                }
               }
             }} 
             className={activeSection === 'learning' ? 'active' : ''}
@@ -165,10 +201,10 @@ export function Header() {
           </Link>
           {dropdownOpen === 'learning' && (
             <div className="nav-dropdown" style={{ display: 'flex', flexDirection: 'column' }}>
-              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' }); }}>Learning Home</Link>
-              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' }); }}>Courses</Link>
-              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' }); }}>Internships</Link>
-              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' }); }}>Workshops</Link>
+              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Learning Home</Link>
+              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Courses</Link>
+              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Internships</Link>
+              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Workshops</Link>
               <Link href="/certificate" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Verify Certificates</Link>
             </div>
           )}

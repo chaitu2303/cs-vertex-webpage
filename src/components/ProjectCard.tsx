@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
-import { Code2, ExternalLink, FileText, ImageIcon, X, CheckCircle, ArrowRight } from "lucide-react"
+import { Code2, ExternalLink, FileText, Image as ImageIcon, X, CheckCircle, ArrowRight } from "lucide-react"
 
 export function ProjectCard({ project }: { project: any }) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -50,9 +50,13 @@ export function ProjectCard({ project }: { project: any }) {
             </div>
           )}
           
-          <div className="project-badges">
-            {project.category && <span className="category-badge">{project.category}</span>}
-            {project.isFeatured && <span className="featured-badge">Featured</span>}
+          <div className="project-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            {project.category && project.category.split(',').filter(Boolean).map((cat: string, i: number) => (
+              <span key={i} className="category-badge" style={{ borderRadius: '20px', padding: '4px 12px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)', border: '1px solid rgba(255,255,255,0.2)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.05em', color: '#fff', textTransform: 'uppercase' }}>
+                {cat.trim()}
+              </span>
+            ))}
+            {project.isFeatured && <span className="featured-badge" style={{ borderRadius: '20px', padding: '4px 12px', background: 'var(--acid)', color: '#000', fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', boxShadow: '0 0 10px rgba(204, 255, 0, 0.4)' }}>Featured</span>}
           </div>
 
           <div className="project-hover-overlay">
@@ -165,6 +169,20 @@ export function ProjectCard({ project }: { project: any }) {
                     <section className="pm-section pm-card">
                       <h3 className="pm-heading-small">Use Case</h3>
                       <p className="pm-text-small">{project.useCase}</p>
+                    </section>
+                  )}
+
+                  {project.timeline && (
+                    <section className="pm-section pm-card">
+                      <h3 className="pm-heading-small">Timeline</h3>
+                      <p className="pm-text-small">{project.timeline}</p>
+                    </section>
+                  )}
+
+                  {project.status && (
+                    <section className="pm-section pm-card">
+                      <h3 className="pm-heading-small">Development Status</h3>
+                      <p className="pm-text-small" style={{ color: project.status === 'Active' ? 'var(--acid)' : '#888' }}>{project.status}</p>
                     </section>
                   )}
                 </div>

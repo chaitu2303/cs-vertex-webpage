@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Courses', path: '/admin/courses', icon: BookOpen },
     { label: 'Webinars', path: '/admin/webinars', icon: Clock },
     { label: 'Certificates', path: '/admin/certificates', icon: CheckCircle },
-    { label: 'Marketing Posters', path: '/admin/marketing/posters', icon: FileImage },
+    { label: 'Notice Board', path: '/admin/announcements', icon: FileImage },
     { label: 'Waitlist', path: '/admin/marketing/waitlist', icon: Users },
     { label: 'Clients', path: '/admin/clients', icon: Users },
     { label: 'Quotes & Leads', path: '/admin/quotes', icon: DollarSign },
@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ]
 
   return (
-    <div className="flex h-screen bg-[#050505] text-gray-100 font-sans overflow-hidden">
+    <div className="flex min-h-screen bg-[#050505] text-gray-100 font-sans overflow-hidden">
       
       {/* Mobile Sidebar Toggle */}
       <button 
@@ -39,8 +39,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </button>
 
       {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-[#222] flex flex-col transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <div className="h-16 flex items-center px-6 border-b border-[#222] gap-3">
+      <aside className={`fixed lg:sticky lg:top-0 lg:h-screen inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-[#222] flex flex-col transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+        <div className="h-16 flex items-center px-6 border-b border-[#222] gap-3 shrink-0">
           <div className="w-8 h-8 rounded bg-[#FF6B2C] flex items-center justify-center font-bold text-black tracking-tighter">CS</div>
           <span className="font-semibold tracking-wide text-white text-sm">Enterprise UI</span>
         </div>
@@ -70,7 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="p-4 border-t border-[#222]">
+        <div className="p-4 border-t border-[#222] shrink-0">
           <Link href="/" className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-[#1a1a1a] transition-all">
             <LogOut size={16} />
             Exit Admin

@@ -23,7 +23,7 @@ export async function syncToJSON(key: string) {
     } else if (key === 'team') {
       data = await prisma.teamMember.findMany({ orderBy: { order: 'asc' } })
     } else if (key === 'announcements') {
-      data = await prisma.announcement.findMany({ orderBy: { createdAt: 'desc' } })
+      data = await prisma.announcement.findMany({ orderBy: [{ priority: 'desc' }, { order: 'asc' }, { createdAt: 'desc' }] })
     } else if (key === 'testimonials') {
       data = await prisma.testimonial.findMany({ orderBy: { createdAt: 'desc' } })
     } else if (key === 'courses') {
@@ -42,21 +42,6 @@ export async function syncToJSON(key: string) {
 }
 
 export async function readFromJSON<T>(key: string, fetchFallback: () => Promise<T>): Promise<T> {
-  const filePath = path.join(dataDir, `${key}.json`)
-  try {
-    if (fs.existsSync(filePath)) {
-      const content = fs.readFileSync(filePath, 'utf-8')
-      return JSON.parse(content) as T
-    }
-  } catch (e) {
-    console.error(`Error reading ${key}.json:`, e)
-  }
-  
-  const data = await fetchFallback()
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8')
-  } catch (e) {
-    console.error(`Error writing fallback to ${key}.json:`, e)
-  }
-  return data
+  // Always fetch fresh from DB to avoid stale cache issues
+  return fetchFallback();
 }

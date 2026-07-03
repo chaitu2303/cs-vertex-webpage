@@ -43,6 +43,7 @@ model Service {
 
 model Project {
   id              String   @id @default(cuid())
+  slug            String?  @unique
   title           String
   category        String?
   shortSummary    String?
@@ -56,11 +57,13 @@ model Project {
   useCase         String?
   image           String?  // Main image placeholder URL
   galleryImages   String?  // JSON array of image URLs
+  timeline        String?
   github          String?
   liveDemo        String?
   documentation   String?
   isFeatured      Boolean  @default(false)
   published       Boolean  @default(true)
+  status          String   @default("Active")
   order           Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -76,6 +79,7 @@ model TeamMember {
   linkedinUrl String?
   githubUrl   String?
   email       String?
+  portfolioUrl String?
   published   Boolean  @default(true)
   order       Int      @default(0)
   createdAt   DateTime @default(now())
@@ -311,12 +315,22 @@ model FormSubmission {
 
 model Announcement {
   id          String   @id @default(cuid())
-  title       String
-  category    String   // "Company Update", "Recruitment", "Brochure", "Offer"
-  content     String
-  fileUrl     String?  // URL to PDF brochure or details
+  title       String?
+  subtitle    String?
+  category    String   @default("Company Update")
+  content     String?
+  offerTag    String?  // "50% OFF", "FREE", "LIMITED"
+  buttonText  String?  // "Apply Now", "Learn More"
+  buttonUrl   String?  // URL for the button
+  fileUrl     String?  // Main image/poster URL
   isPinned    Boolean  @default(false)
+  isFeatured  Boolean  @default(false)
   published   Boolean  @default(true)
+  status      String   @default("Active") // Active, Hidden, Archived
+  priority    Int      @default(0)
+  order       Int      @default(0)
+  startDate   DateTime?
+  endDate     DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

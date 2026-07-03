@@ -30,6 +30,7 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
         linkedinUrl: body.linkedinUrl,
         githubUrl: body.githubUrl,
         email: body.email,
+        portfolioUrl: body.portfolioUrl,
         published: body.published,
         order: body.order
       }

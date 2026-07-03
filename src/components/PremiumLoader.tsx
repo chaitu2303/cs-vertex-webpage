@@ -13,29 +13,9 @@ const LOADER_MESSAGES = [
 export function PremiumLoader() {
   const [msgIndex, setMsgIndex] = useState(0)
   const [visible, setVisible] = useState(true)
-  const [fadeOut, setFadeOut] = useState(false)
 
   useEffect(() => {
-    // 1. Cycle status text messages
-    const msgInterval = setInterval(() => {
-      setMsgIndex((prev) => (prev + 1) % LOADER_MESSAGES.length)
-    }, 600)
-
-    // 2. Start CSS opacity fade-out transition at 1.1s
-    const fadeTimer = setTimeout(() => {
-      setFadeOut(true)
-    }, 1100)
-
-    // 3. Fully unmount the loader from DOM at 1.45s
-    const destroyTimer = setTimeout(() => {
-      setVisible(false)
-    }, 1450)
-
-    return () => {
-      clearInterval(msgInterval)
-      clearTimeout(fadeTimer)
-      clearTimeout(destroyTimer)
-    }
+    setVisible(false)
   }, [])
 
   if (!visible) return null
@@ -52,9 +32,9 @@ export function PremiumLoader() {
       justifyContent: 'center',
       gap: '36px',
       overflow: 'hidden',
-      opacity: fadeOut ? 0 : 1,
+      opacity: 1,
       transition: 'opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
-      pointerEvents: fadeOut ? 'none' : 'auto'
+      pointerEvents: 'auto'
     }}>
       {/* Background Matrix Grid */}
       <div style={{

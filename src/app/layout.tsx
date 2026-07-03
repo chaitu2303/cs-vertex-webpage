@@ -5,6 +5,7 @@ import "./globals.css";
 import { ScrollProgress } from "../components/ScrollProgress";
 import { StructuredData } from "../components/StructuredData";
 import { PremiumLoader } from "../components/PremiumLoader";
+import { FloatingActions } from "../components/FloatingActions";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -96,6 +97,7 @@ export default function RootLayout({
         <PremiumLoader />
         <ScrollProgress />
         {children}
+        <FloatingActions />
       </body>
     </html>
   );
