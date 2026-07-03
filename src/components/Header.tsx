@@ -317,15 +317,16 @@ export function Header() {
             flex-direction: column;
             align-items: flex-start;
             position: absolute;
-            top: 72px; /* Adjusted for 72px header */
+            top: 100px; /* Adjusted for 100px header */
             left: 0;
             width: 100%;
-            height: calc(100vh - 72px);
+            height: calc(100vh - 100px);
             overflow-y: auto;
             background: #050505;
             padding: 0 4vw 80px 4vw;
             border-bottom: 1px solid #333;
             z-index: 49;
+            -webkit-overflow-scrolling: touch;
           }
           .desktop-nav.mobile-open > a, 
           .desktop-nav.mobile-open .nav-dropdown-wrapper > a,
@@ -387,6 +388,20 @@ export function Header() {
           }
           .desktop-nav.mobile-open .mega-title {
             margin-bottom: 5px !important;
+          }
+          .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 100;
+            padding: 10px;
+          }
+          .menu-toggle span {
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: #fff;
+            transition: all 0.3s ease;
           }
         }
         @media(max-width: 768px) {

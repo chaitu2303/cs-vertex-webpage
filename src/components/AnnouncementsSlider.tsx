@@ -309,67 +309,92 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
         }
         
         .nb-lightbox-close {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: rgba(255,255,255,0.1);
-          border: none;
-          color: white;
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: 0.2s;
-          z-index: 100000;
+          position: absolute !important;
+          top: 20px !important;
+          right: 20px !important;
+          background: rgba(255,255,255,0.1) !important;
+          border: none !important;
+          color: white !important;
+          width: 44px !important;
+          min-width: 44px !important;
+          max-width: 44px !important;
+          height: 44px !important;
+          min-height: 44px !important;
+          max-height: 44px !important;
+          border-radius: 50% !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          transition: 0.2s !important;
+          z-index: 100000 !important;
+          padding: 0 !important;
+          margin: 0 !important;
         }
-        .nb-lightbox-close:hover { background: rgba(255,107,44,0.8); }
+        .nb-lightbox-close:hover { background: rgba(255,107,44,0.8) !important; }
         
         .nb-lightbox-download {
-          position: absolute;
-          bottom: -50px;
-          background: rgba(255,255,255,0.1);
-          color: white;
-          padding: 10px 20px;
-          border-radius: 30px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          text-decoration: none;
-          font-size: 14px;
-          transition: 0.2s;
-          border: 1px solid rgba(255,255,255,0.2);
+          position: absolute !important;
+          bottom: -50px !important;
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          background: rgba(255,255,255,0.1) !important;
+          color: white !important;
+          padding: 10px 20px !important;
+          border-radius: 30px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px !important;
+          text-decoration: none !important;
+          font-size: 14px !important;
+          transition: 0.2s !important;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          width: auto !important;
+          min-width: 140px !important;
+          white-space: nowrap !important;
         }
-        .nb-lightbox-download:hover { background: rgba(255,255,255,0.2); }
+        .nb-lightbox-download:hover { background: rgba(255,255,255,0.2) !important; }
         
         .nb-lightbox-nav {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          background: rgba(255,255,255,0.05);
-          border: none;
-          color: white;
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: 0.2s;
-          z-index: 100000;
+          position: absolute !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+          background: rgba(255,255,255,0.05) !important;
+          border: none !important;
+          color: white !important;
+          width: 60px !important;
+          min-width: 60px !important;
+          max-width: 60px !important;
+          height: 60px !important;
+          min-height: 60px !important;
+          max-height: 60px !important;
+          border-radius: 50% !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          transition: 0.2s !important;
+          z-index: 100000 !important;
+          padding: 0 !important;
+          margin: 0 !important;
         }
-        .nb-lightbox-nav:hover { background: rgba(255,255,255,0.2); }
-        .nb-lightbox-nav.prev { left: 30px; }
-        .nb-lightbox-nav.next { right: 30px; }
+        .nb-lightbox-nav:hover { background: rgba(255,255,255,0.2) !important; }
+        .nb-lightbox-nav.prev { left: 30px !important; }
+        .nb-lightbox-nav.next { right: 30px !important; }
         
         @media (max-width: 768px) {
-          .nb-lightbox-nav { width: 40px; height: 40px; }
-          .nb-lightbox-nav.prev { left: 10px; }
-          .nb-lightbox-nav.next { right: 10px; }
-          .nb-lightbox-img { max-height: 80vh; }
+          .nb-lightbox-nav { 
+            width: 44px !important; 
+            min-width: 44px !important;
+            max-width: 44px !important;
+            height: 44px !important; 
+            min-height: 44px !important;
+            max-height: 44px !important;
+          }
+          .nb-lightbox-nav.prev { left: 10px !important; }
+          .nb-lightbox-nav.next { right: 10px !important; }
+          .nb-lightbox-img { max-height: 75vh !important; }
         }
 
         .nb-img-wrap:hover .nb-img-zoom-hint {
@@ -697,22 +722,24 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
         }
 
         /* Mobile */
-        @media (max-width: 700px) {
+        @media (max-width: 900px) {
           .nb-section { padding: 60px 4vw; }
+          .nb-slide { width: 100%; flex: 0 0 100%; min-width: 100%; }
           .nb-card { flex-direction: column; min-height: unset; }
           .nb-img-wrap {
             width: 100%;
             min-width: unset;
-            height: 220px;
+            height: 280px;
           }
-          .nb-img { max-height: 220px; padding: 0; object-fit: contain; }
+          .nb-img { max-height: 280px; padding: 0; object-fit: contain; }
           .nb-img-overlay {
-            background: linear-gradient(to bottom, transparent 70%, #0e0e0e 100%);
+            background: linear-gradient(to bottom, transparent 60%, #0e0e0e 100%);
           }
           .nb-content { padding: 20px 20px 24px; gap: 10px; }
           .nb-card-title { font-size: 20px; }
           .nb-desc { -webkit-line-clamp: 2; font-size: 13px; }
           .nb-header { flex-direction: column; align-items: flex-start; margin-bottom: 24px; }
+          .nb-nav-btns { align-self: flex-end; margin-top: -40px; }
         }
       `}</style>
     </section>
