@@ -1,0 +1,593 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "sqlite"
+  url       = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String   @default("Admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HeroSetting {
+  id               String   @id @default(cuid())
+  positioningText  String
+  ledeText         String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Service {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  businessValue String?
+  icon          String?
+  deliverables  String?  // JSON or comma separated
+  industries    String?  // JSON or comma separated
+  published     Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  title           String
+  category        String?
+  shortSummary    String?
+  challenge       String
+  solution        String
+  technologies    String   // Comma separated list
+  impact          String
+  objectives      String?
+  features        String?
+  outcomes        String?
+  useCase         String?
+  image           String?  // Main image placeholder URL
+  galleryImages   String?  // JSON array of image URLs
+  github          String?
+  liveDemo        String?
+  documentation   String?
+  isFeatured      Boolean  @default(false)
+  published       Boolean  @default(true)
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model TeamMember {
+  id          String   @id @default(cuid())
+  name        String
+  role        String
+  expertise   String?
+  bio         String
+  image       String?
+  linkedinUrl String?
+  githubUrl   String?
+  email       String?
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Technology {
+  id          String   @id @default(cuid())
+  name        String
+  category    String   // e.g., "Software & Web", "AI & Data"
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Internship {
+  id           String   @id @default(cuid())
+  title        String?  // Program Name
+  description  String?
+  duration     String
+  mode         String?  // Remote, Hybrid
+  department   String?
+  stipend      String?
+  location     String?
+  eligibility  String?
+  requirements String?
+  skills       String?
+  benefits     String
+  openDate     DateTime?
+  closeDate    DateTime?
+  lastDate     DateTime?
+  seats        Int?
+  status       String   @default("Open") // Open, Closed
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  applications InternshipApplication[]
+}
+
+model Course {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  duration     String
+  level        String?
+  syllabus     String?
+  price        String?
+  trainer      String?
+  banner       String?
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  registrations CourseRegistration[]
+}
+
+model Workshop {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  date         DateTime?
+  time         String?
+  speaker      String?
+  mode         String?
+  seats        Int?
+  banner       String?
+  status       String   @default("Upcoming") // Upcoming, Past
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  registrations WorkshopRegistration[]
+}
+
+model InternshipApplication {
+  id           String     @id @default(cuid())
+  userId       String?
+  customer     Customer?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  internshipId String
+  internship   Internship @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  fullName     String
+  email        String
+  phone        String
+  college      String
+  degree       String?
+  branch       String
+  currentYear  String?
+  cgpa         String?
+  preferredDomain String?
+  internshipMode  String?
+  duration        String?
+  availabilityDate String?
+  whyJoin         String?
+  skills       String?
+  linkedin     String?
+  github       String?
+  portfolio    String?
+  resumeUrl    String?
+  coverLetter  String?
+  status       String     @default("Pending") // Pending, Shortlisted, Rejected, Waitlisted
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model JobApplication {
+  id              String         @id @default(cuid())
+  careerPositionId String
+  careerPosition  CareerPosition @relation(fields: [careerPositionId], references: [id], onDelete: Cascade)
+  fullName        String
+  email           String
+  phone           String
+  location        String?
+  qualification   String?
+  experience      String?
+  college         String?
+  skills          String?
+  portfolio       String?
+  linkedin        String?
+  github          String?
+  resumeUrl       String?
+  coverLetter     String?
+  availability    String?
+  expectedSalary  String?
+  status          String         @default("Pending") // Pending, Shortlisted, Interviewing, Rejected, Hired
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model NotifyMe {
+  id             String   @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  interestedRole String
+  type           String   @default("Job") // "Job" or "Internship"
+  createdAt      DateTime @default(now())
+}
+
+model CourseRegistration {
+  id            String   @id @default(cuid())
+  userId        String
+  customer      Customer @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId      String
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  fullName      String
+  email         String
+  phone         String
+  college       String
+  qualification String
+  linkedin      String?
+  status        String   @default("Pending") // Pending, Approved, Rejected
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model WorkshopRegistration {
+  id            String   @id @default(cuid())
+  userId        String
+  customer      Customer @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workshopId    String
+  workshop      Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  fullName      String
+  email         String
+  phone         String
+  organization  String?
+  college       String?
+  linkedin      String?
+  status        String   @default("Pending") // Pending, Approved, Rejected
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  clientName  String
+  company     String?
+  email       String?
+  feedback    String
+  rating      Int      @default(5)
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Advertisement {
+  id            String   @id @default(cuid())
+  title         String
+  link          String?
+  image         String?
+  placementArea String   // e.g., "Sidebar", "Footer", "Internships"
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model FAQ {
+  id          String   @id @default(cuid())
+  question    String
+  answer      String
+  category    String   @default("General") // Web, AI, Cybersecurity, IoT, Billing, General, Careers
+  isPinned    Boolean  @default(false)
+  isFeatured  Boolean  @default(false)
+  viewCount   Int      @default(0)
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  author      String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FormSubmission {
+  id          String   @id @default(cuid())
+  formType    String   // "Contact", "Quote", "Internship", "Course", "Webinar", "Enquiry"
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  data        String?  // JSON string storing dynamic form fields
+  status      String   @default("New") // "New", "Reviewed", "Responded"
+  notes       String?
+  tags        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  title       String
+  category    String   // "Company Update", "Recruitment", "Brochure", "Offer"
+  content     String
+  fileUrl     String?  // URL to PDF brochure or details
+  isPinned    Boolean  @default(false)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -------------------------------------------------------------
+// Customer Portal Models
+// -------------------------------------------------------------
+
+model Customer {
+  id            String          @id // Maps to Supabase auth.users.id
+  email         String          @unique
+  name          String?
+  company       String?
+  phone         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  quotes        Quote[]
+  consults      Consultation[]
+  documents     Document[]
+  tickets       SupportTicket[]
+  projects               ClientProject[]
+  internshipApplications InternshipApplication[]
+  courseRegistrations    CourseRegistration[]
+  workshopRegistrations  WorkshopRegistration[]
+}
+
+model Quote {
+  id            String   @id @default(cuid())
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  service       String
+  budget        String?
+  description   String
+  status        String   @default("Pending Review") // Pending Review, Under Discussion, Proposal Sent, Approved, In Progress, Completed, Rejected
+  proposalUrl   String?
+  estimatedCost String?
+  timeline      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  messages      QuoteMessage[]
+}
+
+model Consultation {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  date        DateTime
+  notes       String?
+  status      String   @default("Scheduled") // Scheduled, Completed, Cancelled
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  title       String
+  type        String   // Proposal, Brochure, Quotation, Invoice
+  fileUrl     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SupportTicket {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  subject     String
+  message     String
+  status      String   @default("Open") // Open, In Progress, Resolved
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String   // Can be Customer.id or Admin.id
+  title       String
+  message     String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model ClientProject {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  name        String
+  status      String   @default("Active") // Active, On Hold, Completed
+  progress    Int      @default(0) // 0-100
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  milestones  ProjectMilestone[]
+  messages    ProjectMessage[]
+}
+
+model ProjectMilestone {
+  id              String   @id @default(cuid())
+  clientProjectId String
+  project         ClientProject @relation(fields: [clientProjectId], references: [id], onDelete: Cascade)
+  title           String
+  status          String   @default("Pending") // Pending, In Progress, Completed
+  dueDate         DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ProjectMessage {
+  id              String   @id @default(cuid())
+  clientProjectId String
+  project         ClientProject @relation(fields: [clientProjectId], references: [id], onDelete: Cascade)
+  sender          String   // "Admin" or "Customer"
+  text            String
+  fileUrl         String?
+  createdAt       DateTime @default(now())
+}
+
+model QuoteMessage {
+  id        String   @id @default(cuid())
+  quoteId   String
+  quote     Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  sender    String   // "Admin" or "Customer"
+  text      String
+  fileUrl   String?
+  createdAt DateTime @default(now())
+}
+
+model LaunchRegistration {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  isFounder Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String?
+  fileUrl     String
+  type        String   @default("Image") // Image, Video
+  category    String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ClientLogo {
+  id          String   @id @default(cuid())
+  companyName String
+  industry    String?
+  websiteUrl  String?
+  logoUrl     String
+  altText     String?
+  order       Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CareerPosition {
+  id             String   @id @default(cuid())
+  title          String
+  department     String
+  location       String
+  type           String   // Full-time, Part-time, Contract
+  remote         Boolean  @default(false)
+  description    String?
+  responsibilities String?
+  requirements   String
+  skills         String?
+  salary         String?
+  deadline       DateTime?
+  status         String   @default("Open") // Open, Closed, Draft
+  published      Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  applications   JobApplication[]
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   // JSON string or plain text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  adminId   String?
+  action    String
+  resource  String
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+model AdminTask {
+  id        String   @id @default(cuid())
+  adminId   String
+  title     String
+  status    String   @default("Pending") // Pending, In Progress, Completed
+  dueDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdminEvent {
+  id        String   @id @default(cuid())
+  title     String
+  date      DateTime
+  adminId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Certificate {
+  id            String   @id @default(cuid())
+  certificateId String   @unique
+  studentName   String
+  email         String
+  course        String
+  type          String
+  issueDate     DateTime
+  status        String   @default("Valid")
+  fileUrl       String
+  qrCodeUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Poster {
+  id           String   @id @default(cuid())
+  title        String
+  subtitle     String?
+  description  String?
+  image        String
+  thumbnail    String?
+  buttonText   String?
+  buttonUrl    String?
+  category     String   @default("Offers")
+  priority     Int      @default(0)
+  displayOrder Int      @default(0)
+  featured     Boolean  @default(false)
+  published    Boolean  @default(false)
+  openInModal  Boolean  @default(false)
+  showOnHome   Boolean  @default(true)
+  showInOffers Boolean  @default(false)
+  scheduleDate DateTime?
+  expiryDate   DateTime?
+  status       String   @default("Draft") // Draft, Published, Scheduled, Expired, Archived
+  views        Int      @default(0)
+  clicks       Int      @default(0)
+  createdBy    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Analytics {
+  id           String   @id @default(cuid())
+  path         String
+  views        Int      @default(0)
+  uniqueUsers  Int      @default(0)
+  deviceType   String?
+  browser      String?
+  country      String?
+  date         DateTime @default(now())
+}
+

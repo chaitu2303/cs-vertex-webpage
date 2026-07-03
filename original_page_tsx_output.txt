@@ -1,0 +1,1 @@
+I will view the main application page `src/app/page.tsx` to see how sections are arranged and how headings are styled.

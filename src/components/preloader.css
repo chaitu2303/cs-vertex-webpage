@@ -1,0 +1,232 @@
+/* ═══════════════════════════════════════════════════════════════════
+   CS VERTEX — PREMIUM PRELOADER STYLES
+   ═══════════════════════════════════════════════════════════════════ */
+
+.preloader-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #000000;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader-overlay.preloader-exiting {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Ambient Background Glow */
+.preloader-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 106, 0, 0.07) 0%, rgba(255, 106, 0, 0.02) 40%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate3d(0, 0, 0);
+  animation: glow-pulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes glow-pulse {
+  0% {
+    transform: scale(0.9) translate3d(0, 0, 0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.1) translate3d(0, 0, 0);
+    opacity: 1.2;
+  }
+}
+
+/* Background Canvas */
+.preloader-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.45;
+}
+
+/* Center Logo Container */
+.preloader-center {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader-logo-wrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Logo */
+.preloader-logo-base {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(255, 106, 0, 0.15));
+  animation: logo-pulse 4s ease-in-out infinite;
+}
+
+@keyframes logo-pulse {
+  0%, 100% {
+    transform: scale(0.975);
+    filter: drop-shadow(0 0 12px rgba(255, 106, 0, 0.2));
+  }
+  50% {
+    transform: scale(1.025);
+    filter: drop-shadow(0 0 25px rgba(255, 106, 0, 0.45));
+  }
+}
+
+/* Reflection Sweep Overlay */
+.preloader-logo-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  
+  /* Mask using the same logo file */
+  mask-image: url('/assets/logo/csvertex-logo.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: url('/assets/logo/csvertex-logo.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  
+  /* Metallic light sweep */
+  background: linear-gradient(110deg, 
+    transparent 35%, 
+    rgba(255, 255, 255, 0.35) 45%, 
+    rgba(255, 255, 255, 0.75) 50%, 
+    rgba(255, 255, 255, 0.35) 55%, 
+    transparent 65%
+  );
+  background-size: 250% 100%;
+  background-position-x: 180%;
+  mix-blend-mode: overlay;
+  
+  /* Continuous loop animation */
+  animation: shine-sweep 4s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+@keyframes shine-sweep {
+  0% {
+    background-position-x: 180%;
+  }
+  70% {
+    background-position-x: -80%;
+  }
+  100% {
+    background-position-x: -80%;
+  }
+}
+
+/* Intensify shine on exit reveal */
+.preloader-exiting .preloader-logo-wrap {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 45px rgba(255, 106, 0, 0.75));
+}
+
+.preloader-exiting .preloader-logo-shine {
+  animation: shine-sweep-exit 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes shine-sweep-exit {
+  0% {
+    background-position-x: 180%;
+  }
+  100% {
+    background-position-x: -80%;
+  }
+}
+
+/* Loading Subtext */
+.preloader-text {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin-top: 15px;
+  transition: opacity 0.6s ease;
+  animation: text-breathing 3.5s ease-in-out infinite;
+}
+
+.preloader-exiting .preloader-text {
+  opacity: 0;
+}
+
+@keyframes text-breathing {
+  0%, 100% {
+    opacity: 0.35;
+    letter-spacing: 0.33em;
+  }
+  50% {
+    opacity: 0.85;
+    letter-spacing: 0.38em;
+    color: rgba(255, 106, 0, 0.95);
+    text-shadow: 0 0 10px rgba(255, 106, 0, 0.3);
+  }
+}
+
+/* Fully Rounded Progress Bar Capsule */
+.preloader-progress-wrap {
+  width: 220px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  margin-top: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.preloader-exiting .preloader-progress-wrap {
+  opacity: 0;
+}
+
+/* Glowing Orange Progress Indicator */
+.preloader-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff5000 0%, #ff8c28 100%);
+  box-shadow: 0 0 10px rgba(255, 106, 0, 0.7);
+  border-radius: 6px;
+  width: 0%;
+  transition: width 0.1s ease-out;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   CONTENT CONTAINER WRAPPER
+   ───────────────────────────────────────────────────────────────── */
+.preloader-content {
+  opacity: 0;
+  transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader-content.preloader-content-visible {
+  opacity: 1;
+}

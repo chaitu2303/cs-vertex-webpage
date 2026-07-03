@@ -1,0 +1,1 @@
+"python -c \"import json; data = [json.loads(line) for line in open('C:/Users/user/.gemini/antigravity/brain/de44c105-589c-4863-94a6-56560092161a/.system_generated/logs/transcript.jsonl', encoding='utf-8') if 'orbit-visual' in line]; print([d.get('content', d.get('tool_calls', d)) for d in data])\" > temp.txt"
