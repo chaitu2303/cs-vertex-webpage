@@ -188,7 +188,6 @@ export default function PostersAdminPage() {
               <div style={{ marginBottom: '10px' }}>
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#aaa' }}>Poster Image *</label>
                 <ImageUploader 
-                  aspectRatio={16/9} 
                   currentImage={formData.image} 
                   onUploadSuccess={(url) => setFormData({...formData, image: url})} 
                 />

@@ -13,12 +13,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 })
     }
 
-    // Insert email directly into launch_notifications table using Prisma raw query
-    await prisma.$executeRaw`
-      INSERT INTO launch_notifications (email) 
-      VALUES (${email})
-      ON CONFLICT (email) DO NOTHING
-    `
+    // Insert email into LaunchRegistration table
+    await prisma.launchRegistration.upsert({
+      where: { email },
+      update: {},
+      create: { email }
+    })
 
     // Optional Resend email confirmation
     if (resend) {

@@ -20,6 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Webinars', path: '/admin/webinars', icon: Clock },
     { label: 'Certificates', path: '/admin/certificates', icon: CheckCircle },
     { label: 'Marketing Posters', path: '/admin/marketing/posters', icon: FileImage },
+    { label: 'Waitlist', path: '/admin/marketing/waitlist', icon: Users },
     { label: 'Clients', path: '/admin/clients', icon: Users },
     { label: 'Quotes & Leads', path: '/admin/quotes', icon: DollarSign },
     { label: 'Recruitment', path: '/admin/recruitment', icon: Briefcase },
