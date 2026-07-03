@@ -4,8 +4,12 @@ import { prisma } from './prisma'
 
 const dataDir = path.join(process.cwd(), 'data')
 
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true })
+try {
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true })
+  }
+} catch (e) {
+  console.warn("Read-only filesystem detected, proceeding without local data dir.")
 }
 
 export async function syncToJSON(key: string) {
