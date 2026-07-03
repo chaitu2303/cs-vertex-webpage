@@ -12,50 +12,29 @@ export function ImageUploader({ onUploadSuccess, currentImage }: ImageUploaderPr
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const processImage = (file: File) => {
+  const processImage = async (file: File) => {
     setIsUploading(true)
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const img = new Image()
-      img.onload = () => {
-        // Create canvas to compress image
-        const canvas = document.createElement('canvas')
-        const MAX_WIDTH = 1200
-        const MAX_HEIGHT = 1600
-        let width = img.width
-        let height = img.height
+    const formData = new FormData()
+    formData.append('file', file)
 
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width
-            width = MAX_WIDTH
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height
-            height = MAX_HEIGHT
-          }
-        }
-
-        canvas.width = width
-        canvas.height = height
-        const ctx = canvas.getContext('2d')
-        ctx?.drawImage(img, 0, 0, width, height)
-
-        // Compress and convert to Base64 (quality 0.7 for heavy optimization)
-        const base64DataUrl = canvas.toDataURL('image/jpeg', 0.7)
-        
-        // Pass base64 directly as URL instead of hitting read-only filesystem
-        onUploadSuccess(base64DataUrl)
-        setIsUploading(false)
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (data.success) {
+        alert("Upload Successful")
+        onUploadSuccess(data.url)
+      } else {
+        alert(data.message || "Error uploading image")
       }
-      img.onerror = () => {
-        alert("Failed to read image file.")
-        setIsUploading(false)
-      }
-      img.src = e.target?.result as string
+    } catch (error) {
+      console.error(error)
+      alert("Error uploading image")
+    } finally {
+      setIsUploading(false)
     }
-    reader.readAsDataURL(file)
   }
 
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -60,19 +60,18 @@ export function PosterGallery({ posters }: { posters: any[] }) {
 
       <style>{`
         .posters-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 40px;
-          align-items: start;
+          column-count: 1;
+          column-gap: 40px;
+          width: 100%;
         }
         @media (min-width: 768px) {
           .posters-grid {
-            grid-template-columns: repeat(2, 1fr);
+            column-count: 2;
           }
         }
         @media (min-width: 1024px) {
           .posters-grid {
-            grid-template-columns: repeat(3, 1fr);
+            column-count: 3;
           }
         }
         .poster-card {
@@ -83,6 +82,8 @@ export function PosterGallery({ posters }: { posters: any[] }) {
           display: flex;
           flex-direction: column;
           cursor: pointer;
+          break-inside: avoid;
+          margin-bottom: 40px;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           animation: fadeZoomIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           opacity: 0;

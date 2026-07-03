@@ -62,9 +62,9 @@ export function Header() {
 
   return (
     <header className="site-header">
-      <div className="brand" style={{ display: 'flex', alignItems: 'center', marginLeft: '-15px' }}>
+      <div className="brand" style={{ display: 'flex', alignItems: 'center' }}>
         <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <Image src="/logo-nav.png" alt="CS Vertex Logo" width={180} height={65} priority style={{ objectFit: 'contain' }} />
+          <Image src="/logo-nav.png" alt="CS Vertex Logo" width={140} height={50} priority style={{ objectFit: 'contain' }} />
         </Link>
       </div>
       
@@ -88,7 +88,7 @@ export function Header() {
             }} 
             className={['leadership', 'company', 'vision', 'mission', 'msme'].includes(activeSection) || activeSection === 'about' ? 'active' : ''}
           >
-            About ▼
+            <span style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>About <span className="mobile-chevron">▼</span></span>
           </Link>
           {dropdownOpen === 'about' && (
             <div className="nav-dropdown" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -121,7 +121,7 @@ export function Header() {
             }} 
             className={activeSection === 'services' ? 'active' : ''}
           >
-            Services ▼
+            <span style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>Services <span className="mobile-chevron">▼</span></span>
           </Link>
           {dropdownOpen === 'services' && (
             <div className="nav-dropdown mega-dropdown">
@@ -161,7 +161,7 @@ export function Header() {
             }} 
             className={activeSection === 'learning' ? 'active' : ''}
           >
-            Learning ▼
+            <span style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>Learning <span className="mobile-chevron">▼</span></span>
           </Link>
           {dropdownOpen === 'learning' && (
             <div className="nav-dropdown" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -234,6 +234,8 @@ export function Header() {
           flex-direction: column;
           gap: 10px;
         }
+        .desktop-nav a { display: flex; align-items: center; }
+        .mobile-chevron { display: none; }
         .mega-title {
           font-size: 11px;
           font-family: var(--mono, monospace);
@@ -273,6 +275,7 @@ export function Header() {
           .desktop-nav {
             display: none;
           }
+          .mobile-chevron { display: inline-block; font-size: 10px; }
           .desktop-nav.mobile-open {
             display: flex !important;
             flex-direction: column;
@@ -281,19 +284,29 @@ export function Header() {
             top: 72px; /* Adjusted for 72px header */
             left: 0;
             width: 100%;
-            max-height: calc(100vh - 72px);
+            height: calc(100vh - 72px);
             overflow-y: auto;
             background: #050505;
-            padding: 20px 4vw 60px 4vw;
+            padding: 0 4vw 80px 4vw;
             border-bottom: 1px solid #333;
             z-index: 49;
           }
-          .desktop-nav.mobile-open a, .desktop-nav.mobile-open .portal-menu-wrapper {
+          .desktop-nav.mobile-open > a, 
+          .desktop-nav.mobile-open .nav-dropdown-wrapper > a,
+          .desktop-nav.mobile-open .portal-menu-wrapper > a {
             width: 100%;
             text-align: left;
             font-size: 14px;
-            padding: 15px 0;
+            padding: 20px 0;
             border-bottom: 1px solid #222;
+            color: #fff;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+          }
+          .desktop-nav.mobile-open .portal-menu-wrapper {
+            width: 100%;
+            border-bottom: none;
+            padding-top: 15px;
           }
           .desktop-nav.mobile-open .nav-dropdown-wrapper {
             width: 100%;
@@ -306,15 +319,26 @@ export function Header() {
             left: auto !important;
             box-shadow: none !important;
             border: none !important;
-            background: rgba(255,255,255,0.02) !important;
-            padding: 10px 0 10px 20px !important;
+            background: transparent !important;
+            padding: 10px 0 10px 15px !important;
             min-width: 100% !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 12px !important;
             animation: none !important;
-            border-left: 2px solid var(--acid) !important;
-            margin: 10px 0 !important;
+            border-left: 2px solid #333 !important;
+            margin: 0 !important;
+          }
+          .desktop-nav.mobile-open .nav-dropdown a, 
+          .desktop-nav.mobile-open .portal-dropdown a {
+            border-bottom: none !important;
+            padding: 8px 12px !important;
+            font-size: 13px !important;
+            color: #aaa;
+            letter-spacing: 0.05em;
+          }
+          .desktop-nav.mobile-open .nav-dropdown a:hover {
+            color: var(--acid);
           }
           .desktop-nav.mobile-open .mega-dropdown {
             width: 100% !important;

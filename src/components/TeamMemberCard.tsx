@@ -209,11 +209,9 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
           <X size={16} strokeWidth={2.5} />
         </button>
 
-        {/* ── Two-column layout ── */}
+        {/* ── Unified Layout ── */}
         <div className="tmc-body">
-
-          {/* LEFT: Photo + identity + mini links */}
-          <div className="tmc-left">
+          <div className="tmc-header-unified">
             <div className="tmc-photo-wrap">
               <Image
                 src={imageSrc}
@@ -228,12 +226,8 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
               />
               <div className="tmc-photo-glow" />
             </div>
-
-            {/* Name + role below photo */}
             <h2 className="tmc-name">{member.name}</h2>
             <p className="tmc-role">{member.role}</p>
-
-            {/* Mini icon row */}
             <div className="tmc-mini-links">
               {member.linkedinUrl && (
                 <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="tmc-icon-btn" title="LinkedIn">
@@ -258,16 +252,12 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
             </div>
           </div>
 
-          {/* RIGHT: About + Skills + Focus + Contact */}
-          <div className="tmc-right">
-
-            {/* About */}
+          <div className="tmc-content-unified">
             <section className="tmc-section">
               <h3 className="tmc-section-title">About</h3>
               <p className="tmc-about">{profile.about || member.bio}</p>
             </section>
 
-            {/* Core Skills as chips */}
             <section className="tmc-section">
               <h3 className="tmc-section-title">Core Skills</h3>
               <div className="tmc-chips">
@@ -280,7 +270,6 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
               </div>
             </section>
 
-            {/* Current Focus */}
             {profile.focus.length > 0 && (
               <section className="tmc-section">
                 <h3 className="tmc-section-title">Current Focus</h3>
@@ -296,38 +285,6 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
                 </ul>
               </section>
             )}
-
-            {/* Contact Buttons */}
-            <section className="tmc-section tmc-contact">
-              <h3 className="tmc-section-title">Contact</h3>
-              <div className="tmc-contact-btns">
-                {member.linkedinUrl && (
-                  <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="tmc-contact-btn tmc-contact-btn--primary">
-                    <LinkedInIcon /> LinkedIn
-                  </a>
-                )}
-                {hasGitHub ? (
-                  <a href={member.githubUrl!} target="_blank" rel="noopener noreferrer" className="tmc-contact-btn">
-                    <GitHubIcon /> GitHub
-                  </a>
-                ) : (
-                  <span className="tmc-contact-btn tmc-contact-btn--disabled" title="GitHub coming soon">
-                    <GitHubIcon /> GitHub
-                  </span>
-                )}
-                {member.email && (
-                  <a href={`mailto:${member.email}`} className="tmc-contact-btn">
-                    <Mail size={15} /> Email
-                  </a>
-                )}
-                {hasPortfolio && (
-                  <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="tmc-contact-btn">
-                    <Globe size={15} /> Portfolio
-                  </a>
-                )}
-              </div>
-            </section>
-
           </div>
         </div>
       </div>
@@ -398,87 +355,78 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
           transform: rotate(90deg);
         }
 
-        /* Body grid */
+        /* Unified Body */
         .tmc-body {
-          display: grid;
-          grid-template-columns: 280px 1fr;
-          gap: 0;
-        }
-
-        /* LEFT column */
-        .tmc-left {
-          padding: 36px 28px 36px 36px;
-          border-right: 1px solid rgba(255, 255, 255, 0.05);
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          gap: 0;
+        }
+
+        .tmc-header-unified {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          padding: 40px 24px 30px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          background: rgba(255,255,255,0.01);
+        }
+
+        .tmc-content-unified {
+          padding: 30px 40px 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 28px;
         }
 
         /* Photo */
         .tmc-photo-wrap {
           position: relative;
-          width: 100%;
-          aspect-ratio: 4 / 5;
-          border-radius: 18px;
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
           overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.06);
+          border: 2px solid rgba(255,255,255,0.08);
           background: #111;
           margin-bottom: 20px;
         }
         .tmc-photo-glow {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to bottom, transparent 60%, rgba(255,90,42,0.08) 100%);
+          background: linear-gradient(to bottom, transparent 60%, rgba(255,90,42,0.15) 100%);
           pointer-events: none;
         }
 
-        /* Name / role / badge */
+        /* Name / role */
         .tmc-name {
-          font-size: 20px;
+          font-size: 24px;
           font-weight: 700;
           color: #fff;
-          margin: 0 0 4px;
+          margin: 0 0 6px;
           letter-spacing: -0.02em;
-          line-height: 1.2;
         }
         .tmc-role {
-          font-size: 12px;
-          color: #888;
-          margin: 0 0 10px;
-          line-height: 1.4;
-        }
-        .tmc-badge {
-          display: inline-block;
-          background: rgba(255, 90, 42, 0.1);
-          border: 1px solid rgba(255, 90, 42, 0.25);
-          color: #FF5A2A;
-          font-size: 10px;
-          font-family: var(--mono, monospace);
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-          padding: 4px 10px;
-          border-radius: 20px;
-          margin-bottom: 18px;
+          font-size: 13px;
+          color: #aaa;
+          margin: 0 0 16px;
+          letter-spacing: 0.02em;
         }
 
         /* Mini icon links */
         .tmc-mini-links {
           display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
+          gap: 12px;
+          justify-content: center;
         }
         .tmc-icon-btn {
-          width: 34px;
-          height: 34px;
+          width: 38px;
+          height: 38px;
           display: flex;
           align-items: center;
           justify-content: center;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 8px;
-          color: #777;
+          border-radius: 10px;
+          color: #888;
           text-decoration: none;
           transition: all 0.2s ease;
         }
@@ -488,23 +436,16 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
           color: #FF5A2A;
         }
 
-        /* RIGHT column */
-        .tmc-right {
-          padding: 36px 36px 36px 32px;
-          display: flex;
-          flex-direction: column;
-          gap: 24px;
-          overflow: hidden;
-        }
-
         /* Sections */
         .tmc-section {
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          align-items: center;
+          text-align: center;
+          gap: 12px;
         }
         .tmc-section-title {
-          font-size: 10px;
+          font-size: 11px;
           font-family: var(--mono, monospace);
           font-weight: 600;
           text-transform: uppercase;
@@ -515,17 +456,20 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
 
         /* About text */
         .tmc-about {
-          font-size: 13.5px;
+          font-size: 14px;
           color: #a8a8a3;
-          line-height: 1.7;
+          line-height: 1.8;
           margin: 0;
+          max-width: 600px;
         }
 
         /* Skill chips */
         .tmc-chips {
           display: flex;
           flex-wrap: wrap;
-          gap: 7px;
+          gap: 8px;
+          justify-content: center;
+          max-width: 600px;
         }
         .tmc-chip {
           font-size: 11px;
@@ -533,12 +477,11 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
           color: #ccc;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.07);
-          padding: 5px 12px;
+          padding: 6px 14px;
           border-radius: 20px;
           letter-spacing: 0.04em;
           transition: all 0.2s ease;
           cursor: default;
-          white-space: nowrap;
         }
         .tmc-chip:hover {
           background: rgba(255,90,42,0.09);
@@ -553,96 +496,38 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
           padding: 0;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 10px;
+          align-items: center;
         }
         .tmc-focus-item {
           display: flex;
           align-items: center;
-          gap: 9px;
-          font-size: 13px;
+          gap: 10px;
+          font-size: 13.5px;
           color: #b0b0aa;
         }
         .tmc-check {
           color: #FF5A2A;
           display: flex;
-          flex-shrink: 0;
-        }
-
-        /* Contact */
-        .tmc-contact {
-          border-top: 1px solid rgba(255,255,255,0.05);
-          padding-top: 24px;
-          gap: 12px;
-        }
-        .tmc-contact-btns {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-        }
-        .tmc-contact-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 9px 16px;
-          border-radius: 8px;
-          font-size: 12px;
-          font-weight: 600;
-          text-decoration: none;
-          border: 1px solid rgba(255,255,255,0.08);
-          background: rgba(255,255,255,0.03);
-          color: #ddd;
-          transition: all 0.2s ease;
-          cursor: pointer;
-        }
-        .tmc-contact-btn:hover {
-          background: rgba(255,90,42,0.1);
-          border-color: rgba(255,90,42,0.35);
-          color: #FF5A2A;
-        }
-        .tmc-contact-btn--primary {
-          background: rgba(255,90,42,0.1);
-          border-color: rgba(255,90,42,0.25);
-          color: #FF5A2A;
-        }
-        .tmc-contact-btn--primary:hover {
-          background: rgba(255,90,42,0.2);
-          border-color: #FF5A2A;
-        }
-        .tmc-contact-btn--disabled {
-          opacity: 0.35;
-          cursor: not-allowed;
-          pointer-events: none;
         }
 
         /* ── Responsive ── */
         @media (max-width: 700px) {
-          .tmc-body {
-            grid-template-columns: 1fr;
+          .tmc-content-unified {
+            padding: 24px 20px 30px;
+            gap: 24px;
           }
-          .tmc-left {
-            padding: 24px 24px 16px;
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 0;
-            border-right: none;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+          .tmc-header-unified {
+            padding: 30px 20px 24px;
           }
           .tmc-photo-wrap {
-            width: 80px;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            margin-bottom: 0;
-            margin-right: 16px;
-            flex-shrink: 0;
+            width: 100px;
+            height: 100px;
           }
-          .tmc-name   { font-size: 18px; }
-          .tmc-role   { font-size: 11px; }
-          .tmc-badge  { margin-bottom: 10px; }
-          .tmc-mini-links { width: 100%; margin-top: 10px; }
-          .tmc-right  { padding: 20px 24px 24px; gap: 20px; }
-          .tmc-contact { padding-top: 16px; }
-          .tmc-contact-btn { flex-grow: 1; justify-content: center; }
+          .tmc-name { font-size: 22px; }
+          .tmc-role { font-size: 12px; }
+          .tmc-about { font-size: 13px; }
+          .tmc-focus-item { font-size: 13px; }
         }
       `}</style>
     </div>,

@@ -218,10 +218,7 @@ export default async function AboutPage() {
                       <span className="msme-label">Enterprise Type</span>
                       <span className="msme-value">Micro Enterprise</span>
                     </div>
-                    <div>
-                      <span className="msme-label">Registration Date</span>
-                      <span className="msme-value">Available in Admin</span>
-                    </div>
+
                     <div>
                       <span className="msme-label">Udyam Registration Number</span>
                       <span className="msme-value" style={{ color: 'var(--acid)', fontFamily: 'var(--mono)' }}>UDYAM-XX-XX-XXXXXXX</span>
