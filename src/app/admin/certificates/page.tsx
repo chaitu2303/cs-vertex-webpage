@@ -153,7 +153,7 @@ export default function CertificatesAdminPage() {
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#aaa' }}>Certificate File/Image</label>
                   <ImageUploader 
-                    aspectRatio={4/3} 
+                     
                     currentImage={formData.fileUrl} 
                     onUploadSuccess={(url) => setFormData({...formData, fileUrl: url})} 
                   />
@@ -161,7 +161,7 @@ export default function CertificatesAdminPage() {
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#aaa' }}>QR Code Image (Optional)</label>
                   <ImageUploader 
-                    aspectRatio={1} 
+                     
                     currentImage={formData.qrCodeUrl} 
                     onUploadSuccess={(url) => setFormData({...formData, qrCodeUrl: url})} 
                   />

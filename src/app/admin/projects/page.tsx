@@ -144,7 +144,7 @@ export default function ProjectsAdminPage() {
               <div style={{ marginBottom: '10px' }}>
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#aaa' }}>Project Image (16:9 Ratio)</label>
                 <ImageUploader 
-                  aspectRatio={16/9} 
+                   
                   currentImage={formData.image} 
                   onUploadSuccess={(url) => setFormData({...formData, image: url})} 
                 />

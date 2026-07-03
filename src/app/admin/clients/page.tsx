@@ -136,7 +136,7 @@ export default function ClientsAdminPage() {
               <div style={{ marginBottom: '10px' }}>
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#aaa' }}>Client Logo</label>
                 <ImageUploader 
-                  aspectRatio={1} 
+                   
                   currentImage={formData.logoUrl || ''} 
                   onUploadSuccess={(url) => setFormData({...formData, logoUrl: url})} 
                 />
