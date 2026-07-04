@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/server'
 import { prisma } from '@/lib/prisma'
 
 
@@ -30,10 +31,10 @@ export async function login(formData: FormData) {
   redirect('/portal')
 }
 
-import { sendWelcomeEmail } from '@/lib/email'
+import { sendWelcomeEmail, sendVerificationEmail, sendAdminNotificationNewUser } from '@/lib/email'
 
 export async function signup(formData: FormData) {
-  const supabase = await createClient()
+  const supabaseAdmin = createAdminClient()
 
   const data = {
     email: formData.get('email') as string,
@@ -44,12 +45,22 @@ export async function signup(formData: FormData) {
 
   let authData;
   try {
-    const { data: resultData, error } = await supabase.auth.signUp({
+    // Generate signup link (this creates the user without sending the default Supabase email)
+    const { data: resultData, error } = await supabaseAdmin.auth.admin.generateLink({
+      type: 'signup',
       email: data.email,
       password: data.password,
+      options: {
+        data: {
+          full_name: data.name,
+        }
+      }
     })
     
     if (error) {
+      if (error.message.includes('User already registered')) {
+        return { error: 'An account with this email already exists.' }
+      }
       return { error: error.message }
     }
     authData = resultData;
@@ -69,15 +80,22 @@ export async function signup(formData: FormData) {
         }
       })
       
-      // Send Welcome Email
-      await sendWelcomeEmail(data.email, data.name || 'Valued Customer')
+      // Send Custom HTML Verification Email
+      if (authData.properties?.action_link) {
+        await sendVerificationEmail(data.email, authData.properties.action_link)
+      }
+
+      // Notify Admin
+      const ip = 'Hidden' // IP logging would require headers() which isn't passed here easily, but we can set to generic or get from request later.
+      await sendAdminNotificationNewUser(data.email, data.name, ip, 'Customer')
+      
     } catch (e) {
       console.error('Failed to create customer profile', e)
     }
   }
 
-  revalidatePath('/portal')
-  redirect('/portal')
+  // Do NOT redirect, return success to show toast
+  return { success: true }
 }
 
 export async function logout() {

@@ -146,7 +146,7 @@ export function MultiStepQuoteForm({ actionUrl }: { actionUrl?: string }) {
 
   if (status === 'success') {
     return (
-      <div style={{ background: 'rgba(255, 92, 42, 0.05)', padding: '50px', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--acid)', backdropFilter: 'blur(10px)', maxWidth: '700px', margin: '0 auto' }}>
+      <div style={{ background: '#0a0a0a', padding: '50px', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--acid)', maxWidth: '700px', margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--acid)', marginBottom: '20px' }}>
           <CheckCircle size={48} strokeWidth={1.5} />
         </div>
@@ -159,7 +159,7 @@ export function MultiStepQuoteForm({ actionUrl }: { actionUrl?: string }) {
 
   return (
     <>
-      <div style={{ background: 'rgba(255,255,255,0.01)', backdropFilter: 'blur(12px)', padding: '40px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', maxWidth: '700px', margin: '0 auto', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+      <div style={{ background: '#0a0a0a', padding: '40px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', maxWidth: '700px', margin: '0 auto', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
         
         {/* 3-Step Progress Indicator */}
         <div style={{ display: 'flex', gap: '12px', marginBottom: '40px' }}>
@@ -336,7 +336,7 @@ export function MultiStepQuoteForm({ actionUrl }: { actionUrl?: string }) {
 
       {/* Mandatory Auth Modal */}
       {showAuthModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
           <div style={{ background: '#111', border: '1px solid #333', padding: '40px', borderRadius: '16px', maxWidth: '400px', width: '100%', position: 'relative' }}>
             <button onClick={() => setShowAuthModal(false)} style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', color: '#F5F1EA', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <X size={18} strokeWidth={1.5} />

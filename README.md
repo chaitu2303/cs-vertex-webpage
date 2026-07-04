@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CS Vertex Enterprise Platform
 
-## Getting Started
+Welcome to the CS Vertex platform repository. This Next.js (Turbopack) application powers the primary corporate website, client portal, and enterprise backend for CS Vertex.
 
-First, run the development server:
+## Architecture
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS V4 + Vanilla CSS + Framer Motion
+- **Database**: Prisma ORM (SQLite for Dev, PostgreSQL intended for Prod)
+- **Email**: Brevo SMTP via Nodemailer (`src/lib/emailService.ts`)
+- **PWA**: Fully installable Progressive Web App with offline caching
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Prerequisites
+- Node.js >= 20.0.0
+- npm >= 10.0.0
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Development Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd cs-vertex-webpage
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-## Learn More
+3. **Configure Environment**
+   - Copy `.env.example` to `.env`
+   - Fill in your secure SMTP passwords, API keys, and database URL.
+   ```bash
+   cp .env.example .env
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Initialize Database**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. **Start the Development Server**
+   ```bash
+   npm run dev
+   ```
+   The application will be available at `http://localhost:3000`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Production Deployment Checklist
 
-## Deploy on Vercel
+A new developer should follow these steps to deploy:
+1. Ensure all environment variables are securely stored in your provider (Vercel/AWS).
+2. Ensure `DATABASE_URL` points to a production PostgreSQL/MySQL instance (Do not use SQLite in serverless production).
+3. Run `npm run build` to compile the optimized production bundle.
+4. Run `npm run start` to boot the Node server.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
+- `npm run dev` - Starts the development server with Turbopack.
+- `npm run build` - Builds the application for production.
+- `npm run start` - Starts the production server.
+- `npm run lint` - Runs ESLint.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact
+For infrastructure issues, contact `admin@csvertex.com`.

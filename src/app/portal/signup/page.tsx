@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { signup } from '../actions'
 import Link from 'next/link'
 import { X } from 'lucide-react'
+import { toast } from 'react-hot-toast'
 
 import { createClient } from '@/utils/supabase/client'
 
@@ -37,7 +38,15 @@ export default function SignupPage() {
     const result = await signup(formData)
     if (result?.error) {
       setError(result.error)
+      toast.error(result.error)
       setLoading(false)
+    } else {
+      // Success! Form is replaced with success message or cleared
+      toast.success('Account created successfully. A verification email has been sent.')
+      setLoading(false)
+      // Reset form
+      const form = document.getElementById('signup-form') as HTMLFormElement
+      if (form) form.reset()
     }
   }
 
@@ -52,7 +61,7 @@ export default function SignupPage() {
         
         {error && <div style={{ padding: '12px', background: 'rgba(255,0,0,0.1)', color: '#ff4444', marginBottom: '20px', borderRadius: '6px', fontSize: '13px' }}>{error}</div>}
 
-        <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <form id="signup-form" action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           <div style={{ display: 'flex', gap: '20px' }}>
             <div style={{ flex: 1 }}>

@@ -12,7 +12,12 @@ export default async function StudentDashboardPage() {
 
   let customer = await prisma.customer.findUnique({ where: { id: user.id } })
   if (!customer) {
-    customer = await prisma.customer.create({ data: { id: user.id, email: user.email || '' } })
+    try {
+      customer = await prisma.customer.create({ data: { id: user.id, email: user.email || `${user.id}@no-email.placeholder.com` } })
+    } catch (err) {
+      customer = await prisma.customer.findUnique({ where: { id: user.id } })
+      if (!customer) throw err;
+    }
   }
 
   const [internships, courses, workshops] = await Promise.all([

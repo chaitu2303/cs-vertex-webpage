@@ -530,13 +530,6 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
           <h3 className="tmc-card-name">{member.name}</h3>
           <p className="tmc-card-role">{member.role}</p>
 
-          {/* Skill preview — first 3 chips */}
-          <div className="tmc-card-chips">
-            {skills.slice(0, 3).map((s, i) => (
-              <span key={i} className="tmc-card-chip">{s}</span>
-            ))}
-          </div>
-
           {/* Actions */}
           <div className="tmc-card-actions">
             <button 

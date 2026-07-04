@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { sendWelcomeEmail } from '@/lib/email'
 
 
 
@@ -32,9 +33,11 @@ export async function GET(request: Request) {
                 name: user.user_metadata?.full_name || user.email?.split('@')[0],
               }
             })
+            // New user verified their email or logged in via OAuth for the first time
+            await sendWelcomeEmail(user.email!)
           }
         } catch (e) {
-          console.error('Error syncing user to Prisma on OAuth callback', e)
+          console.error('Error syncing user to Prisma on auth callback', e)
         }
       }
       

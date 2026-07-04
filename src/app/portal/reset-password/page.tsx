@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-hot-toast'
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('')
@@ -16,16 +17,14 @@ export default function ResetPassword() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
         setStatus('idle')
-        setMessage('')
       } else if (session) {
         setStatus('idle')
-        setMessage('')
       } else {
         // Wait a brief moment to allow tokens to be processed and cookies set
         const timer = setTimeout(() => {
           supabase.auth.getSession().then(({ data }) => {
             if (!data.session) {
-              setMessage('Invalid or expired reset link. Please try again.')
+              toast.error('Invalid or expired reset link. Please try again.')
               setStatus('error')
             }
           })
@@ -42,17 +41,24 @@ export default function ResetPassword() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('loading')
-    setMessage('')
 
     const { error } = await supabase.auth.updateUser({ password })
 
     if (error) {
       setStatus('error')
-      setMessage(error.message)
+      toast.error(error.message)
     } else {
       setStatus('success')
-      setMessage('Password changed successfully.')
-      setTimeout(() => router.push('/'), 2000)
+      toast.success('Password changed successfully.')
+      
+      // Trigger confirmation email
+      try {
+        await fetch('/api/auth/password-changed', { method: 'POST' })
+      } catch (err) {
+        console.error('Failed to send confirmation email', err)
+      }
+
+      setTimeout(() => router.push('/portal/login'), 2000)
     }
   }
 
@@ -60,12 +66,6 @@ export default function ResetPassword() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#090a0a', padding: '20px' }}>
       <div style={{ background: '#111', border: '1px solid #222', borderRadius: '12px', padding: '40px', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
         <h1 style={{ color: '#fff', fontSize: '24px', marginBottom: '10px', fontWeight: 500 }}>Set New Password</h1>
-        
-        {message && (
-          <div style={{ background: status === 'error' ? 'rgba(255,0,0,0.1)' : 'rgba(0,255,0,0.1)', color: status === 'error' ? '#ff4444' : '#44ff44', padding: '10px', borderRadius: '6px', fontSize: '13px', marginBottom: '20px' }}>
-            {message}
-          </div>
-        )}
 
         {status !== 'success' && (
           <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>

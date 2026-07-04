@@ -3,17 +3,16 @@
 import React, { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import Link from 'next/link'
+import { toast } from 'react-hot-toast'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [message, setMessage] = useState('')
   const supabase = createClient()
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('loading')
-    setMessage('')
 
     const res = await fetch('/api/auth/reset-password-request', {
       method: 'POST',
@@ -23,10 +22,10 @@ export default function ForgotPassword() {
 
     if (!res.ok) {
       setStatus('error')
-      setMessage('Failed to send reset link. Please try again.')
+      toast.error('Failed to send reset link. Please try again.')
     } else {
       setStatus('success')
-      setMessage('Password reset link has been sent to your email.')
+      toast.success('Password reset link has been sent to your email.')
     }
   }
 
@@ -35,12 +34,6 @@ export default function ForgotPassword() {
       <div style={{ background: '#111', border: '1px solid #222', borderRadius: '12px', padding: '40px', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
         <h1 style={{ color: '#fff', fontSize: '24px', marginBottom: '10px', fontWeight: 500 }}>Reset Password</h1>
         <p style={{ color: '#888', fontSize: '14px', marginBottom: '30px' }}>Enter your email to receive a reset link.</p>
-        
-        {message && (
-          <div style={{ background: status === 'error' ? 'rgba(255,0,0,0.1)' : 'rgba(0,255,0,0.1)', color: status === 'error' ? '#ff4444' : '#44ff44', padding: '10px', borderRadius: '6px', fontSize: '13px', marginBottom: '20px' }}>
-            {message}
-          </div>
-        )}
 
         <form onSubmit={handleReset} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <input 

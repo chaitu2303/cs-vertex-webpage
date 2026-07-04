@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   // Disabled in dev: StrictMode causes double-invocation of effects which
   // can surface as visible blinks during development.
   reactStrictMode: false,
+  compress: true,
+  poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 3600,

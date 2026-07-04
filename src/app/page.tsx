@@ -127,7 +127,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
 
               {/* CTAs */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '32px', flexWrap: 'wrap' }}>
-                <a href="#quote" style={{
+                <a href="#consultation" style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
                   background: 'var(--acid)', color: '#000',
                   padding: '14px 24px', borderRadius: '4px',

@@ -6,7 +6,8 @@ import { ScrollProgress } from "../components/ScrollProgress";
 import { StructuredData } from "../components/StructuredData";
 import { PremiumLoader } from "../components/PremiumLoader";
 import { FloatingActions } from "../components/FloatingActions";
-
+import { ConsultationModal } from "../components/ConsultationModal";
+import { Toaster } from "react-hot-toast";
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--sans",
@@ -38,7 +39,16 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
-    apple: '/apple-icon.png',
+    apple: '/icons/apple-touch-icon.png',
+  },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'CS Vertex',
+  },
+  formatDetection: {
+    telephone: false,
   },
   alternates: {
     canonical: '/',
@@ -91,13 +101,37 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preload" as="image" href="/assets/vertex-hero.png" />
         <link rel="preload" as="image" href="/logo-nav.png" />
-        
+        <script dangerouslySetInnerHTML={{ __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+              }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+              });
+            });
+          }
+        `}} />
       </head>
       <body>
         <PremiumLoader />
         <ScrollProgress />
         {children}
         <FloatingActions />
+        <ConsultationModal />
+        <Toaster position="bottom-right" toastOptions={{
+          style: {
+            background: '#111',
+            color: '#fff',
+            border: '1px solid #333'
+          },
+          success: {
+            iconTheme: {
+              primary: '#D4FF3E',
+              secondary: '#000',
+            }
+          }
+        }} />
       </body>
     </html>
   );

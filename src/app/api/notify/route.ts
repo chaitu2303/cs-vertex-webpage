@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Resend } from 'resend'
-
-// Initialize Resend Client if API key is provided
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
+import { sendEmail } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {
@@ -13,38 +10,36 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 })
     }
 
-    // Insert email into LaunchRegistration table
-    await prisma.launchRegistration.upsert({
-      where: { email },
-      update: {},
-      create: { email }
+    const existing = await prisma.launchRegistration.findUnique({
+      where: { email }
     })
 
-    // Optional Resend email confirmation
-    if (resend) {
-      try {
-        await resend.emails.send({
-          from: 'CS Vertex <no-reply@csvertex.com>',
-          to: email,
-          subject: 'CS Vertex Launch Reminder',
-          text: `Thank you for joining CS Vertex.\nWe'll notify you before launch.`,
-          html: `
-            <div style="font-family: sans-serif; background: #030303; color: #fff; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto; border: 1px solid #E8440A;">
-              <h2 style="color: #E8440A; letter-spacing: 0.1em;">CS VERTEX SYSTEMS</h2>
-              <p>Thank you for joining CS Vertex.</p>
-              <p>We will notify you before the official launch on June 24, 2026.</p>
-              <br/>
-              <hr style="border-color: #222;" />
-              <p style="font-size: 11px; color: #666;">This is an automated reminder. Please do not reply directly to this email.</p>
-            </div>
-          `
-        })
-        console.log('Confirmation email sent successfully via Resend.')
-      } catch (emailErr) {
-        console.error('Error sending confirmation email via Resend:', emailErr)
-      }
-    } else {
-      console.log('Resend confirmation email skipped (RESEND_API_KEY not set).')
+    if (existing) {
+      return NextResponse.json({ error: 'This email is already subscribed.' }, { status: 409 })
+    }
+
+    // Insert email into LaunchRegistration table
+    await prisma.launchRegistration.create({
+      data: { email }
+    })
+
+    // Brevo email confirmation
+    try {
+      await sendEmail({
+        to: email,
+        subject: 'Welcome to CS Vertex Notifications',
+        html: `
+          <p>Hi,</p>
+          <p>Thank you for subscribing to CS Vertex updates.</p>
+          <p>We'll notify you whenever this course, workshop, internship or service becomes available.</p>
+          <p>Stay Connected.</p>
+          <br/>
+          <p>CS Vertex<br/><a href="https://csvertex.com" style="color: #E8440A;">https://csvertex.com</a></p>
+        `
+      })
+      console.log('Confirmation email sent successfully via Brevo.')
+    } catch (emailErr) {
+      console.error('Error sending confirmation email via Brevo:', emailErr)
     }
 
     return NextResponse.json({ success: true })

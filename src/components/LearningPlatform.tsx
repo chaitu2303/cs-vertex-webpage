@@ -5,6 +5,7 @@ import { Clock, GraduationCap, Wrench } from 'lucide-react'
 import { InternshipApplyButton } from '@/components/RecruitmentButtons'
 import Link from 'next/link'
 import { useState } from 'react'
+import { toast } from 'react-hot-toast'
 
 const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any }) => {
   const [email, setEmail] = useState('')
@@ -20,14 +21,27 @@ const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any })
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       })
+      const data = await res.json()
+      
       if (res.ok) {
         setStatus('success')
         setEmail('')
+        toast.success("You're on the list! We'll notify you when this becomes available.", { duration: 4000 })
+        // Reset button state after 3 seconds
+        setTimeout(() => setStatus('idle'), 3000)
       } else {
         setStatus('error')
+        if (res.status === 409) {
+           toast.error(data.error || "This email is already subscribed.")
+        } else {
+           toast.error(data.error || "Something went wrong. Please try again.")
+        }
+        setTimeout(() => setStatus('idle'), 3000)
       }
     } catch {
       setStatus('error')
+      toast.error("Network error. Please try again.")
+      setTimeout(() => setStatus('idle'), 3000)
     }
   }
 
@@ -37,23 +51,19 @@ const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any })
       <h3 style={{ color: '#FFFFFF', margin: '0 0 15px', fontSize: '26px' }}>{title}</h3>
       <p style={{ color: '#888', marginBottom: '25px' }}>{title} will be announced soon. Get notified when we launch.</p>
       
-      {status === 'success' ? (
-        <p style={{ color: 'var(--acid)', fontWeight: 600 }}>Thank you! We'll notify you soon.</p>
-      ) : (
-        <form onSubmit={handleNotify} className="notify-form" style={{ display: 'flex', gap: '10px', marginTop: 'auto', flexWrap: 'wrap' }}>
-          <input 
-            type="email" 
-            placeholder="Your email address" 
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            style={{ flex: 1, minWidth: '150px', background: '#000', border: '1px solid #333', padding: '10px 15px', borderRadius: '8px', color: '#fff', outline: 'none' }}
-            required
-          />
-          <button type="submit" disabled={status === 'loading'} style={{ flex: '0 0 auto', background: 'var(--acid)', color: '#000', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 600, cursor: status === 'loading' ? 'not-allowed' : 'pointer' }}>
-            {status === 'loading' ? '...' : 'Notify Me'}
-          </button>
-        </form>
-      )}
+      <form onSubmit={handleNotify} className="notify-form" style={{ display: 'flex', gap: '10px', marginTop: 'auto', flexWrap: 'wrap' }}>
+        <input 
+          type="email" 
+          placeholder="Your email address" 
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          style={{ flex: 1, minWidth: '150px', background: '#000', border: '1px solid #333', padding: '10px 15px', borderRadius: '8px', color: '#fff', outline: 'none' }}
+          required
+        />
+        <button type="submit" disabled={status === 'loading' || status === 'success'} style={{ flex: '0 0 auto', background: status === 'success' ? '#333' : 'var(--acid)', color: status === 'success' ? '#fff' : '#000', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 600, cursor: status === 'loading' ? 'not-allowed' : 'pointer', transition: 'all 0.2s' }}>
+          {status === 'loading' ? 'Subscribing...' : status === 'success' ? '✓ Subscribed' : 'Notify Me'}
+        </button>
+      </form>
     </motion.div>
   )
 }

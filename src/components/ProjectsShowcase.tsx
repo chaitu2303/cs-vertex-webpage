@@ -115,9 +115,9 @@ export function ProjectsShowcase({ projects }: { projects: any[] }) {
         }
 
         .filter-btn {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #aaa;
+          background: rgba(0, 0, 0, 0.04);
+          border: 1px solid rgba(0, 0, 0, 0.12);
+          color: #555;
           padding: 10px 24px;
           border-radius: 30px;
           font-size: 14px;
@@ -129,9 +129,9 @@ export function ProjectsShowcase({ projects }: { projects: any[] }) {
         }
         
         .filter-btn:hover {
-          background: rgba(255, 255, 255, 0.08);
-          color: white;
-          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(0, 0, 0, 0.08);
+          color: black;
+          border-color: rgba(0, 0, 0, 0.35);
           transform: translateY(-2px);
         }
         
@@ -184,16 +184,15 @@ export function ProjectsShowcase({ projects }: { projects: any[] }) {
         
         @media (max-width: 1024px) {
           .project-wrapper { width: calc(50% - 15px); }
-        }
-
-        @media (max-width: 640px) {
-          .project-wrapper { width: 100%; max-width: 100%; }
           .filters-container {
             justify-content: flex-start;
             overflow-x: auto;
             flex-wrap: nowrap;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            padding: 5px 20px;
+            margin-left: -20px;
+            margin-right: -20px;
           }
           .filters-container::-webkit-scrollbar {
             display: none;
@@ -201,6 +200,10 @@ export function ProjectsShowcase({ projects }: { projects: any[] }) {
           .filter-btn {
             white-space: nowrap;
           }
+        }
+        
+        @media (max-width: 640px) {
+          .project-wrapper { width: 100%; max-width: 100%; }
         }
       `}</style>
     </div>

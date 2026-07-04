@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { login } from '../actions'
 import Link from 'next/link'
 import { X } from 'lucide-react'
+import { toast } from 'react-hot-toast'
 
 import { createClient } from '@/utils/supabase/client'
 
@@ -24,6 +25,7 @@ export default function LoginPage() {
     })
     if (error) {
       setError(error.message)
+      toast.error(error.message)
       setLoading(false)
     }
   }
@@ -34,7 +36,10 @@ export default function LoginPage() {
     const result = await login(formData)
     if (result?.error) {
       setError(result.error)
+      toast.error(result.error)
       setLoading(false)
+    } else {
+      toast.success('Logged in successfully.')
     }
   }
 

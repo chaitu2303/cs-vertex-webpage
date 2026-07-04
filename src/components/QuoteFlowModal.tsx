@@ -84,7 +84,7 @@ export function QuoteFlowModal() {
   if (!isOpen) return null
   
   return (
-    <div className="modal-overlay" onClick={() => setIsOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+    <div className="modal-overlay" onClick={() => setIsOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
        <div className="modal-content" onClick={e => e.stopPropagation()} style={{ background: '#0B0B0B', borderRadius: '16px', border: '1px solid #333', width: '100%', maxWidth: isAuthenticated ? '700px' : '400px', padding: isAuthenticated ? '0' : '40px', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
           
           <button onClick={() => setIsOpen(false)} style={{ position: 'absolute', top: 20, right: 20, background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>

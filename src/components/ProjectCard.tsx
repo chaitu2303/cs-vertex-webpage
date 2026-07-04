@@ -50,15 +50,6 @@ export function ProjectCard({ project }: { project: any }) {
             </div>
           )}
           
-          <div className="project-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-            {project.category && project.category.split(',').filter(Boolean).map((cat: string, i: number) => (
-              <span key={i} className="category-badge" style={{ borderRadius: '20px', padding: '4px 12px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)', border: '1px solid rgba(255,255,255,0.2)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.05em', color: '#fff', textTransform: 'uppercase' }}>
-                {cat.trim()}
-              </span>
-            ))}
-            {project.isFeatured && <span className="featured-badge" style={{ borderRadius: '20px', padding: '4px 12px', background: 'var(--acid)', color: '#000', fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', boxShadow: '0 0 10px rgba(204, 255, 0, 0.4)' }}>Featured</span>}
-          </div>
-
           <div className="project-hover-overlay">
             <div className="hover-actions">
               <span className="action-btn" title="View Details">
@@ -69,7 +60,19 @@ export function ProjectCard({ project }: { project: any }) {
         </div>
 
         <div className="project-content">
-          <h3 className="project-title">{project.title}</h3>
+          <div className="project-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+            <h3 className="project-title" style={{ margin: 0 }}>{project.title}</h3>
+            {project.isFeatured && <span className="featured-badge" style={{ borderRadius: '20px', padding: '2px 8px', background: 'var(--acid)', color: '#000', fontSize: '10px', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Featured</span>}
+          </div>
+          {project.category && (
+            <div className="project-card-categories" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '10px' }}>
+              {project.category.split(',').filter(Boolean).map((cat: string, i: number) => (
+                <span key={i} className="category-badge" style={{ borderRadius: '20px', padding: '2px 8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '10px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase' }}>
+                  {cat.trim()}
+                </span>
+              ))}
+            </div>
+          )}
           {project.shortSummary && (
             <p className="project-summary">{project.shortSummary}</p>
           )}

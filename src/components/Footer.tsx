@@ -57,7 +57,7 @@ export default function Footer() {
             <a href="mailto:hello@csvertex.com" className="footer-nav-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Mail size={14} /> hello@csvertex.com
             </a>
-            <Link href="#quote" className="footer-cta-link" style={{ color: '#000' }}>
+            <Link href="#consultation" className="footer-cta-link" style={{ color: '#000' }}>
               Request Consultation
             </Link>
           </div>

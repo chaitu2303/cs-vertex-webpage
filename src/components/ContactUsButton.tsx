@@ -62,8 +62,7 @@ export function ContactUsButton() {
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(10px)',
+            background: 'rgba(0, 0, 0, 0.95)',
             zIndex: 9999,
             display: 'flex',
             justifyContent: 'center',

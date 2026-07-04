@@ -1,9 +1,7 @@
 "use server"
 
 import { prisma } from '@/lib/prisma'
-import { Resend } from 'resend'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { sendEmail } from '@/lib/email'
 
 /**
  * Saves an email to the launch_notifications table.
@@ -30,10 +28,9 @@ export async function subscribeEmail(email: string): Promise<{ ok: boolean; mess
       return { ok: true, message: "You're already on the list! We'll notify you at launch." }
     }
 
-    // --- Send Welcome Email via Resend ---
+    // --- Send Welcome Email via Brevo ---
     try {
-      await resend.emails.send({
-        from: 'CS Vertex <hello@csvertex.com>',
+      await sendEmail({
         to: cleanEmail,
         subject: 'Welcome to CS Vertex - Launch Notification Confirmed',
         html: `
@@ -64,7 +61,7 @@ export async function subscribeEmail(email: string): Promise<{ ok: boolean; mess
         `
       })
     } catch (emailErr) {
-      console.error('[subscribeEmail] Resend error:', emailErr)
+      console.error('[subscribeEmail] Brevo error:', emailErr)
       // We don't fail the UI if the email fails to send (e.g. if domain isn't verified yet)
     }
 

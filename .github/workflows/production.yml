@@ -1,0 +1,56 @@
+name: Production CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    name: Build & Lint & Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Prisma Generate
+        run: npx prisma generate
+
+      - name: Check Formatting & Linting
+        run: npm run lint
+
+      - name: Dependency Security Audit
+        run: npm audit --audit-level=high
+
+      - name: Production Build
+        run: npm run build
+        env:
+          DATABASE_URL: "file:./dev.db" # Mock DB for build testing
+          NEXT_PUBLIC_SITE_URL: "https://csvertex.com"
+          BREVO_API_KEY: "dummy-key-for-build"
+
+  deploy:
+    name: Deploy to Production
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel (Example)
+        # Note: Set VERCEL_TOKEN and VERCEL_ORG_ID in GitHub Secrets
+        run: echo "Vercel deployment step would run here if vercel-cli is installed."
+        # run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}

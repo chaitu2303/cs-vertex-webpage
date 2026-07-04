@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Briefcase, X, CheckCircle, Upload } from 'lucide-react'
+import { toast } from 'react-hot-toast'
 
 type ModalType = 'job' | 'internship'
 
@@ -17,6 +18,7 @@ export function RecruitmentModal({ isOpen, onClose, type }: RecruitmentModalProp
   const [view, setView] = useState<'loading' | 'no-openings' | 'form' | 'success'>('loading')
   const [formData, setFormData] = useState<any>({})
   const [submitting, setSubmitting] = useState(false)
+  const [notifyStatus, setNotifyStatus] = useState<'idle'|'loading'|'success'>('idle')
 
   useEffect(() => {
     if (isOpen) {
@@ -45,9 +47,9 @@ export function RecruitmentModal({ isOpen, onClose, type }: RecruitmentModalProp
 
   const handleNotifySubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitting(true)
+    setNotifyStatus('loading')
     try {
-      await fetch('/api/recruitment/notify', {
+      const res = await fetch('/api/recruitment/notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -55,11 +57,26 @@ export function RecruitmentModal({ isOpen, onClose, type }: RecruitmentModalProp
           type: type === 'job' ? 'Job' : 'Internship'
         })
       })
-      setView('success')
+      const data = await res.json()
+      
+      if (res.ok) {
+        setNotifyStatus('success')
+        setFormData({})
+        toast.success("You're on the list! We'll notify you when this becomes available.", { duration: 4000 })
+        setTimeout(() => setNotifyStatus('idle'), 3000)
+      } else {
+        setNotifyStatus('idle')
+        if (res.status === 409) {
+          toast.error(data.error || "This email is already subscribed.")
+        } else {
+          toast.error(data.error || "Something went wrong. Please try again.")
+        }
+      }
     } catch (error) {
       console.error(error)
+      setNotifyStatus('idle')
+      toast.error("Network error. Please try again.")
     }
-    setSubmitting(false)
   }
 
   const handleApplicationSubmit = async (e: React.FormEvent) => {
@@ -113,12 +130,12 @@ export function RecruitmentModal({ isOpen, onClose, type }: RecruitmentModalProp
             <form onSubmit={handleNotifySubmit} className="notify-form">
               <h3>Notify Me</h3>
               <p className="sub-text">Leave your details and we'll let you know when roles open up.</p>
-              <input required type="text" placeholder="Full Name" onChange={e => setFormData({...formData, name: e.target.value})} />
-              <input required type="email" placeholder="Email Address" onChange={e => setFormData({...formData, email: e.target.value})} />
-              <input type="tel" placeholder="Phone Number (Optional)" onChange={e => setFormData({...formData, phone: e.target.value})} />
-              <input required type="text" placeholder="Interested Role (e.g. Frontend Developer)" onChange={e => setFormData({...formData, interestedRole: e.target.value})} />
-              <button type="submit" disabled={submitting} className="btn-primary">
-                {submitting ? 'Submitting...' : 'Notify Me'}
+              <input required type="text" placeholder="Full Name" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} />
+              <input required type="email" placeholder="Email Address" value={formData.email || ''} onChange={e => setFormData({...formData, email: e.target.value})} />
+              <input type="tel" placeholder="Phone Number (Optional)" value={formData.phone || ''} onChange={e => setFormData({...formData, phone: e.target.value})} />
+              <input required type="text" placeholder="Interested Role (e.g. Frontend Developer)" value={formData.interestedRole || ''} onChange={e => setFormData({...formData, interestedRole: e.target.value})} />
+              <button type="submit" disabled={notifyStatus === 'loading' || notifyStatus === 'success'} className="btn-primary" style={{ background: notifyStatus === 'success' ? '#333' : '#FF6A2A', color: notifyStatus === 'success' ? '#fff' : '#fff' }}>
+                {notifyStatus === 'loading' ? 'Subscribing...' : notifyStatus === 'success' ? '✓ Subscribed' : 'Notify Me'}
               </button>
             </form>
           </div>

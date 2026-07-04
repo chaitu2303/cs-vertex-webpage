@@ -61,7 +61,7 @@ export function Header() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="site-header">
+    <header className="site-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
       <div className="brand" style={{ display: 'flex', alignItems: 'center' }}>
         <Link 
           href="/" 
@@ -272,6 +272,7 @@ export function Header() {
         }
         .desktop-nav a { display: flex; align-items: center; }
         .mobile-chevron { display: none; }
+        .menu-toggle { display: none; }
         .mega-title {
           font-size: 11px;
           font-family: var(--mono, monospace);
@@ -389,19 +390,30 @@ export function Header() {
           .desktop-nav.mobile-open .mega-title {
             margin-bottom: 5px !important;
           }
-          .menu-toggle {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            z-index: 100;
-            padding: 10px;
+          header.site-header .menu-toggle {
+            position: absolute !important;
+            right: 20px !important;
+            left: auto !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 4px !important;
+            z-index: 100 !important;
+            padding: 8px !important;
+            background: transparent !important;
+            border: none !important;
+            cursor: pointer !important;
+            width: auto !important;
+            height: auto !important;
           }
-          .menu-toggle span {
-            display: block;
-            width: 28px;
-            height: 2px;
-            background: #fff;
-            transition: all 0.3s ease;
+          header.site-header .menu-toggle span {
+            display: block !important;
+            width: 20px !important;
+            height: 2px !important;
+            background: #fff !important;
+            transition: all 0.3s ease !important;
+            margin: 0 !important;
           }
         }
         @media(max-width: 768px) {
@@ -410,10 +422,10 @@ export function Header() {
       `}</style>
       
 
-      <button className="menu-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{ marginLeft: 'auto' }}>
-        <span style={{ transform: mobileMenuOpen ? 'translateY(8px) rotate(45deg)' : 'none' }}></span>
+      <button className="menu-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{ outline: 'none' }}>
+        <span style={{ transform: mobileMenuOpen ? 'translateY(6px) rotate(45deg)' : 'none' }}></span>
         <span style={{ opacity: mobileMenuOpen ? 0 : 1 }}></span>
-        <span style={{ transform: mobileMenuOpen ? 'translateY(-8px) rotate(-45deg)' : 'none' }}></span>
+        <span style={{ transform: mobileMenuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none' }}></span>
       </button>
     </header>
   )

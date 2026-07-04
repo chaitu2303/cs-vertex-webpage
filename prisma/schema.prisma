@@ -469,7 +469,18 @@ model LaunchRegistration {
   createdAt DateTime @default(now())
 }
 
-
+model EmailLog {
+  id           String   @id @default(cuid())
+  to           String
+  from         String
+  subject      String
+  templateName String?
+  status       String   @default("PENDING") // PENDING, SENT, FAILED
+  retries      Int      @default(0)
+  errorMessage String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
 
 model GalleryImage {
   id          String   @id @default(cuid())
@@ -604,4 +615,3 @@ model Analytics {
   country      String?
   date         DateTime @default(now())
 }
-

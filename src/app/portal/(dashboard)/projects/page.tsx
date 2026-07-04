@@ -12,9 +12,15 @@ export default async function CustomerProjectsPage() {
 
   let customer = await prisma.customer.findUnique({ where: { id: customerId } })
   if (!customer) {
-    customer = await prisma.customer.create({
-      data: { id: customerId, email: user.email || '' }
-    })
+    try {
+      customer = await prisma.customer.create({
+        data: { id: customerId, email: user.email || `${customerId}@no-email.placeholder.com` }
+      })
+    } catch (err) {
+      // Fallback in case of concurrent creation
+      customer = await prisma.customer.findUnique({ where: { id: customerId } })
+      if (!customer) throw err;
+    }
   }
 
   const projects = await prisma.clientProject.findMany({
