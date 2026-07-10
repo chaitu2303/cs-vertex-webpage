@@ -818,6 +818,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
           -webkit-mask-composite: xor;
           mask-composite: exclude;
           opacity: 0;
+          pointer-events: none;
           transition: opacity 0.4s ease;
         }
         .tmc-card:hover::after {

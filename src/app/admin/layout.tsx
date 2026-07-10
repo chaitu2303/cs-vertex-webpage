@@ -28,6 +28,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Settings', path: '/admin/settings', icon: Settings },
   ]
 
+  const isAuthPage = pathname.startsWith('/admin/login') || pathname.startsWith('/admin/forgot-password') || pathname.startsWith('/admin/reset-password')
+
+  if (isAuthPage) {
+    return (
+      <div className="min-h-screen bg-[#050505] text-gray-100 font-sans">
+        {children}
+      </div>
+    )
+  }
+
   return (
     <div className="flex min-h-screen bg-[#050505] text-gray-100 font-sans overflow-hidden">
       
