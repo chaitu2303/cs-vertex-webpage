@@ -377,6 +377,7 @@ export function Header() {
           background: transparent;
           border: none;
           cursor: pointer;
+          margin-left: auto;
           z-index: 9998;
         }
 
