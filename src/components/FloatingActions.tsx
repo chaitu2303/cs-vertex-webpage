@@ -1,12 +1,10 @@
 "use client"
 
 import React from 'react'
-import { AIAssistant } from './AIAssistant'
 
 export function FloatingActions() {
   return (
     <div className="floating-actions" style={{ zIndex: 9996 }}>
-      <AIAssistant />
       <a 
         href="https://wa.me/917288977131?text=Hello%20CS%20Vertex,%20I%20would%20like%20to%20discuss%20a%20project." 
         target="_blank" 

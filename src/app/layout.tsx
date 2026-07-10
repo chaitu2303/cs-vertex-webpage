@@ -3,7 +3,6 @@ import { Manrope, DM_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ScrollProgress } from "../components/ScrollProgress";
-import { CustomCursor } from "../components/CustomCursor";
 import { StructuredData } from "../components/StructuredData";
 import { PremiumLoader } from "../components/PremiumLoader";
 import { FloatingActions } from "../components/FloatingActions";
@@ -113,7 +112,6 @@ export default function RootLayout({
         `}} />
       </head>
       <body>
-        <CustomCursor />
         <PremiumLoader />
         <ScrollProgress />
         {children}
