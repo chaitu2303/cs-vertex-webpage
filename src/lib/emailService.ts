@@ -1,27 +1,19 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { prisma } from './prisma';
 import { emailTemplates } from './emailTemplates';
 
-// Setup Nodemailer Transport for Brevo SMTP
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
-  port: parseInt(process.env.SMTP_PORT || '587', 10),
-  secure: process.env.SMTP_SECURE === 'true',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// Setup Resend
+const resend = new Resend(process.env.RESEND_API_KEY || 're_mock_key');
 
 interface SendEmailOptions {
-  to: string;
+  to: string | string[];
   subject: string;
   html: string;
   templateName?: string;
   replyTo?: string;
 }
 
-// Basic in-memory queue for simple rate-limiting (e.g., 200ms delay between sends in a serverless function)
+// Basic in-memory queue for simple rate-limiting
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 class EmailService {
@@ -52,22 +44,14 @@ class EmailService {
   public static async sendWithRetry(options: SendEmailOptions, maxRetries = 3): Promise<boolean> {
     const fromName = process.env.MAIL_FROM_NAME || 'CS Vertex';
     const fromEmail = process.env.MAIL_FROM_EMAIL || 'hello@csvertex.com';
-    const sender = `"${fromName}" <${fromEmail}>`;
-
-    const mailOptions = {
-      from: sender,
-      to: options.to,
-      subject: options.subject,
-      html: options.html,
-      replyTo: options.replyTo || process.env.REPLY_TO || fromEmail,
-    };
+    const sender = `${fromName} <${fromEmail}>`;
 
     // 1. Create DB log entry
     let logEntry;
     try {
       logEntry = await prisma.emailLog.create({
         data: {
-          to: options.to,
+          to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
           from: sender,
           subject: options.subject,
           templateName: options.templateName || 'custom',
@@ -82,7 +66,17 @@ class EmailService {
     let attempt = 0;
     while (attempt < maxRetries) {
       try {
-        await transporter.sendMail(mailOptions);
+        const { data, error } = await resend.emails.send({
+          from: sender,
+          to: Array.isArray(options.to) ? options.to : [options.to],
+          subject: options.subject,
+          html: options.html,
+          replyTo: options.replyTo || process.env.REPLY_TO || fromEmail,
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
         
         if (logEntry) {
           await prisma.emailLog.update({

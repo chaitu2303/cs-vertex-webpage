@@ -32,7 +32,7 @@ export function ClientReviews({ testimonials = [] }: { testimonials?: any[] }) {
               <div className="review-header">
                 <div className="client-info">
                   {review.image ? (
-                    <img src={review.image} alt={review.name} className="client-photo" />
+                    <Image src={review.image} alt={review.name} width={50} height={50} className="client-photo" unoptimized />
                   ) : (
                     <div className="client-photo-placeholder">{review.name.charAt(0)}</div>
                   )}
@@ -42,7 +42,7 @@ export function ClientReviews({ testimonials = [] }: { testimonials?: any[] }) {
                   </div>
                 </div>
                 {review.companyLogo && (
-                   <img src={review.companyLogo} alt="Company" className="company-logo" />
+                   <Image src={review.companyLogo} alt="Company" width={100} height={30} className="company-logo" unoptimized />
                 )}
               </div>
               

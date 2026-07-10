@@ -2,14 +2,15 @@
 
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Trash2, Edit2, X } from 'lucide-react'
-import { addServiceAction, deleteServiceAction, updateServiceAction } from './actions'
+import { Trash2, Edit2, X, GripVertical } from 'lucide-react'
+import { addServiceAction, deleteServiceAction, updateServiceAction, reorderServicesAction } from './actions'
 
 export default function ServicesClient({ initialServices }: { initialServices: any[] }) {
   const [services, setServices] = useState(initialServices)
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   const [formData, setFormData] = useState({ title: '', icon: '' })
 
@@ -53,6 +54,42 @@ export default function ServicesClient({ initialServices }: { initialServices: a
     setFormData({ title: srv.title, icon: srv.icon || '' })
     setEditingId(srv.id)
     setIsAdding(true)
+  }
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index)
+    // Optional: make it look slightly transparent
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = 'move'
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (e.dataTransfer) {
+      e.dataTransfer.dropEffect = 'move'
+    }
+  }
+
+  const handleDrop = async (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === index) return
+
+    const newServices = [...services]
+    const draggedItem = newServices[draggedIndex]
+    
+    // Remove the item from original position
+    newServices.splice(draggedIndex, 1)
+    // Insert it at the new position
+    newServices.splice(index, 0, draggedItem)
+    
+    // Update local state for immediate feedback
+    setServices(newServices)
+    setDraggedIndex(null)
+
+    // Save the new order to DB
+    const updates = newServices.map((srv, i) => ({ id: srv.id, order: i }))
+    await reorderServicesAction(updates)
   }
 
   return (
@@ -104,6 +141,7 @@ export default function ServicesClient({ initialServices }: { initialServices: a
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
           <thead style={{ background: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <tr>
+              <th style={{ width: '40px', padding: '16px 12px' }}></th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500 }}>Title</th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500 }}>Icon</th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500, textAlign: 'right' }}>Actions</th>
@@ -115,8 +153,19 @@ export default function ServicesClient({ initialServices }: { initialServices: a
                 <td colSpan={3} style={{ padding: '40px', textAlign: 'center', color: '#666' }}>No services found.</td>
               </tr>
             ) : (
-              services.map(srv => (
-                <tr key={srv.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s' }} className="hover:bg-white/5">
+              services.map((srv, index) => (
+                <tr 
+                  key={srv.id} 
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDrop={(e) => handleDrop(e, index)}
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s', opacity: draggedIndex === index ? 0.5 : 1 }} 
+                  className="hover:bg-white/5"
+                >
+                  <td style={{ padding: '16px 12px', color: '#555', cursor: 'grab' }}>
+                    <GripVertical size={16} />
+                  </td>
                   <td style={{ padding: '16px 24px', color: '#fff', fontWeight: 500 }}>{srv.title}</td>
                   <td style={{ padding: '16px 24px', color: '#ccc' }}>{srv.icon}</td>
                   <td style={{ padding: '16px 24px', textAlign: 'right', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>

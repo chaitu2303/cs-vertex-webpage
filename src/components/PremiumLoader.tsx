@@ -103,7 +103,7 @@ export function PremiumLoader() {
           padding: '12px'
         }}>
           <img
-            src="/assets/logo/csvertex-logo.png"
+            src="/assets/logo.png"
             alt="CS Vertex Logo"
             style={{
               width: '85%',

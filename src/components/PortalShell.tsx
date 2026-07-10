@@ -60,7 +60,7 @@ export function PortalShell({ children, userEmail, initialUnreadCount }: PortalS
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('Service Worker registered:', reg.scope))
+        .then((reg) => {})
         .catch((err) => console.error('Service Worker registration failed:', err))
     }
 
@@ -68,7 +68,7 @@ export function PortalShell({ children, userEmail, initialUnreadCount }: PortalS
       const timer = setTimeout(() => {
         Notification.requestPermission().then((permission) => {
           if (permission === 'granted') {
-            console.log('Push notification permission granted.')
+            // granted
           }
         })
       }, 4000)

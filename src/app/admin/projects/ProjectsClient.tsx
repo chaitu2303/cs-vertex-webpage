@@ -16,7 +16,7 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: a
   const [searchTerm, setSearchTerm] = useState('')
 
   // Drag and Drop State
-  const [draggedIdx, setDraggedIdx] = useState<number | null>(null)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   // Form State
   const defaultForm = { 
@@ -79,29 +79,29 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: a
 
   // --- Drag and Drop Handlers ---
   const handleDragStart = (e: React.DragEvent, index: number) => {
-    setDraggedIdx(index)
-    e.dataTransfer.effectAllowed = "move"
-    e.dataTransfer.setDragImage(e.currentTarget, 20, 20)
+    setDraggedIndex(index)
+    if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move'
   }
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault()
-    if (draggedIdx === null || draggedIdx === index) return
-    const newProjects = [...projects]
-    const draggedItem = newProjects[draggedIdx]
-    newProjects.splice(draggedIdx, 1)
-    newProjects.splice(index, 0, draggedItem)
-    setDraggedIdx(index)
-    setProjects(newProjects)
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
   }
 
-  const handleDragEnd = async () => {
-    setDraggedIdx(null)
-    // Update order values sequentially based on new array order
-    const updated = projects.map((p, i) => ({ ...p, order: i }))
-    setProjects(updated)
+  const handleDrop = async (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === index) return
+
+    const newList = [...projects]
+    const draggedItem = newList[draggedIndex]
     
-    const updates = updated.map((p, i) => ({ id: p.id, order: i }))
+    newList.splice(draggedIndex, 1)
+    newList.splice(index, 0, draggedItem)
+    
+    setProjects(newList)
+    setDraggedIndex(null)
+
+    const updates = newList.map((p, i) => ({ id: p.id, order: i }))
     await updateProjectOrderAction(updates)
   }
 
@@ -218,7 +218,7 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: a
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
           <thead style={{ background: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <tr>
-              <th style={{ padding: '16px 24px', width: '40px' }}></th>
+              <th style={{ width: '40px', padding: '16px 12px' }}></th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500 }}>Project</th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500 }}>Category</th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500 }}>Status</th>
@@ -231,23 +231,23 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: a
                 <td colSpan={5} style={{ padding: '40px', textAlign: 'center', color: '#666' }}>No projects found.</td>
               </tr>
             ) : (
-              filteredProjects.map((proj, idx) => (
+              filteredProjects.map((proj, index) => (
                 <tr 
                   key={proj.id} 
-                  draggable={!searchTerm} // Only allow drag if not searching
-                  onDragStart={e => handleDragStart(e, idx)}
-                  onDragOver={e => handleDragOver(e, idx)}
-                  onDragEnd={handleDragEnd}
+                  draggable={!searchTerm}
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDrop={(e) => handleDrop(e, index)}
                   style={{ 
                     borderBottom: '1px solid rgba(255,255,255,0.05)', 
                     transition: 'background 0.2s',
-                    background: draggedIdx === idx ? 'rgba(255,255,255,0.05)' : 'transparent',
+                    opacity: draggedIndex === index ? 0.5 : 1,
                     cursor: searchTerm ? 'default' : 'grab'
                   }} 
                   className="hover:bg-white/5"
                 >
-                  <td style={{ padding: '16px 12px 16px 24px', color: '#666' }}>
-                    <GripVertical size={16} style={{ cursor: searchTerm ? 'not-allowed' : 'grab' }} />
+                  <td style={{ padding: '16px 12px', color: '#555' }}>
+                    <GripVertical size={16} />
                   </td>
                   <td style={{ padding: '16px 24px', color: '#fff', fontWeight: 500 }}>
                     {proj.title}

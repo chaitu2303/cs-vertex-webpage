@@ -7,7 +7,8 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 
-const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any }) => {
+const NotifyCard = ({ title, icon: Icon, interest }: { title: string, icon: any, interest: string }) => {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle'|'loading'|'success'|'error'>('idle')
   
@@ -19,16 +20,15 @@ const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any })
       const res = await fetch('/api/notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ name, email, interest, sourcePage: 'Learning' })
       })
       const data = await res.json()
       
       if (res.ok) {
         setStatus('success')
+        setName('')
         setEmail('')
         toast.success("You're on the list! We'll notify you when this becomes available.", { duration: 4000 })
-        // Reset button state after 3 seconds
-        setTimeout(() => setStatus('idle'), 3000)
       } else {
         setStatus('error')
         if (res.status === 409) {
@@ -45,23 +45,47 @@ const LearningEmptyState = ({ title, icon: Icon }: { title: string, icon: any })
     }
   }
 
+  if (status === 'success') {
+    return (
+      <motion.div className="learning-card" style={{ background: '#111', padding: '40px', border: '1px solid #222', borderRadius: '16px', display: 'flex', flexDirection: 'column' }}>
+        <Icon color="var(--acid)" size={28} style={{ marginBottom: '20px' }} />
+        <h3 style={{ color: '#FFFFFF', margin: '0 0 15px', fontSize: '26px' }}>{title}</h3>
+        <p style={{ color: '#aaa', marginBottom: '25px', lineHeight: 1.6 }}>
+          <span style={{ color: 'var(--acid)', fontWeight: 'bold' }}>✓ Thank you!</span><br/><br/>
+          You've successfully joined our notification list for {interest}.<br/><br/>
+          We'll notify you as soon as registrations open.
+        </p>
+        <button onClick={() => setStatus('idle')} style={{ width: '100%', background: '#333', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', marginTop: 'auto' }}>
+          Notify Another Email
+        </button>
+      </motion.div>
+    )
+  }
+
   return (
     <motion.div className="learning-card" style={{ background: '#111', padding: '40px', border: '1px solid #222', borderRadius: '16px', display: 'flex', flexDirection: 'column' }}>
       <Icon color="var(--acid)" size={28} style={{ marginBottom: '20px' }} />
       <h3 style={{ color: '#FFFFFF', margin: '0 0 15px', fontSize: '26px' }}>{title}</h3>
       <p style={{ color: '#888', marginBottom: '25px' }}>{title} will be announced soon. Get notified when we launch.</p>
       
-      <form onSubmit={handleNotify} className="notify-form" style={{ display: 'flex', gap: '10px', marginTop: 'auto', flexWrap: 'wrap' }}>
+      <form onSubmit={handleNotify} className="notify-form" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'auto' }}>
+        <input 
+          type="text" 
+          placeholder="Your Name (Optional)" 
+          value={name}
+          onChange={e => setName(e.target.value)}
+          style={{ width: '100%', background: '#000', border: '1px solid #333', padding: '10px 15px', borderRadius: '8px', color: '#fff', outline: 'none' }}
+        />
         <input 
           type="email" 
           placeholder="Your email address" 
           value={email}
           onChange={e => setEmail(e.target.value)}
-          style={{ flex: 1, minWidth: '150px', background: '#000', border: '1px solid #333', padding: '10px 15px', borderRadius: '8px', color: '#fff', outline: 'none' }}
+          style={{ width: '100%', background: '#000', border: '1px solid #333', padding: '10px 15px', borderRadius: '8px', color: '#fff', outline: 'none' }}
           required
         />
-        <button type="submit" disabled={status === 'loading' || status === 'success'} style={{ flex: '0 0 auto', background: status === 'success' ? '#333' : 'var(--acid)', color: status === 'success' ? '#fff' : '#000', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 600, cursor: status === 'loading' ? 'not-allowed' : 'pointer', transition: 'all 0.2s' }}>
-          {status === 'loading' ? 'Subscribing...' : status === 'success' ? '✓ Subscribed' : 'Notify Me'}
+        <button type="submit" disabled={status === 'loading'} style={{ width: '100%', background: 'var(--acid)', color: '#000', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 600, cursor: status === 'loading' ? 'not-allowed' : 'pointer', transition: 'all 0.2s', marginTop: '5px' }}>
+          {status === 'loading' ? 'Subscribing...' : 'Notify Me'}
         </button>
       </form>
     </motion.div>
@@ -152,7 +176,7 @@ export function LearningPlatform({ internships = [], courses = [], workshops = [
               </motion.div>
             ))
           ) : (
-            <LearningEmptyState title="Internships" icon={Clock} />
+            <NotifyCard title="Internships" icon={Clock} interest="Internships" />
           )}
 
           {/* Courses Column */}
@@ -176,7 +200,7 @@ export function LearningPlatform({ internships = [], courses = [], workshops = [
               </motion.div>
             ))
           ) : (
-            <LearningEmptyState title="Courses" icon={GraduationCap} />
+            <NotifyCard title="Courses" icon={GraduationCap} interest="Courses" />
           )}
 
           {/* Workshops Column */}
@@ -200,7 +224,7 @@ export function LearningPlatform({ internships = [], courses = [], workshops = [
               </motion.div>
             ))
           ) : (
-            <LearningEmptyState title="Workshops" icon={Wrench} />
+            <NotifyCard title="Workshops" icon={Wrench} interest="Workshops" />
           )}
         </div>
       </div>

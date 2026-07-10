@@ -234,7 +234,7 @@ export function Header() {
             <div className="portal-dropdown" style={{ display: 'flex', flexDirection: 'column' }}>
               <Link href="/portal" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Dashboard</Link>
               <Link href="/portal/projects" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>My Projects</Link>
-              <Link href="/portal/student-dashboard" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Learning</Link>
+              <Link href="/portal/learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Learning</Link>
             </div>
           )}
         </div>
@@ -391,21 +391,15 @@ export function Header() {
             margin-bottom: 5px !important;
           }
           header.site-header .menu-toggle {
-            position: absolute !important;
-            right: 20px !important;
-            left: auto !important;
-            top: 50% !important;
-            transform: translateY(-50%) !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 4px !important;
-            z-index: 100 !important;
             padding: 8px !important;
             background: transparent !important;
             border: none !important;
             cursor: pointer !important;
-            width: auto !important;
-            height: auto !important;
+            margin-left: auto; /* push to right */
+            z-index: 100 !important;
           }
           header.site-header .menu-toggle span {
             display: block !important;

@@ -2,7 +2,8 @@
 
 
 import React, { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, X, Check, Save, Star } from 'lucide-react'
+import { Plus, Edit, Trash2, X, Check, Save, Star, GripVertical } from 'lucide-react'
+import { reorderTestimonialsAction } from './actions'
 
 interface Testimonial {
   id: string
@@ -21,12 +22,15 @@ export default function TestimonialsAdminPage() {
   const [formData, setFormData] = useState<Partial<Testimonial>>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   const fetchTestimonials = async () => {
     setLoading(true)
     try {
       const res = await fetch('/api/admin/testimonials')
       const data = await res.json()
+      // sort by order if available
+      data.sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
       setTestimonials(data)
     } catch (e) {
       console.error(e)
@@ -87,6 +91,33 @@ export default function TestimonialsAdminPage() {
     }
   }
 
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index)
+    if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+  }
+
+  const handleDrop = async (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === index) return
+
+    const newList = [...testimonials]
+    const draggedItem = newList[draggedIndex]
+    
+    newList.splice(draggedIndex, 1)
+    newList.splice(index, 0, draggedItem)
+    
+    setTestimonials(newList)
+    setDraggedIndex(null)
+
+    const updates = newList.map((item, i) => ({ id: item.id, order: i }))
+    await reorderTestimonialsAction(updates)
+  }
+
   return (
     <div className="admin-page-container" style={{ padding: '20px', color: '#fff', minHeight: '100vh', background: '#0a0a0a' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -100,16 +131,28 @@ export default function TestimonialsAdminPage() {
         <p>Loading testimonials...</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {testimonials.map(p => (
-            <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: '#111', border: '1px solid #222', borderRadius: '8px' }}>
-              <div>
-                <h4 style={{ margin: 0 }}>{p.clientName} {p.published ? '' : '(Draft)'}</h4>
-                <div style={{ fontSize: '13px', color: '#888', marginTop: '4px', display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <span>{p.company || 'Individual'}</span>
-                  <span>&bull;</span>
-                  <span style={{ display: 'flex', alignItems: 'center', color: '#f1c40f' }}>
-                    {p.rating} <Star size={12} fill="#f1c40f" style={{ marginLeft: '4px' }} />
-                  </span>
+          {testimonials.map((p, index) => (
+            <div 
+              key={p.id} 
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDrop={(e) => handleDrop(e, index)}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: '#111', border: '1px solid #222', borderRadius: '8px', opacity: draggedIndex === index ? 0.5 : 1 }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ color: '#555', cursor: 'grab' }}>
+                  <GripVertical size={16} />
+                </div>
+                <div>
+                  <h4 style={{ margin: 0 }}>{p.clientName} {p.published ? '' : '(Draft)'}</h4>
+                  <div style={{ fontSize: '13px', color: '#888', marginTop: '4px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <span>{p.company || 'Individual'}</span>
+                    <span>&bull;</span>
+                    <span style={{ display: 'flex', alignItems: 'center', color: '#f1c40f' }}>
+                      {p.rating} <Star size={12} fill="#f1c40f" style={{ marginLeft: '4px' }} />
+                    </span>
+                  </div>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '10px' }}>

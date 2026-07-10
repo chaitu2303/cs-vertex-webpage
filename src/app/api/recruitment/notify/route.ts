@@ -24,8 +24,9 @@ export async function POST(request: Request) {
         name,
         email,
         phone,
-        interestedRole,
-        type: type || 'Job'
+        interest: interestedRole || 'Career / Recruitment',
+        sourcePage: type || 'Job',
+        message: 'Automatically subscribed from Recruitment / Internship section.'
       }
     })
 

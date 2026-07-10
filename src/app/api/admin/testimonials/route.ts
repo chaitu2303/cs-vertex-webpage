@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { syncToJSON } from '@/lib/cms'
+import { logAudit } from '@/lib/audit'
 
 export async function GET() {
   try {
     const data = await prisma.testimonial.findMany({
-      orderBy: { createdAt: 'desc' }
+      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }]
     })
     return NextResponse.json(data)
   } catch (error) {
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
       }
     })
     await syncToJSON('testimonials')
+    await logAudit('Created Testimonial', body.clientName, `Rating: ${body.rating}`)
     return NextResponse.json(data)
   } catch (error) {
     console.error(error)

@@ -29,6 +29,7 @@
     "react-hot-toast": "^2.6.0",
     "react-image-crop": "^11.1.2",
     "recharts": "^3.9.1",
+    "resend": "^6.17.2",
     "three": "^0.184.0"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { decrypt } from './lib/auth'
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   let response = NextResponse.next()
 
   const { pathname } = request.nextUrl
@@ -10,8 +10,8 @@ export async function proxy(request: NextRequest) {
   // ----------------------------------------------------
   // Admin Route Protection
   // ----------------------------------------------------
-  if (pathname.startsWith('/admin')) {
-    const isAuthPage = pathname.startsWith('/admin/login') || pathname.startsWith('/admin/forgot-password')
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
+    const isAuthPage = pathname.startsWith('/admin/login') || pathname.startsWith('/admin/forgot-password') || pathname.startsWith('/api/admin/login')
     const adminSession = request.cookies.get('admin_session')?.value
     let isValidSession = false
 
@@ -27,6 +27,9 @@ export async function proxy(request: NextRequest) {
     }
 
     if (!isValidSession && !isAuthPage) {
+      if (pathname.startsWith('/api/')) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
       // Redirect unauthenticated users to login
       const url = request.nextUrl.clone()
       url.pathname = '/admin/login'
@@ -34,6 +37,9 @@ export async function proxy(request: NextRequest) {
     }
 
     if (isValidSession && isAuthPage) {
+      if (pathname.startsWith('/api/')) {
+         return response
+      }
       // Redirect authenticated users away from login
       const url = request.nextUrl.clone()
       url.pathname = '/admin'
@@ -122,6 +128,6 @@ export const config = {
      * - api (API routes, unless we specifically want to protect them here)
      * - assets, etc.
      */
-    '/((?!_next/static|_next/image|favicon.ico|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

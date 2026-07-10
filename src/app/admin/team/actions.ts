@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { syncToJSON } from '@/lib/cms'
+import { logAudit } from '@/lib/audit'
 
 export async function addMemberAction(formData: FormData) {
   const name = formData.get('name') as string
@@ -17,6 +18,7 @@ export async function addMemberAction(formData: FormData) {
       data: { name, role, email, bio, linkedinUrl, githubUrl }
     })
     await syncToJSON('team')
+    await logAudit('Created Team Member', name, `Role: ${role}`)
     revalidatePath('/admin/team')
     revalidatePath('/')
     return { success: true, data: member }
@@ -41,6 +43,7 @@ export async function updateMemberAction(formData: FormData) {
       data: { name, role, email, bio, linkedinUrl, githubUrl }
     })
     await syncToJSON('team')
+    await logAudit('Updated Team Member', name, `Role: ${role}`)
     revalidatePath('/admin/team')
     revalidatePath('/')
     return { success: true, data: member }
@@ -53,12 +56,32 @@ export async function updateMemberAction(formData: FormData) {
 export async function deleteMemberAction(formData: FormData) {
   const id = formData.get('id') as string
   try {
-    await prisma.teamMember.delete({ where: { id } })
+    const member = await prisma.teamMember.delete({ where: { id } })
     await syncToJSON('team')
+    await logAudit('Deleted Team Member', member.name, `Role: ${member.role}`)
     revalidatePath('/admin/team')
     revalidatePath('/')
     return { success: true }
   } catch (error) {
     return { success: false, error: 'Failed to delete member' }
+  }
+}
+
+export async function reorderTeamAction(updates: { id: string; order: number }[]) {
+  try {
+    await prisma.$transaction(
+      updates.map(update => 
+        prisma.teamMember.update({
+          where: { id: update.id },
+          data: { order: update.order }
+        })
+      )
+    )
+    await syncToJSON('team')
+    revalidatePath('/admin/team')
+    revalidatePath('/')
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: 'Failed to reorder' }
   }
 }

@@ -2,14 +2,15 @@
 
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Trash2, Edit2, X } from 'lucide-react'
-import { addMemberAction, deleteMemberAction, updateMemberAction } from './actions'
+import { Trash2, Edit2, X, GripVertical } from 'lucide-react'
+import { addMemberAction, deleteMemberAction, updateMemberAction, reorderTeamAction } from './actions'
 
 export default function TeamClient({ initialTeam }: { initialTeam: any[] }) {
   const [team, setTeam] = useState(initialTeam)
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   // Form State
   const [formData, setFormData] = useState({ name: '', role: '', email: '', bio: '', linkedinUrl: '', githubUrl: '' })
@@ -65,6 +66,33 @@ export default function TeamClient({ initialTeam }: { initialTeam: any[] }) {
     })
     setEditingId(member.id)
     setIsAdding(true)
+  }
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index)
+    if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+  }
+
+  const handleDrop = async (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === index) return
+
+    const newTeam = [...team]
+    const draggedItem = newTeam[draggedIndex]
+    
+    newTeam.splice(draggedIndex, 1)
+    newTeam.splice(index, 0, draggedItem)
+    
+    setTeam(newTeam)
+    setDraggedIndex(null)
+
+    const updates = newTeam.map((m, i) => ({ id: m.id, order: i }))
+    await reorderTeamAction(updates)
   }
 
   return (
@@ -132,6 +160,7 @@ export default function TeamClient({ initialTeam }: { initialTeam: any[] }) {
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
           <thead style={{ background: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <tr>
+              <th style={{ width: '40px', padding: '16px 12px' }}></th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500 }}>Name</th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500 }}>Role</th>
               <th style={{ padding: '16px 24px', color: '#888', fontWeight: 500, textAlign: 'right' }}>Actions</th>
@@ -143,8 +172,19 @@ export default function TeamClient({ initialTeam }: { initialTeam: any[] }) {
                 <td colSpan={3} style={{ padding: '40px', textAlign: 'center', color: '#666' }}>No team members found.</td>
               </tr>
             ) : (
-              team.map(member => (
-                <tr key={member.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s' }} className="hover:bg-white/5">
+              team.map((member, index) => (
+                <tr 
+                  key={member.id} 
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDrop={(e) => handleDrop(e, index)}
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s', opacity: draggedIndex === index ? 0.5 : 1 }} 
+                  className="hover:bg-white/5"
+                >
+                  <td style={{ padding: '16px 12px', color: '#555', cursor: 'grab' }}>
+                    <GripVertical size={16} />
+                  </td>
                   <td style={{ padding: '16px 24px', color: '#fff', fontWeight: 500 }}>{member.name}</td>
                   <td style={{ padding: '16px 24px', color: '#ccc' }}>{member.role}</td>
                   <td style={{ padding: '16px 24px', textAlign: 'right', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>

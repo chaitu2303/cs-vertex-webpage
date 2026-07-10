@@ -208,13 +208,38 @@ model JobApplication {
 }
 
 model NotifyMe {
-  id             String   @id @default(cuid())
-  name           String
-  email          String
-  phone          String?
-  interestedRole String
-  type           String   @default("Job") // "Job" or "Internship"
-  createdAt      DateTime @default(now())
+  id         String   @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  interest   String
+  message    String?
+  sourcePage String?
+  status     String   @default("New") // New, Contacted, In Progress, Converted, Closed
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  notes      NotifyMeNote[]
+  activities NotifyMeActivityLog[]
+}
+
+model NotifyMeNote {
+  id          String   @id @default(cuid())
+  notifyMeId  String
+  notifyMe    NotifyMe @relation(fields: [notifyMeId], references: [id], onDelete: Cascade)
+  adminId     String?  // The admin who wrote the note
+  text        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model NotifyMeActivityLog {
+  id          String   @id @default(cuid())
+  notifyMeId  String
+  notifyMe    NotifyMe @relation(fields: [notifyMeId], references: [id], onDelete: Cascade)
+  action      String   // e.g., "Status changed to Contacted", "Lead Created", "Email Sent"
+  adminId     String?
+  createdAt   DateTime @default(now())
 }
 
 model CourseRegistration {
@@ -259,6 +284,7 @@ model Testimonial {
   feedback    String
   rating      Int      @default(5)
   published   Boolean  @default(false)
+  order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

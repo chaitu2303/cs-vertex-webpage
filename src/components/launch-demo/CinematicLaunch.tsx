@@ -227,7 +227,7 @@ export function CinematicLaunch({ initialData }: CinematicLaunchProps) {
   // Log Stage 1 on mount
   useEffect(() => {
     try {
-      console.log("[STAGE 1] Assets Loaded")
+      // Stage 1 Log removed
     } catch (err: any) {
       setMountError(err?.message || String(err))
     }
@@ -268,7 +268,7 @@ export function CinematicLaunch({ initialData }: CinematicLaunchProps) {
       timeoutMs = 3500
     }
 
-    console.log(`[WATCHDOG] Armed: Stage "${phase}" will auto-skip in ${timeoutMs}ms if stuck.`)
+    // Log Watchdog removed
 
     const timer = setTimeout(() => {
       const next = getNextPhase(phase)
@@ -286,35 +286,35 @@ export function CinematicLaunch({ initialData }: CinematicLaunchProps) {
     if (phase === 'P0') return
 
     if (phase === 'SILENCE' || phase === 'ENERGY') {
-      console.log("[STAGE 2] Countdown Started")
+      // Stage 2 Log removed
     }
     
     // Log Countdown Finished exactly once when leaving counting states
     if (['FINAL_COUNTDOWN', 'MYSTERY', 'AWAKENING', 'RELEASE', 'LOGO_REVEAL', 'HERO', 'ENTRY', 'DONE'].includes(phase) && !stage3LoggedRef.current) {
       stage3LoggedRef.current = true
-      console.log("[STAGE 3] Countdown Finished")
+      // Stage 3 Log removed
     }
 
     if (phase === 'FINAL_COUNTDOWN') {
-      console.log("[STAGE 4] Final 10 Seconds Started")
+      // Stage 4 Log removed
     }
 
     if (phase === 'RELEASE' && !stage5LoggedRef.current) {
       stage5LoggedRef.current = true
-      console.log("[STAGE 5] Cloth Release Started")
+      // Stage 5 Log removed
     }
 
     if (phase === 'LOGO_REVEAL' && !stage6LoggedRef.current) {
       stage6LoggedRef.current = true
-      console.log("[STAGE 6] Logo Reveal Started")
+      // Stage 6 Log removed
     }
 
     if (phase === 'HERO' && !stage6LoggedRef.current) {
-      console.log("[STAGE 7] Hero Moment Started")
+      // Stage 7 Log removed
     }
 
     if (phase === 'DONE') {
-      console.log("[STAGE 8] Completed")
+      // Stage 8 Log removed
     }
   }, [phase])
 
@@ -479,7 +479,7 @@ export function CinematicLaunch({ initialData }: CinematicLaunchProps) {
       return
     }
 
-    console.log(`[STAGE MACHINE] Entering stage: ${phase}`)
+    // Stage Machine Log removed
 
     let timer: NodeJS.Timeout
 
@@ -767,7 +767,7 @@ export function CinematicLaunch({ initialData }: CinematicLaunchProps) {
         setCanvasFallbackActive(true)
       }
       const next = getNextPhase(phase)
-      console.log(`[STAGE MACHINE] T=0 reached. Transitioning from ${phase} to ${next}. WebGL status: ${!isFallback}`)
+      // T=0 Log removed
       setPhase(next)
     }
 

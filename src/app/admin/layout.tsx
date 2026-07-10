@@ -7,6 +7,7 @@ import {
   CheckCircle, FileText, FileImage, DollarSign, Briefcase, 
   Settings, LogOut, Menu, X, Search, Bell
 } from 'lucide-react'
+import { NotificationsPopover } from '@/components/admin/NotificationsPopover'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -100,10 +101,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="text-gray-400 hover:text-white transition-colors relative">
-              <Bell size={18} />
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#FF6B2C] rounded-full"></span>
-            </button>
+            <NotificationsPopover />
             <div className="h-4 w-[1px] bg-[#222]"></div>
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">

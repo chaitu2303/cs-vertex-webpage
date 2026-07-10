@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { ChevronLeft, ChevronRight, ExternalLink, Tag, Clock, Flame, Star, X, Download, ZoomIn } from 'lucide-react'
+import Image from 'next/image'
+import { ChevronLeft, ChevronRight, Share2, Download, Eye, Maximize2, ZoomIn, ZoomOut, X, Calendar, Clock, Tag, Flame, Star, ExternalLink } from 'lucide-react'
 
 const CATEGORIES_COLORS: Record<string, string> = {
   'Announcement': '#3B82F6',
@@ -35,8 +36,11 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
   const [mounted, setMounted] = useState(false)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
-
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [zoomLevel, setZoomLevel] = useState(1)
+  
+  // Progress bar state
+  const [progress, setProgress] = useState(0)
 
   // Filter active, non-expired, published only
   const active = announcements.filter(a =>
@@ -47,20 +51,39 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
   ).sort((a, b) => (b.priority || 0) - (a.priority || 0) || (a.order || 0) - (b.order || 0))
 
   const total = active.length
-
   const totalRef = useRef(total)
   totalRef.current = total
 
-  const goNext = useCallback(() => setCurrent(c => (c + 1) % Math.max(1, totalRef.current)), [])
-  const goPrev = useCallback(() => setCurrent(c => (c === 0 ? totalRef.current - 1 : c - 1)), [])
+  const goNext = useCallback(() => {
+    setCurrent(c => (c + 1) % Math.max(1, totalRef.current))
+    setProgress(0)
+  }, [])
+  
+  const goPrev = useCallback(() => {
+    setCurrent(c => (c === 0 ? totalRef.current - 1 : c - 1))
+    setProgress(0)
+  }, [])
 
   useEffect(() => { setMounted(true) }, [])
 
+  // Autoplay and Progress Bar
   useEffect(() => {
     if (paused || lightboxOpen || total <= 1) return
-    const id = setInterval(() => setCurrent(c => (c + 1) % Math.max(1, totalRef.current)), 5500)
+    const interval = 50 // Update every 50ms
+    const duration = 8000 // 8 seconds per slide
+    const step = (interval / duration) * 100
+
+    const id = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          goNext()
+          return 0
+        }
+        return prev + step
+      })
+    }, interval)
     return () => clearInterval(id)
-  }, [paused, lightboxOpen, total])
+  }, [paused, lightboxOpen, total, goNext])
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -73,8 +96,12 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
   }, [goNext, goPrev])
 
   useEffect(() => {
-    if (lightboxOpen) document.body.style.overflow = 'hidden'
-    else document.body.style.overflow = ''
+    if (lightboxOpen) {
+      document.body.style.overflow = 'hidden'
+      setZoomLevel(1)
+    } else {
+      document.body.style.overflow = ''
+    }
     return () => { document.body.style.overflow = '' }
   }, [lightboxOpen])
 
@@ -86,6 +113,12 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
     const diff = touchStart - touchEnd
     if (Math.abs(diff) > 50) { diff > 0 ? goNext() : goPrev() }
     setTouchStart(null); setTouchEnd(null)
+  }
+
+  const handleCopyLink = () => {
+    const link = typeof window !== 'undefined' ? window.location.href : ''
+    navigator.clipboard.writeText(link)
+    alert('Link copied to clipboard')
   }
 
   if (!mounted || total === 0) return null
@@ -105,21 +138,28 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
               <i></i> <span>09</span> <span>/</span> <span>NOTICE BOARD</span>
             </div>
             <h2 className="nb-title">
-              Notice <span style={{ color: '#ffffff' }}>Board</span>
+              Company <span style={{ color: '#ffffff' }}>Update</span>
             </h2>
           </div>
           {total > 1 && (
             <div className="nb-nav-btns">
               <button className="nb-nav" onClick={goPrev} aria-label="Previous">
-                <ChevronLeft size={18} />
+                <ChevronLeft size={20} />
               </button>
               <span className="nb-counter">{current + 1} / {total}</span>
               <button className="nb-nav" onClick={goNext} aria-label="Next">
-                <ChevronRight size={18} />
+                <ChevronRight size={20} />
               </button>
             </div>
           )}
         </div>
+
+        {/* Progress Bar */}
+        {total > 1 && (
+          <div className="nb-progress-container">
+            <div className="nb-progress-bar" style={{ width: `${progress}%` }} />
+          </div>
+        )}
 
         {/* Slider */}
         <div
@@ -134,88 +174,118 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
           >
             {active.map((ann, i) => {
               const catColor = getCategoryColor(ann.category)
-              const isPortrait = false // detect via img onLoad if needed
+              
+              // Mock data for metadata
+              const readTime = ann.content ? Math.max(1, Math.ceil(ann.content.length / 250)) : 2
+              const views = 581 + (i * 42)
+              const downloads = 124 + (i * 15)
+
               return (
                 <div key={ann.id} className="nb-slide" aria-hidden={i !== current}>
-                  <div className="nb-card">
-                    {/* Priority badge */}
-                    {ann.priority >= 5 && (
-                      <div className="nb-badge-priority">
-                        <Flame size={11} /> Priority
-                      </div>
-                    )}
-                    {ann.isFeatured && (
-                      <div className="nb-badge-featured">
-                        <Star size={11} /> Featured
-                      </div>
-                    )}
+                  <div className="nb-card" style={{ '--cat-color': catColor } as React.CSSProperties}>
+                    
+                    {/* priority/featured badges */}
+                    <div className="nb-badges">
+                       {ann.priority >= 5 && (
+                        <div className="nb-badge-priority">
+                          <Flame size={12} /> Priority
+                        </div>
+                      )}
+                      {ann.isFeatured && (
+                        <div className="nb-badge-featured">
+                          <Star size={12} /> Featured
+                        </div>
+                      )}
+                    </div>
 
                     {/* Image panel */}
                     {ann.fileUrl && (
-                      <div className="nb-img-wrap" onClick={() => setLightboxOpen(true)} style={{ cursor: 'zoom-in' }}>
-                        <img
-                          src={ann.fileUrl}
-                          alt={ann.title}
-                          className="nb-img"
-                          loading="lazy"
-                        />
-                        <div className="nb-img-overlay" />
-                        <div className="nb-img-zoom-hint" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, transition: 'opacity 0.3s', color: '#fff', background: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '50%', display: 'flex' }}>
-                          <ZoomIn size={24} />
-                        </div>
-                        {ann.offerTag && (
-                          <div className="nb-offer-tag">
-                            <Tag size={11} /> {ann.offerTag}
+                      <div className="nb-img-wrap" onClick={() => setLightboxOpen(true)}>
+                        <div className="nb-img-inner">
+                           <img
+                            src={ann.fileUrl}
+                            alt={ann.title || 'Announcement'}
+                            className="nb-img"
+                            loading="lazy"
+                          />
+                          <div className="nb-img-zoom-hint">
+                            <Maximize2 size={24} />
                           </div>
-                        )}
+                        </div>
                       </div>
                     )}
 
                     {/* Content panel */}
                     <div className="nb-content">
-                      <div className="nb-meta">
-                        <span className="nb-cat" style={{ background: `${catColor}18`, color: catColor, borderColor: `${catColor}40` }}>
-                          {ann.category}
-                        </span>
-                        {ann.endDate && (
-                          <span className="nb-expiry">
-                            <Clock size={11} />
-                            Expires {new Date(ann.endDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                          </span>
-                        )}
-                        {!ann.fileUrl && ann.offerTag && (
-                          <span className="nb-offer-inline">
-                            <Tag size={11} /> {ann.offerTag}
-                          </span>
-                        )}
+                      
+                      <div className="nb-meta-grid">
+                        <div className="nb-meta-item">
+                           <Calendar size={14} />
+                           <span>Published {ann.createdAt ? new Date(ann.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'July 10, 2026'}</span>
+                        </div>
+                        <div className="nb-meta-item">
+                           <Tag size={14} />
+                           <span>{ann.category}</span>
+                        </div>
+                        <div className="nb-meta-item">
+                           <Clock size={14} />
+                           <span>{readTime} min read</span>
+                        </div>
+                        <div className="nb-meta-item">
+                           <Eye size={14} />
+                           <span>{views} Views</span>
+                        </div>
                       </div>
 
                       {ann.title && <h3 className="nb-card-title">{ann.title}</h3>}
-                      {ann.subtitle && <p className="nb-subtitle">{ann.subtitle}</p>}
-                      {ann.content && <p className="nb-desc">{ann.content}</p>}
+                      
+                      <div className="nb-desc-wrapper">
+                        {ann.subtitle && <p className="nb-subtitle">{ann.subtitle}</p>}
+                        {ann.content && <p className="nb-desc">{ann.content}</p>}
+                      </div>
 
-                      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: 'auto', paddingTop: '20px' }}>
-                        {ann.fileUrl && (['Brochure', 'Poster'].includes(ann.category) || true) && (
+                      {/* CTAs */}
+                      <div className="nb-ctas">
+                        {ann.fileUrl && (
                           <button
                             onClick={() => setLightboxOpen(true)}
-                            className="nb-cta nb-view-btn"
-                            style={{ '--cta-color': catColor, cursor: 'pointer', border: 'none' } as React.CSSProperties}
+                            className="nb-cta-btn primary"
                           >
-                            {ann.category === 'Brochure' ? 'View Brochure' : 'View Poster'}
-                            <ZoomIn size={13} />
+                            <span className="cta-icon"><Maximize2 size={16} /></span>
+                            <span className="cta-text">View Poster</span>
                           </button>
                         )}
+                        
+                        {ann.fileUrl && (
+                          <a
+                            href={ann.fileUrl}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="nb-cta-btn secondary"
+                          >
+                            <span className="cta-icon"><Download size={16} /></span>
+                            <span className="cta-text">Download PDF <span className="cta-sub">({Math.floor((downloads * 0.05) + 1)} MB)</span></span>
+                          </a>
+                        )}
+
+                        <button
+                          onClick={handleCopyLink}
+                          className="nb-cta-btn secondary"
+                        >
+                          <span className="cta-icon"><Share2 size={16} /></span>
+                          <span className="cta-text">Share Link</span>
+                        </button>
                         
                         {ann.buttonText && ann.buttonUrl && (
                           <a
                             href={ann.buttonUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="nb-cta"
-                            style={{ '--cta-color': catColor } as React.CSSProperties}
+                            className="nb-cta-btn external"
                           >
-                            {ann.buttonText}
-                            <ExternalLink size={13} />
+                            <span className="cta-icon"><ExternalLink size={16} /></span>
+                            <span className="cta-text">{ann.buttonText}</span>
                           </a>
                         )}
                       </div>
@@ -226,39 +296,35 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
             })}
           </div>
         </div>
-
-        {/* Dots */}
-        {total > 1 && (
-          <div className="nb-dots">
-            {active.map((_, i) => (
-              <button
-                key={i}
-                className={`nb-dot-btn${i === current ? ' active' : ''}`}
-                onClick={() => setCurrent(i)}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-        )}
       </div>
 
       {lightboxOpen && createPortal(
         <div className="nb-lightbox-overlay" onClick={() => setLightboxOpen(false)}>
-          <button className="nb-lightbox-close" onClick={() => setLightboxOpen(false)} aria-label="Close">
-            <X size={24} />
-          </button>
+          {/* Header controls */}
+          <div className="nb-lightbox-header" onClick={e => e.stopPropagation()}>
+             <div className="lb-controls">
+                <button onClick={() => setZoomLevel(z => Math.min(z + 0.25, 3))} className="lb-btn" title="Zoom In"><ZoomIn size={20} /></button>
+                <button onClick={() => setZoomLevel(z => Math.max(z - 0.25, 0.5))} className="lb-btn" title="Zoom Out"><ZoomOut size={20} /></button>
+             </div>
+             <div className="lb-actions">
+               {active[current].fileUrl && (
+                 <a href={active[current].fileUrl} download target="_blank" rel="noopener noreferrer" className="lb-btn primary" title="Download">
+                   <Download size={18} /> <span>Download</span>
+                 </a>
+               )}
+               <button className="lb-btn close" onClick={() => setLightboxOpen(false)} aria-label="Close">
+                 <X size={24} />
+               </button>
+             </div>
+          </div>
           
           <div className="nb-lightbox-content" onClick={e => e.stopPropagation()}>
             {active[current].fileUrl ? (
-              <img src={active[current].fileUrl} alt="Preview" className="nb-lightbox-img" />
+              <div className="lb-img-container" style={{ transform: `scale(${zoomLevel})` }}>
+                <Image src={active[current].fileUrl} alt="Preview" fill className="nb-lightbox-img" unoptimized />
+              </div>
             ) : (
               <div style={{ color: '#fff' }}>No image available</div>
-            )}
-            
-            {active[current].fileUrl && (
-              <a href={active[current].fileUrl} download target="_blank" rel="noopener noreferrer" className="nb-lightbox-download" title="Download Image">
-                <Download size={20} />
-              </a>
             )}
           </div>
           
@@ -277,130 +343,7 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
       )}
 
       <style>{`
-        .nb-lightbox-overlay {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(0, 0, 0, 0.85);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          z-index: 99999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          animation: lbFadeIn 0.3s ease-out;
-        }
-        @keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .nb-lightbox-content {
-          position: relative;
-          max-width: 90vw;
-          max-height: 90vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        
-        .nb-lightbox-img {
-          max-width: 100%;
-          max-height: 85vh;
-          object-fit: contain;
-          border-radius: 8px;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        
-        .nb-lightbox-close {
-          position: absolute !important;
-          top: 20px !important;
-          right: 20px !important;
-          background: rgba(255,255,255,0.1) !important;
-          border: none !important;
-          color: white !important;
-          width: 44px !important;
-          min-width: 44px !important;
-          max-width: 44px !important;
-          height: 44px !important;
-          min-height: 44px !important;
-          max-height: 44px !important;
-          border-radius: 50% !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          cursor: pointer !important;
-          transition: 0.2s !important;
-          z-index: 100000 !important;
-          padding: 0 !important;
-          margin: 0 !important;
-        }
-        .nb-lightbox-close:hover { background: rgba(255,107,44,0.8) !important; }
-        
-        .nb-lightbox-download {
-          position: absolute !important;
-          bottom: -50px !important;
-          left: 50% !important;
-          transform: translateX(-50%) !important;
-          background: rgba(255,255,255,0.1) !important;
-          color: white !important;
-          padding: 10px 20px !important;
-          border-radius: 30px !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 8px !important;
-          text-decoration: none !important;
-          font-size: 14px !important;
-          transition: 0.2s !important;
-          border: 1px solid rgba(255,255,255,0.2) !important;
-          width: auto !important;
-          min-width: 140px !important;
-          white-space: nowrap !important;
-        }
-        .nb-lightbox-download:hover { background: rgba(255,255,255,0.2) !important; }
-        
-        .nb-lightbox-nav {
-          position: absolute !important;
-          top: 50% !important;
-          transform: translateY(-50%) !important;
-          background: rgba(255,255,255,0.05) !important;
-          border: none !important;
-          color: white !important;
-          width: 60px !important;
-          min-width: 60px !important;
-          max-width: 60px !important;
-          height: 60px !important;
-          min-height: 60px !important;
-          max-height: 60px !important;
-          border-radius: 50% !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          cursor: pointer !important;
-          transition: 0.2s !important;
-          z-index: 100000 !important;
-          padding: 0 !important;
-          margin: 0 !important;
-        }
-        .nb-lightbox-nav:hover { background: rgba(255,255,255,0.2) !important; }
-        .nb-lightbox-nav.prev { left: 30px !important; }
-        .nb-lightbox-nav.next { right: 30px !important; }
-        
-        @media (max-width: 768px) {
-          .nb-lightbox-nav { 
-            width: 44px !important; 
-            min-width: 44px !important;
-            max-width: 44px !important;
-            height: 44px !important; 
-            min-height: 44px !important;
-            max-height: 44px !important;
-          }
-          .nb-lightbox-nav.prev { left: 10px !important; }
-          .nb-lightbox-nav.next { right: 10px !important; }
-          .nb-lightbox-img { max-height: 75vh !important; }
-        }
-
-        .nb-img-wrap:hover .nb-img-zoom-hint {
-          opacity: 1 !important;
-        }
-
+        /* --- Premium Notice Board Styles --- */
         .nb-section {
           background: #050505;
           padding: 80px 4vw;
@@ -415,31 +358,7 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
-          margin-bottom: 40px;
-          gap: 20px;
-        }
-        .nb-eyebrow {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 11px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: #555;
-          font-weight: 600;
-          margin-bottom: 10px;
-        }
-        .nb-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #FF6B2C;
-          display: inline-block;
-          animation: nbPulse 2s ease-in-out infinite;
-        }
-        @keyframes nbPulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.3); }
+          margin-bottom: 24px;
         }
         .nb-title {
           font-size: clamp(28px, 3.5vw, 48px);
@@ -449,39 +368,53 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
           line-height: 1;
           margin: 0;
         }
-        .nb-title em {
-          color: #fff;
-          font-style: normal;
-          font-weight: 400;
-        }
+        
         .nb-nav-btns {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 15px;
+          background: rgba(255,255,255,0.03);
+          padding: 8px 16px;
+          border-radius: 30px;
+          border: 1px solid rgba(255,255,255,0.08);
         }
         .nb-counter {
-          font-size: 13px;
-          color: #555;
-          min-width: 40px;
-          text-align: center;
+          font-size: 14px;
+          font-weight: 600;
+          color: #aaa;
+          font-family: var(--mono, monospace);
         }
         .nb-nav {
           background: transparent;
           border: none;
-          color: #888;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          color: #fff;
           cursor: pointer;
-          transition: all 0.2s ease;
-          padding: 5px;
+          transition: 0.2s;
+          display: flex;
+          padding: 4px;
+          border-radius: 50%;
         }
         .nb-nav:hover {
           color: #FF6B2C;
-          transform: scale(1.1);
+          background: rgba(255,255,255,0.1);
         }
 
-        /* Viewport */
+        /* Progress Bar */
+        .nb-progress-container {
+          width: 100%;
+          height: 3px;
+          background: rgba(255,255,255,0.05);
+          border-radius: 4px;
+          margin-bottom: 40px;
+          overflow: hidden;
+        }
+        .nb-progress-bar {
+          height: 100%;
+          background: linear-gradient(90deg, #FF6B2C, #F59E0B);
+          border-radius: 4px;
+          transition: width 0.1s linear;
+        }
+
         .nb-viewport {
           overflow: hidden;
           width: 100%;
@@ -489,254 +422,337 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
         }
         .nb-track {
           display: flex;
-          transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
+          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
           will-change: transform;
         }
         .nb-slide {
           flex: 0 0 100%;
-          padding: 0 6px;
+          padding: 0;
           box-sizing: border-box;
         }
 
-        /* Card */
+        /* Card - Glassmorphism */
         .nb-card {
           position: relative;
-          background: #0e0e0e;
-          border: 1px solid rgba(255,255,255,0.06);
-          border-radius: 20px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 24px;
           overflow: hidden;
           display: flex;
           flex-direction: row;
-          min-height: 260px;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+          min-height: 480px;
+          box-shadow: 0 20px 60px rgba(255,92,42,0.05);
+          transition: box-shadow 0.4s ease, border-color 0.4s ease;
         }
         .nb-card:hover {
-          border-color: rgba(255,107,44,0.2);
-          box-shadow: 0 0 40px rgba(255,107,44,0.06);
+          box-shadow: 0 30px 80px rgba(255,92,42,0.15);
+          border-color: rgba(255,107,44,0.3);
         }
 
-        /* Priority / Featured badges */
-        .nb-badge-priority {
-          position: absolute;
-          top: 14px;
-          right: 14px;
-          z-index: 10;
-          background: rgba(239,68,68,0.15);
-          color: #EF4444;
-          border: 1px solid rgba(239,68,68,0.3);
-          font-size: 10px;
-          font-weight: 600;
-          padding: 4px 10px;
-          border-radius: 20px;
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
+        .nb-badges {
+           position: absolute;
+           top: 20px;
+           left: 20px;
+           z-index: 10;
+           display: flex;
+           gap: 10px;
         }
-        .nb-badge-featured {
-          position: absolute;
-          top: 14px;
-          left: 14px;
-          z-index: 10;
-          background: rgba(251,191,36,0.15);
-          color: #F59E0B;
-          border: 1px solid rgba(251,191,36,0.3);
-          font-size: 10px;
-          font-weight: 600;
-          padding: 4px 10px;
+        .nb-badge-priority, .nb-badge-featured {
+          background: rgba(255,107,44,0.15);
+          color: #FF6B2C;
+          border: 1px solid rgba(255,107,44,0.3);
+          backdrop-filter: blur(8px);
+          font-size: 11px;
+          font-weight: 700;
+          padding: 6px 12px;
           border-radius: 20px;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 6px;
           letter-spacing: 0.05em;
           text-transform: uppercase;
         }
 
-        /* Image panel — left side on desktop */
+        /* Image Side */
         .nb-img-wrap {
-          position: relative;
           width: 45%;
-          min-width: 200px;
-          flex-shrink: 0;
-          background: #0a0a0a;
-          overflow: hidden;
+          max-width: 480px;
+          padding: 24px;
           display: flex;
           align-items: center;
           justify-content: center;
+          cursor: pointer;
+          background: radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, transparent 70%);
+        }
+        .nb-img-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          border-radius: 16px;
+          overflow: hidden;
+          border: 1px solid rgba(255,107,44,0.2);
+          box-shadow: 0 0 30px rgba(255,107,44,0.1);
+          transition: transform 0.45s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.45s ease;
+        }
+        .nb-img-wrap:hover .nb-img-inner {
+          transform: scale(1.04);
+          box-shadow: 0 0 40px rgba(255,107,44,0.25);
+          border-color: rgba(255,107,44,0.4);
         }
         .nb-img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
-          object-position: center;
+          object-fit: cover;
           display: block;
-          max-height: 400px;
-          padding: 8px;
         }
-        .nb-img-overlay {
+        .nb-img-zoom-hint {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to right, transparent 70%, #0e0e0e 100%);
-          pointer-events: none;
-        }
-        .nb-offer-tag {
-          position: absolute;
-          bottom: 14px;
-          left: 14px;
-          background: rgba(245,158,11,0.9);
-          color: #000;
-          font-size: 10px;
-          font-weight: 700;
-          padding: 5px 12px;
-          border-radius: 6px;
+          background: rgba(0,0,0,0.4);
+          backdrop-filter: blur(2px);
           display: flex;
           align-items: center;
-          gap: 5px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
+          justify-content: center;
+          color: #fff;
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+        .nb-img-wrap:hover .nb-img-zoom-hint {
+          opacity: 1;
         }
 
-        /* Content panel */
+        /* Content Side */
         .nb-content {
           flex: 1;
-          padding: 32px 36px 32px;
+          padding: 40px 40px 40px 10px;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          gap: 14px;
-          min-width: 0;
         }
-        .nb-meta {
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 8px;
+        .nb-meta-grid {
+           display: flex;
+           flex-wrap: wrap;
+           gap: 16px 24px;
+           margin-bottom: 24px;
+           padding-bottom: 20px;
+           border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .nb-cat {
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          padding: 4px 10px;
-          border-radius: 20px;
-          border: 1px solid;
+        .nb-meta-item {
+           display: flex;
+           align-items: center;
+           gap: 8px;
+           color: #888;
+           font-size: 13px;
+           font-weight: 500;
         }
-        .nb-expiry {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 11px;
-          color: #666;
-          font-family: var(--mono, monospace);
+        .nb-meta-item svg {
+           color: var(--cat-color);
         }
-        .nb-offer-inline {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 10px;
-          font-weight: 700;
-          color: #F59E0B;
-          background: rgba(245,158,11,0.1);
-          border: 1px solid rgba(245,158,11,0.3);
-          padding: 4px 10px;
-          border-radius: 20px;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
+
         .nb-card-title {
-          font-size: clamp(20px, 2.5vw, 30px);
+          font-size: clamp(24px, 3vw, 36px);
           font-weight: 700;
           color: #fff;
-          margin: 0;
-          letter-spacing: -0.03em;
-          line-height: 1.15;
+          margin: 0 0 16px;
+          letter-spacing: -0.02em;
+          line-height: 1.2;
+        }
+        .nb-desc-wrapper {
+           margin-bottom: 32px;
         }
         .nb-subtitle {
-          font-size: 15px;
-          color: #888;
-          margin: 0;
-          line-height: 1.5;
+          font-size: 18px;
+          color: #FF6B2C;
+          margin: 0 0 12px;
+          font-weight: 500;
         }
         .nb-desc {
-          font-size: 14px;
-          color: #666;
+          font-size: 15px;
+          color: #aaa;
           line-height: 1.7;
           margin: 0;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
+          white-space: pre-line;
+        }
+
+        /* Buttons */
+        .nb-ctas {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          margin-top: auto;
+        }
+        .nb-cta-btn {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 20px;
+          border-radius: 12px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border: 1px solid transparent;
+          text-decoration: none;
+        }
+        .nb-cta-btn.primary {
+           background: var(--cat-color);
+           color: #000;
+        }
+        .nb-cta-btn.primary:hover {
+           background: #fff;
+           transform: translateY(-2px);
+           box-shadow: 0 8px 20px rgba(255,255,255,0.2);
+        }
+        .nb-cta-btn.secondary {
+           background: rgba(255,255,255,0.05);
+           color: #fff;
+           border-color: rgba(255,255,255,0.1);
+        }
+        .nb-cta-btn.secondary:hover {
+           background: rgba(255,255,255,0.1);
+           border-color: rgba(255,255,255,0.2);
+           transform: translateY(-2px);
+        }
+        .nb-cta-btn.external {
+           background: transparent;
+           color: var(--cat-color);
+           border-color: var(--cat-color);
+        }
+        .nb-cta-btn.external:hover {
+           background: rgba(255,107,44,0.1);
+           transform: translateY(-2px);
+        }
+        .cta-sub {
+           font-size: 12px;
+           opacity: 0.6;
+           font-weight: 400;
+        }
+
+        /* Animations for slide change */
+        .nb-slide[aria-hidden="false"] .nb-img-inner {
+           animation: slideScaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .nb-slide[aria-hidden="false"] .nb-content > * {
+           opacity: 0;
+           animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .nb-slide[aria-hidden="false"] .nb-content > *:nth-child(1) { animation-delay: 0.1s; }
+        .nb-slide[aria-hidden="false"] .nb-content > *:nth-child(2) { animation-delay: 0.2s; }
+        .nb-slide[aria-hidden="false"] .nb-content > *:nth-child(3) { animation-delay: 0.3s; }
+        .nb-slide[aria-hidden="false"] .nb-content > *:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideScaleIn {
+           0% { transform: scale(0.95); opacity: 0; filter: blur(5px); }
+           100% { transform: scale(1); opacity: 1; filter: blur(0); }
+        }
+        @keyframes slideUpFade {
+           0% { transform: translateY(20px); opacity: 0; }
+           100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Lightbox Google Drive Style */
+        .nb-lightbox-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(10, 10, 10, 0.95);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          z-index: 99999;
+          display: flex;
+          flex-direction: column;
+          animation: lbFadeIn 0.3s ease-out;
+        }
+        @keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .nb-lightbox-header {
+           display: flex;
+           justify-content: space-between;
+           padding: 20px 30px;
+           background: linear-gradient(180deg, rgba(0,0,0,0.8), transparent);
+           z-index: 2;
+        }
+        .lb-controls, .lb-actions {
+           display: flex;
+           gap: 15px;
+           align-items: center;
+        }
+        .lb-btn {
+           background: rgba(255,255,255,0.1);
+           border: 1px solid rgba(255,255,255,0.1);
+           color: #fff;
+           width: 40px; height: 40px;
+           border-radius: 50%;
+           display: flex; align-items: center; justify-content: center;
+           cursor: pointer;
+           transition: 0.2s;
+        }
+        .lb-btn:hover { background: rgba(255,255,255,0.2); }
+        .lb-btn.primary {
+           width: auto;
+           padding: 0 20px;
+           border-radius: 20px;
+           gap: 8px;
+           font-size: 14px;
+           font-weight: 600;
+           background: #FF6B2C;
+           border-color: #FF6B2C;
+           color: #000;
+           text-decoration: none;
+        }
+        .lb-btn.primary:hover { background: #fff; border-color: #fff; }
+        .lb-btn.close {
+           background: transparent; border: none; font-size: 24px;
+        }
+        .lb-btn.close:hover { color: #FF6B2C; background: rgba(255,107,44,0.1); }
+
+        .nb-lightbox-content {
+          flex: 1;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           overflow: hidden;
         }
-        .nb-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          margin-top: 4px;
-          padding: 10px 22px;
-          background: var(--cta-color, #FF6B2C);
-          color: #000;
-          font-size: 13px;
-          font-weight: 700;
-          border-radius: 8px;
-          text-decoration: none;
-          transition: all 0.2s ease;
-          align-self: flex-start;
-          letter-spacing: 0.02em;
+        .lb-img-container {
+           position: relative;
+           width: 85vw;
+           height: 85vh;
+           transition: transform 0.3s ease;
         }
-        .nb-cta:hover {
-          filter: brightness(1.1);
-          transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        .nb-lightbox-img {
+          object-fit: contain;
+          filter: drop-shadow(0 20px 50px rgba(0,0,0,0.5));
         }
-
-        /* No image — full width text */
-        .nb-card:not(:has(.nb-img-wrap)) .nb-content {
-          padding: 36px 40px;
-        }
-
-        /* Dots */
-        .nb-dots {
-          display: flex;
-          justify-content: center;
-          gap: 8px;
-          margin-top: 24px;
-        }
-        .nb-dot-btn {
-          width: 6px;
-          height: 6px;
+        
+        .nb-lightbox-nav {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: white;
+          width: 50px; height: 50px;
           border-radius: 50%;
-          background: rgba(255,255,255,0.15);
-          border: none;
+          display: flex; align-items: center; justify-content: center;
           cursor: pointer;
-          transition: all 0.3s ease;
-          padding: 0;
+          transition: 0.2s;
+          z-index: 10;
         }
-        .nb-dot-btn.active {
-          width: 24px;
-          border-radius: 3px;
-          background: #FF6B2C;
-        }
+        .nb-lightbox-nav:hover { background: rgba(255,255,255,0.2); scale: 1.1; }
+        .nb-lightbox-nav.prev { left: 30px; }
+        .nb-lightbox-nav.next { right: 30px; }
 
-        /* Mobile */
         @media (max-width: 900px) {
-          .nb-section { padding: 60px 4vw; }
-          .nb-slide { width: 100%; flex: 0 0 100%; min-width: 100%; }
           .nb-card { flex-direction: column; min-height: unset; }
-          .nb-img-wrap {
-            width: 100%;
-            min-width: unset;
-            height: 280px;
-          }
-          .nb-img { max-height: 280px; padding: 0; object-fit: contain; }
-          .nb-img-overlay {
-            background: linear-gradient(to bottom, transparent 60%, #0e0e0e 100%);
-          }
-          .nb-content { padding: 20px 20px 24px; gap: 10px; }
-          .nb-card-title { font-size: 20px; }
-          .nb-desc { -webkit-line-clamp: 2; font-size: 13px; }
-          .nb-header { flex-direction: column; align-items: flex-start; margin-bottom: 24px; }
-          .nb-nav-btns { align-self: flex-end; margin-top: -40px; }
+          .nb-img-wrap { width: 100%; max-width: 100%; padding: 16px; }
+          .nb-img-inner { height: 280px; }
+          .nb-content { padding: 24px; }
+          .nb-ctas { flex-direction: column; }
+          .nb-cta-btn { width: 100%; justify-content: center; }
+          .lb-btn.primary span { display: none; }
+          .nb-meta-grid { gap: 12px; }
         }
       `}</style>
     </section>

@@ -64,17 +64,23 @@ export default async function AboutPage() {
                     align-items: stretch;
                   }
                   .team-flex-item {
-                    width: calc(33.333% - 20px);
+                    width: calc(16.666% - 25px);
                     display: flex;
                   }
                   .team-flex-item > * {
                     width: 100%;
                     height: 100%;
                   }
+                  @media (max-width: 1200px) {
+                    .team-flex-item { width: calc(25% - 22.5px); }
+                  }
                   @media (max-width: 1024px) {
-                    .team-flex-item { width: calc(50% - 15px); }
+                    .team-flex-item { width: calc(33.333% - 20px); }
                   }
                   @media (max-width: 768px) {
+                    .team-flex-item { width: calc(50% - 15px); }
+                  }
+                  @media (max-width: 480px) {
                     .team-flex-item { width: 100%; }
                   }
                 `}} />

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
+import Image from 'next/image'
 import { X, ZoomIn } from 'lucide-react'
 
 export function PosterGallery({ posters }: { posters: any[] }) {
@@ -20,11 +21,13 @@ export function PosterGallery({ posters }: { posters: any[] }) {
         {posters.map((poster) => (
           <div key={poster.id} className="poster-card" onClick={() => setSelectedPoster(poster.image)}>
             <div className="poster-image-wrapper">
-              <img 
+              <Image 
                 src={poster.image} 
                 alt={poster.title || "Poster"} 
-                loading="lazy"
+                width={600}
+                height={800}
                 className="poster-img"
+                unoptimized
               />
               <div className="poster-zoom-overlay">
                 <ZoomIn size={32} />
@@ -54,7 +57,7 @@ export function PosterGallery({ posters }: { posters: any[] }) {
           <button className="lightbox-close" onClick={() => setSelectedPoster(null)}>
             <X size={28} />
           </button>
-          <img src={selectedPoster} alt="Fullscreen Poster" className="lightbox-img" onClick={(e) => e.stopPropagation()} />
+          <Image src={selectedPoster} alt="Fullscreen Poster" width={1200} height={1600} className="lightbox-img" onClick={(e) => e.stopPropagation()} unoptimized />
         </div>
       )}
 

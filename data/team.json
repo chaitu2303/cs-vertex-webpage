@@ -78,21 +78,5 @@
     "order": 5,
     "createdAt": "2026-07-03T17:50:19.203Z",
     "updatedAt": "2026-07-03T18:06:40.802Z"
-  },
-  {
-    "id": "cmr58b3uw00051iro5wt6mjqq",
-    "name": "Gunna Sateesh",
-    "role": "Operations Coordinator",
-    "expertise": "Operations Management, Project Coordination, Client Relationship Management, Java, Python, Web Development",
-    "bio": "Coordinates business operations, client communication, project execution, documentation, and delivery management to ensure smooth workflow across all CS Vertex projects.",
-    "image": "/assets/team/founder_sateesh2.jpeg",
-    "linkedinUrl": "https://www.linkedin.com/in/sateesh-gunna-33948534a",
-    "githubUrl": "https://github.com/sateeshg09",
-    "email": "sateeshgunna09@gmail.com",
-    "portfolioUrl": null,
-    "published": true,
-    "order": 6,
-    "createdAt": "2026-07-03T17:50:19.208Z",
-    "updatedAt": "2026-07-03T18:06:40.808Z"
   }
 ]

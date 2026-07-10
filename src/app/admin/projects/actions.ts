@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { syncToJSON } from '@/lib/cms'
+import { logAudit } from '@/lib/audit'
 
 export async function addProjectAction(formData: FormData) {
   const title = formData.get('title') as string
@@ -38,6 +39,7 @@ export async function addProjectAction(formData: FormData) {
       }
     })
     await syncToJSON('projects')
+    await logAudit('Created Project', title, `Slug: ${slug}`)
     revalidatePath('/admin/projects')
     revalidatePath('/')
     return { success: true, data: proj }
@@ -82,6 +84,7 @@ export async function updateProjectAction(formData: FormData) {
       }
     })
     await syncToJSON('projects')
+    await logAudit('Updated Project', title, `Slug: ${slug}`)
     revalidatePath('/admin/projects')
     revalidatePath('/')
     return { success: true, data: proj }
@@ -93,8 +96,9 @@ export async function updateProjectAction(formData: FormData) {
 export async function deleteProjectAction(formData: FormData) {
   const id = formData.get('id') as string
   try {
-    await prisma.project.delete({ where: { id } })
+    const proj = await prisma.project.delete({ where: { id } })
     await syncToJSON('projects')
+    await logAudit('Deleted Project', proj.title, `Slug: ${proj.slug}`)
     revalidatePath('/admin/projects')
     revalidatePath('/')
     return { success: true }

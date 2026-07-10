@@ -25,7 +25,7 @@ export async function syncToJSON(key: string) {
     } else if (key === 'announcements') {
       data = await prisma.announcement.findMany({ orderBy: [{ priority: 'desc' }, { order: 'asc' }, { createdAt: 'desc' }] })
     } else if (key === 'testimonials') {
-      data = await prisma.testimonial.findMany({ orderBy: { createdAt: 'desc' } })
+      data = await prisma.testimonial.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'desc' }] })
     } else if (key === 'courses') {
       data = await prisma.course.findMany({ orderBy: { createdAt: 'desc' } })
     } else if (key === 'internships') {

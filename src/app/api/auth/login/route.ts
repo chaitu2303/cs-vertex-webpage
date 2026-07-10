@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     const normalizedEmail = email.trim().toLowerCase()
-    console.log("DEBUG [Admin Login Request]:", { email: normalizedEmail, passwordLength: password.length })
+
 
     const FIXED_ADMIN_EMAIL = "admin@csvertex.com"
     const FIXED_ADMIN_PASSWORD = "CSVertex#Admin%2026"
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       }
     }
 
-    console.log("DEBUG [Admin Login Status]:", { isValid, role })
+
 
     if (!isValid) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })

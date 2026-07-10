@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     try {
       // Find an admin user to notify, or just create a general notification if your schema allows
       // For now, we'll just log it. The Admin dashboard can pull unpublished testimonials directly.
-      console.log('New testimonial queued for review:', newTestimonial.id)
+
     } catch (e) {
       console.error('Failed to notify admin:', e)
     }

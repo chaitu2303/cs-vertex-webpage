@@ -49,7 +49,7 @@ export default function Footer() {
             <h4 style={{ color: '#fff', fontSize: '12px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0, fontFamily: 'var(--mono)' }}>Legal</h4>
             <Link href="/privacy" className="footer-nav-link">Privacy Policy</Link>
             <Link href="/terms" className="footer-nav-link">Terms of Service</Link>
-            <Link href="/refunds" className="footer-nav-link">Refund Policy</Link>
+            <Link href="/refund-policy" className="footer-nav-link">Refund Policy</Link>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
