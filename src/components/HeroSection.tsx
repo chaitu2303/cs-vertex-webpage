@@ -151,7 +151,7 @@ export function HeroSection() {
             >
               Explore Services
             </motion.a>
-          </div>
+          </motion.div>
           
           {/* Trust Badges */}
           <div className="trust-badges-row">

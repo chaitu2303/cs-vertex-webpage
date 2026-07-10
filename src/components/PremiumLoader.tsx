@@ -79,7 +79,7 @@ export function PremiumLoader() {
         <p className="loader-text">Building Modern Digital Systems</p>
         
         <div className="loader-progress-container">
-          <div className="loader-progress-bar" style={{ width: \`\${progress}%\` }}>
+          <div className="loader-progress-bar" style={{ width: `${progress}%` }}>
             <div className="loader-progress-glow"></div>
           </div>
         </div>
