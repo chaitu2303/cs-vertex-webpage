@@ -336,8 +336,8 @@ export function PosterGallery({ posters }: { posters: any[] }) {
         /* Bottom Right Toolbar */
         .lightbox-toolbar {
           position: absolute;
-          bottom: 30px;
-          right: 30px;
+          bottom: calc(30px + env(safe-area-inset-bottom));
+          right: calc(30px + env(safe-area-inset-right));
           background: rgba(15,15,15,0.8);
           backdrop-filter: blur(12px);
           border: 1px solid rgba(255,255,255,0.1);
@@ -374,9 +374,12 @@ export function PosterGallery({ posters }: { posters: any[] }) {
 
         @media (max-width: 768px) {
           .lightbox-toolbar {
-            bottom: 20px;
-            right: 50%;
-            transform: translateX(50%);
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            right: calc(20px + env(safe-area-inset-right));
+          }
+          .lightbox-top-actions {
+            top: calc(20px + env(safe-area-inset-top));
+            right: calc(20px + env(safe-area-inset-right));
           }
         }
       `}</style>

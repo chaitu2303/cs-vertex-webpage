@@ -32,11 +32,12 @@ export function ScrollProgress() {
       position: 'fixed',
       top: 0,
       left: 0,
-      height: '3px',
-      background: 'var(--acid)',
+      height: '4px',
+      background: 'linear-gradient(90deg, #FF5C2A, #F43F5E, #8B5CF6, #3B82F6)',
       width: `0%`,
       zIndex: 99999,
-      boxShadow: '0 0 10px var(--acid)'
+      boxShadow: '0 0 15px rgba(255, 92, 42, 0.6)',
+      transition: 'width 0.1s ease-out'
     }} />
   )
 }

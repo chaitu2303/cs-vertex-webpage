@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Search, ChevronDown, CheckCircle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 type FAQ = {
   id: string
@@ -61,6 +62,20 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
     return 0 // Preserve server order
   })
 
+  // Helper to highlight matching text
+  const highlightText = (text: string, highlight: string) => {
+    if (!highlight.trim()) return text
+    const regex = new RegExp(`(${highlight})`, 'gi')
+    const parts = text.split(regex)
+    return parts.map((part, i) => 
+      regex.test(part) ? (
+        <mark key={i} style={{ backgroundColor: 'rgba(255,107,44,0.3)', color: 'inherit', padding: '0 2px', borderRadius: '2px', fontWeight: 600 }}>{part}</mark>
+      ) : (
+        part
+      )
+    )
+  }
+
   return (
     <section id="faq" className="section-gap" style={{ background: '#Fdfbf7', color: '#111' }}>
       <div className="container-1400">
@@ -75,7 +90,7 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
         </div>
 
         {/* Search & Filters */}
-        <div className="faq-controls">
+        <div className="faq-controls sticky top-20 z-10 bg-[#Fdfbf7] pb-4" style={{ position: 'sticky', top: '80px', zIndex: 10, background: '#Fdfbf7', paddingBottom: '16px' }}>
           <div className="search-container">
             <Search className="search-icon" size={18} />
             <input 
@@ -111,17 +126,28 @@ export function FAQSection({ initialFaqs }: { initialFaqs: FAQ[] }) {
                     <div className="faq-q-content">
                       {faq.isPinned && <span className="pinned-badge">PINNED</span>}
                       {faq.isFeatured && <span className="featured-badge">FEATURED</span>}
-                      <span>{faq.question}</span>
+                      <span>{highlightText(faq.question, search)}</span>
                     </div>
                     <div className={`faq-icon ${isOpen ? 'rotated' : ''}`}>
                       <ChevronDown size={20} />
                     </div>
                   </button>
-                  <div className="faq-answer-wrapper" style={{ maxHeight: isOpen ? '500px' : '0' }}>
-                    <div className="faq-answer">
-                      <p>{faq.answer}</p>
-                    </div>
-                  </div>
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="faq-answer-wrapper" 
+                        style={{ overflow: 'hidden' }}
+                      >
+                        <div className="faq-answer">
+                          <p>{highlightText(faq.answer, search)}</p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )
             })

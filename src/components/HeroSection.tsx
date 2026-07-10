@@ -327,7 +327,7 @@ export function HeroSection() {
         }
 
         .hero-h1 {
-          font-size: clamp(48px, 6vw, 84px);
+          font-size: clamp(48px, 7vw, 90px);
           font-weight: 600;
           line-height: 1.05;
           letter-spacing: -0.04em;
@@ -544,31 +544,39 @@ export function HeroSection() {
 
         @media (max-width: 900px) {
           .hero-section-wrapper {
-            padding-top: 20px;
-            min-height: 85vh; /* Fixing the mobile blank space issue */
+            padding-top: 10px;
+            min-height: 100dvh;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
           }
           .hero-content-grid {
             grid-template-columns: 1fr;
             text-align: left;
-            padding-top: var(--spacing-5);
-            margin-top: 50px;
+            padding-top: 20px;
+            margin-top: 0;
           }
           .hero-h1 {
-            font-size: clamp(40px, 8vw, 56px);
+            font-size: 48px;
           }
           .hero-mockups-wrapper {
-            height: 400px;
-            margin-top: var(--spacing-5);
+            height: 350px;
+            margin-top: 10px;
           }
           .mockup-dashboard {
             width: 100%;
             margin-left: -50%;
-            margin-top: -20%;
+            margin-top: -30%;
           }
-          .system-nominal { left: 5%; top: 10%; }
-          .deploy-status { right: 5%; bottom: 10%; }
+          .system-nominal { left: 0%; top: 5%; transform: scale(0.9); }
+          .deploy-status { right: 0%; bottom: 5%; transform: scale(0.9); }
+          .particles-container, .mouse-glow-orb {
+            display: none;
+          }
+        }
+        @media (min-width: 901px) and (max-width: 1200px) {
+          .hero-h1 {
+            font-size: 70px;
+          }
         }
       `}</style>
     </section>

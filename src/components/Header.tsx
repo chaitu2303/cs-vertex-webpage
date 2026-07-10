@@ -197,7 +197,7 @@ export function Header() {
             >
               <div className="mobile-menu-header">
                 <Image src="/logo-nav.png" alt="CS Vertex Logo" width={120} height={40} style={{ objectFit: 'contain' }} />
-                <button onClick={() => setMobileMenuOpen(false)} className="close-btn"><X size={24} color="#fff" /></button>
+                <button onClick={() => setMobileMenuOpen(false)} className="close-btn" aria-label="Close menu"><X size={28} color="#fff" /></button>
               </div>
 
               <div className="mobile-menu-links">
@@ -233,9 +233,6 @@ export function Header() {
               <div className="mobile-bottom-actions">
                 <Link href="/portal" className="mobile-portal-btn" onClick={() => setMobileMenuOpen(false)}>
                   <User size={18} /> {user ? 'Customer Dashboard' : 'Customer Sign In'}
-                </Link>
-                <Link href="/#search" className="mobile-search-btn" onClick={() => setMobileMenuOpen(false)}>
-                  <Search size={18} />
                 </Link>
               </div>
             </motion.div>
@@ -384,7 +381,10 @@ export function Header() {
           display: none;
           background: transparent;
           border: none;
+          color: #fff;
           cursor: pointer;
+          min-width: 48px;
+          min-height: 48px;
           margin-left: auto;
           z-index: 9998;
         }
@@ -427,7 +427,7 @@ export function Header() {
             border-left: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            box-shadow: -20px 0 50px rgba(0,0,0,0.8);
           }
 
           .mobile-menu-header {
@@ -441,8 +441,8 @@ export function Header() {
           .close-btn {
             background: rgba(255,255,255,0.1);
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -496,24 +496,14 @@ export function Header() {
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-size: 13px;
-            padding: 14px 20px;
+            min-height: 48px;
+            padding: 0 20px;
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             text-decoration: none;
-          }
-
-          .mobile-search-btn {
-            width: 48px;
-            height: 48px;
-            background: rgba(255,255,255,0.1);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
           }
         }
       `}</style>
