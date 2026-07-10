@@ -1,6 +1,35 @@
 @import "tailwindcss";
 
-:root{--ink:#0B0B0B;--paper:#FAF7F2;--acid:#FF5A2A;--acid-hover:#FF6A3D;--brand-blue:#5c7df8;--muted:#96968f;--line:rgba(255,255,255,.14);--mono:"DM Mono",monospace;--sans:"Manrope",sans-serif}
+:root {
+  --ink: #0B0B0B;
+  --paper: #FAF7F2;
+  --acid: #FF5A2A;
+  --acid-hover: #FF6A3D;
+  --brand-blue: #5c7df8;
+  --muted: #96968f;
+  --line: rgba(255,255,255,.14);
+  --mono: "DM Mono", monospace;
+  --sans: "Manrope", sans-serif;
+
+  /* Enterprise Design System Standard Variables */
+  --spacing-1: 8px;
+  --spacing-2: 16px;
+  --spacing-3: 24px;
+  --spacing-4: 32px;
+  --spacing-5: 40px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.8);
+  --glow-acid: 0 0 20px rgba(255, 90, 42, 0.3);
+  --glow-acid-hover: 0 0 40px rgba(255, 90, 42, 0.6);
+  --transition-fast: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);position:relative;overflow-x:hidden}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}
 img, video { max-width: 100%; height: auto; object-fit: cover; }
 /* Top Utility Bar */
@@ -9,7 +38,7 @@ img, video { max-width: 100%; height: auto; object-fit: cover; }
 .utility-group a { display: flex; align-items: center; gap: 6px; transition: 0.3s; }
 .utility-group a:hover { color: var(--acid); }
 
-.site-header{position:sticky;top:0;z-index:50;width:100%;height:clamp(70px,8vh,100px);min-height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 4vw;border-bottom:1px solid var(--line);background:rgba(5, 5, 5, 0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.site-header{position:sticky;top:0;z-index:9999;width:100%;height:clamp(70px,8vh,100px);min-height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 4vw;border-bottom:1px solid var(--line);background:rgba(5, 5, 5, 0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 
 /* Portal & Admin: ensure all interactive elements are always clickable */
 .portal-sidebar, .portal-main, .portal-nav-link { pointer-events: auto !important; }
@@ -141,7 +170,7 @@ img, video { max-width: 100%; height: auto; object-fit: cover; }
 .form-error { padding: 15px; background: rgba(255,0,0,0.1); border: 1px solid red; color: red; font-size: 13px; }
 
 /* Modal CSS */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 100; padding: 20px; backdrop-filter: blur(5px); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9997; padding: 20px; backdrop-filter: blur(5px); }
 .modal-content { background: #111; border: 1px solid #333; padding: 40px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
 .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #888; font-size: 30px; cursor: pointer; transition: 0.3s; }
 .modal-close:hover { color: var(--acid); }
@@ -317,7 +346,7 @@ button, .primary-action, .footer-cta { min-height: 48px; }
   inset: 0;
   background: rgba(0,0,0,0.8);
   backdrop-filter: blur(5px);
-  z-index: 999;
+  z-index: 9997;
   display: flex;
   align-items: center;
   justify-content: center;

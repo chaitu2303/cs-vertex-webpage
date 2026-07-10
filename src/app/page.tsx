@@ -15,6 +15,7 @@ const MultiStepQuoteForm = dynamic(() => import('../components/MultiStepQuoteFor
 const WhyChooseUs = dynamic(() => import('../components/WhyChooseUs').then(m => m.WhyChooseUs))
 import Footer from '@/components/Footer'
 import { HeroLogoAnimation } from '../components/HeroLogoAnimation'
+import { HeroSection } from '../components/HeroSection'
 import { NoticeBoard } from '../components/NoticeBoard'
 
 import { DevelopmentProcess } from '../components/DevelopmentProcess'
@@ -95,89 +96,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
       <Header />
 
       {/* 01. HERO SECTION */}
-      <section id="home" className="hero">
-        <div className="hero-grid"></div>
-        <div className="hero-image">
-          <Image 
-            src="/assets/vertex-hero.png" 
-            alt="CS Vertex Hero" 
-            fill 
-            priority
-            style={{ objectFit: 'cover', objectPosition: 'center right', opacity: 0.3, mixBlendMode: 'screen' }} 
-          />
-        </div>
-        <div className="container-1400 hero-container" style={{ position: 'relative', zIndex: 3, padding: '0 4vw' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '40px' }}>
+      <HeroSection />
 
-            {/* LEFT: Copy */}
-            <div style={{ flex: '1 1 480px', maxWidth: '620px' }}>
-              <div className="eyebrow">
-                <i></i> 01 / ENGINEERING EXCELLENCE
-              </div>
-
-              <h1 style={{ marginTop: '22px' }}>
-                Enterprise<br/>
-                <em>Digital</em><br/>
-                Engineering
-              </h1>
-
-              <p className="hero-lede" style={{ marginTop: '20px' }}>
-                We engineer secure software, AI-powered solutions, embedded systems, and modern digital platforms for startups, enterprises, and global businesses.
-              </p>
-
-              {/* CTAs */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '32px', flexWrap: 'wrap' }}>
-                <a href="#consultation" style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  background: 'var(--acid)', color: '#000',
-                  padding: '14px 24px', borderRadius: '4px',
-                  fontFamily: 'var(--mono)', fontSize: '11px', fontWeight: 700,
-                  letterSpacing: '0.08em', textTransform: 'uppercase',
-                  textDecoration: 'none', transition: 'opacity 0.2s',
-                  whiteSpace: 'nowrap'
-                }}>
-                  Get Free Consultation →
-                </a>
-                <a href="#services" style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  background: 'transparent', color: 'var(--paper)',
-                  padding: '13px 24px', borderRadius: '4px',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  fontFamily: 'var(--mono)', fontSize: '11px', fontWeight: 600,
-                  letterSpacing: '0.08em', textTransform: 'uppercase',
-                  textDecoration: 'none', transition: 'border-color 0.2s',
-                  whiteSpace: 'nowrap'
-                }}>
-                  Explore Services
-                </a>
-              </div>
-
-              {/* Trust Badges */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginTop: '28px' }}>
-                {['MSME Registered', 'Secure Development', 'End-to-End Solutions', 'Remote Worldwide'].map(badge => (
-                  <div key={badge} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ color: 'var(--acid)', fontSize: '11px', fontWeight: 700 }}>✓</span>
-                    <span style={{ color: '#888', fontFamily: 'var(--mono)', fontSize: '9px', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{badge}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* RIGHT: Logo Animation */}
-            <div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <div className="hero-logo-anim-wrap" style={{ width: '460px', height: '460px' }}>
-                <HeroLogoAnimation />
-              </div>
-            </div>
-
-          </div>
-
-          {/* Bottom: Clients Marquee */}
-          <div style={{ width: '100%', marginTop: '40px' }}>
-            <ClientsMarquee logos={clients} />
-          </div>
-        </div>
-      </section>
+      {/* Clients Marquee moved outside of Hero */}
+      <div style={{ width: '100%', background: 'var(--ink)', paddingBottom: '40px' }}>
+        <ClientsMarquee logos={clients} />
+      </div>
 
       {/* 02. ABOUT CS VERTEX */}
 

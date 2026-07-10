@@ -1,11 +1,66 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { X, ZoomIn } from 'lucide-react'
+import { X, ZoomIn, Plus, Minus, RotateCcw, Maximize, Share2, Download } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export function PosterGallery({ posters }: { posters: any[] }) {
-  const [selectedPoster, setSelectedPoster] = useState<string | null>(null)
+  const [selectedPoster, setSelectedPoster] = useState<any>(null)
+  const [zoom, setZoom] = useState(1)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStart = useRef({ x: 0, y: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (selectedPoster) {
+      document.body.style.overflow = 'hidden'
+      setZoom(1)
+      setPan({ x: 0, y: 0 })
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [selectedPoster])
+
+  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.5, 4))
+  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.5, 0.5))
+  const handleReset = () => {
+    setZoom(1)
+    setPan({ x: 0, y: 0 })
+  }
+  const handleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`)
+      })
+    } else {
+      document.exitFullscreen()
+    }
+  }
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (zoom <= 1) return
+    setIsDragging(true)
+    dragStart.current = { x: e.clientX - pan.x, y: e.clientY - pan.y }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return
+    setPan({
+      x: e.clientX - dragStart.current.x,
+      y: e.clientY - dragStart.current.y
+    })
+  }
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    setIsDragging(false)
+    e.currentTarget.releasePointerCapture(e.pointerId)
+  }
 
   if (!posters || posters.length === 0) {
     return (
@@ -18,8 +73,16 @@ export function PosterGallery({ posters }: { posters: any[] }) {
   return (
     <>
       <div className="posters-grid">
-        {posters.map((poster) => (
-          <div key={poster.id} className="poster-card" onClick={() => setSelectedPoster(poster.image)}>
+        {posters.map((poster, index) => (
+          <motion.div 
+            key={poster.id} 
+            className="poster-card" 
+            onClick={() => setSelectedPoster(poster)}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ delay: index * 0.1 }}
+          >
             <div className="poster-image-wrapper">
               <Image 
                 src={poster.image} 
@@ -27,6 +90,7 @@ export function PosterGallery({ posters }: { posters: any[] }) {
                 width={600}
                 height={800}
                 className="poster-img"
+                loading="lazy"
                 unoptimized
               />
               <div className="poster-zoom-overlay">
@@ -48,18 +112,65 @@ export function PosterGallery({ posters }: { posters: any[] }) {
                 )}
               </div>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      {selectedPoster && (
-        <div className="poster-lightbox" onClick={() => setSelectedPoster(null)}>
-          <button className="lightbox-close" onClick={() => setSelectedPoster(null)}>
-            <X size={28} />
-          </button>
-          <Image src={selectedPoster} alt="Fullscreen Poster" width={1200} height={1600} className="lightbox-img" onClick={(e) => e.stopPropagation()} unoptimized />
-        </div>
-      )}
+      <AnimatePresence>
+        {selectedPoster && (
+          <motion.div 
+            className="poster-lightbox" 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            ref={containerRef}
+          >
+            {/* Top Right Fixed Actions */}
+            <div className="lightbox-top-actions">
+              <button className="action-fab close-fab" onClick={() => setSelectedPoster(null)}>
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Draggable/Zoomable Image Area */}
+            <div 
+              className="lightbox-image-area"
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              style={{ cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
+            >
+              <motion.div
+                animate={{ x: pan.x, y: pan.y, scale: zoom }}
+                transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.8 }}
+                style={{ originX: 0.5, originY: 0.5 }}
+              >
+                <Image 
+                  src={selectedPoster.image} 
+                  alt="Fullscreen Poster" 
+                  width={1200} 
+                  height={1600} 
+                  className="lightbox-img" 
+                  draggable={false}
+                  unoptimized 
+                />
+              </motion.div>
+            </div>
+
+            {/* Bottom Right Zoom Toolbar */}
+            <div className="lightbox-toolbar">
+              <button className="toolbar-btn" onClick={handleZoomOut} title="Zoom Out"><Minus size={20} /></button>
+              <div className="toolbar-divider" />
+              <button className="toolbar-btn" onClick={handleReset} title="Reset Zoom"><RotateCcw size={18} /></button>
+              <div className="toolbar-divider" />
+              <button className="toolbar-btn" onClick={handleZoomIn} title="Zoom In"><Plus size={20} /></button>
+              <div className="toolbar-divider" />
+              <button className="toolbar-btn" onClick={handleFullscreen} title="Fullscreen"><Maximize size={18} /></button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style>{`
         .posters-grid {
@@ -88,8 +199,6 @@ export function PosterGallery({ posters }: { posters: any[] }) {
           break-inside: avoid;
           margin-bottom: 40px;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
-          animation: fadeZoomIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
         }
         .poster-card:hover {
           transform: translateY(-6px);
@@ -168,54 +277,107 @@ export function PosterGallery({ posters }: { posters: any[] }) {
           position: fixed;
           inset: 0;
           z-index: 99999;
-          background: rgba(0,0,0,0.9);
-          backdrop-filter: blur(8px);
+          background: rgba(5,5,5,0.95);
+          backdrop-filter: blur(12px);
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 40px;
-          animation: fadeIn 0.3s ease;
+          touch-action: none; /* Prevent browser handling of pinch/pan */
         }
-        .lightbox-close {
+
+        .lightbox-image-area {
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+        }
+
+        .lightbox-img {
+          max-width: 90vw;
+          max-height: 90vh;
+          object-fit: contain;
+          border-radius: 8px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+          pointer-events: none; /* Let the wrapper handle pointer events */
+        }
+
+        /* Top Right Fixed Actions */
+        .lightbox-top-actions {
           position: absolute;
-          top: 30px;
-          right: 30px;
-          background: rgba(255,255,255,0.1);
-          border: 1px solid rgba(255,255,255,0.2);
-          color: white;
-          width: 50px;
-          height: 50px;
+          top: 24px;
+          right: 24px;
+          z-index: 100;
+          display: flex;
+          gap: 12px;
+        }
+        
+        .action-fab {
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
+          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(8px);
+          color: #fff;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.2s ease;
         }
-        .lightbox-close:hover {
-          background: rgba(255,255,255,0.2);
+        .action-fab:hover {
+          background: rgba(255,90,42,0.2);
+          border-color: #FF5A2A;
           transform: scale(1.1);
         }
-        .lightbox-img {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
-          border-radius: 8px;
-          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-          animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+        /* Bottom Right Toolbar */
+        .lightbox-toolbar {
+          position: absolute;
+          bottom: 30px;
+          right: 30px;
+          background: rgba(15,15,15,0.8);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 30px;
+          display: flex;
+          align-items: center;
+          padding: 6px;
+          z-index: 100;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+        .toolbar-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: none;
+          background: transparent;
+          color: #aaa;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: 0.2s;
         }
-        @keyframes fadeZoomIn {
-          from { opacity: 0; transform: scale(0.95) translateY(20px); }
-          to { opacity: 1; transform: scale(1) translateY(0); }
+        .toolbar-btn:hover {
+          background: rgba(255,255,255,0.1);
+          color: #fff;
         }
-        @keyframes scaleUp {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
+        .toolbar-divider {
+          width: 1px;
+          height: 20px;
+          background: rgba(255,255,255,0.1);
+          margin: 0 4px;
+        }
+
+        @media (max-width: 768px) {
+          .lightbox-toolbar {
+            bottom: 20px;
+            right: 50%;
+            transform: translateX(50%);
+          }
         }
       `}</style>
     </>

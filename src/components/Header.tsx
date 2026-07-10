@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { CheckCircle } from 'lucide-react'
-
+import { CheckCircle, Home, Search, User, Menu, X, Briefcase, Zap, Shield, HelpCircle } from 'lucide-react'
 import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export function Header() {
   const [user, setUser] = useState<any>(null)
@@ -22,7 +22,7 @@ export function Header() {
     
     const observerOptions = {
       root: null,
-      rootMargin: '-45% 0px -45% 0px', // Center-based trigger range
+      rootMargin: '-45% 0px -45% 0px',
       threshold: 0
     }
 
@@ -61,12 +61,11 @@ export function Header() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="site-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-      <div className="brand" style={{ display: 'flex', alignItems: 'center' }}>
+    <header className="site-header">
+      <div className="brand">
         <Link 
           href="/" 
           className="logo" 
-          style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
           onClick={() => {
             if (typeof window !== 'undefined' && window.location.pathname === '/') {
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -77,174 +76,229 @@ export function Header() {
         </Link>
       </div>
       
-      <nav className={`desktop-nav ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+      <nav className="desktop-nav">
         <Link 
           href="/" 
-          onClick={() => {
-            setMobileMenuOpen(false);
-            if (typeof window !== 'undefined' && window.location.pathname === '/') {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-          }} 
           className={activeSection === 'home' ? 'active' : ''}
         >Home</Link>
         <div 
           className="nav-dropdown-wrapper" 
-          style={{ display: 'inline-block', position: 'relative' }}
           onMouseEnter={() => setDropdownOpen('about')}
           onMouseLeave={() => setDropdownOpen('')}
         >
           <Link 
             href="/about" 
-            onClick={(e) => {
-              if (window.innerWidth <= 900) {
-                e.preventDefault();
-                setDropdownOpen(dropdownOpen === 'about' ? '' : 'about');
-              } else {
-                setMobileMenuOpen(false);
-              }
-            }} 
             className={['leadership', 'company', 'vision', 'mission', 'msme'].includes(activeSection) || activeSection === 'about' ? 'active' : ''}
           >
-            <span style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>About <span className="mobile-chevron">▼</span></span>
+            <span>About <span className="mobile-chevron">▼</span></span>
           </Link>
           {dropdownOpen === 'about' && (
-            <div className="nav-dropdown" style={{ display: 'flex', flexDirection: 'column' }}>
-              <Link href="/about" className="dropdown-link about-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>About Overview</Link>
-              <Link href="/about#leadership" className="dropdown-link about-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Leadership Team</Link>
-              <Link href="/about#company" className="dropdown-link about-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Company</Link>
-              <Link href="/about#vision" className="dropdown-link about-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Vision</Link>
-              <Link href="/about#mission" className="dropdown-link about-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Mission</Link>
-              <Link href="/about#msme" className="dropdown-link about-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>MSME</Link>
+            <div className="nav-dropdown">
+              <Link href="/about" className="dropdown-link about-link">About Overview</Link>
+              <Link href="/about#leadership" className="dropdown-link about-link">Leadership Team</Link>
+              <Link href="/about#company" className="dropdown-link about-link">Company</Link>
+              <Link href="/about#vision" className="dropdown-link about-link">Vision</Link>
+              <Link href="/about#mission" className="dropdown-link about-link">Mission</Link>
+              <Link href="/about#msme" className="dropdown-link about-link">MSME</Link>
             </div>
           )}
         </div>
 
         <div 
           className="nav-dropdown-wrapper" 
-          style={{ display: 'inline-block', position: 'relative' }}
           onMouseEnter={() => setDropdownOpen('services')}
           onMouseLeave={() => setDropdownOpen('')}
         >
           <Link 
             href="/#services" 
-            onClick={(e) => {
-              if (window.innerWidth <= 900) {
-                e.preventDefault();
-                setDropdownOpen(dropdownOpen === 'services' ? '' : 'services');
-              } else {
-                setMobileMenuOpen(false);
-                if (window.location.pathname === '/') {
-                  e.preventDefault();
-                  document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }
-            }} 
             className={activeSection === 'services' ? 'active' : ''}
           >
-            <span style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>Services <span className="mobile-chevron">▼</span></span>
+            <span>Services <span className="mobile-chevron">▼</span></span>
           </Link>
           {dropdownOpen === 'services' && (
             <div className="nav-dropdown mega-dropdown">
               <div className="mega-col">
                 <span className="mega-title">Core Services</span>
-                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>All Services</Link>
-                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Software Engineering</Link>
-                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>AI Solutions</Link>
-                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Cybersecurity</Link>
-                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>IoT & Embedded</Link>
-                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>VAPT</Link>
-                <Link href="/#services" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Enterprise Solutions</Link>
+                <Link href="/#services" className="dropdown-link">All Services</Link>
+                <Link href="/#services" className="dropdown-link">Software Engineering</Link>
+                <Link href="/#services" className="dropdown-link">AI Solutions</Link>
+                <Link href="/#services" className="dropdown-link">Cybersecurity</Link>
+                <Link href="/#services" className="dropdown-link">IoT & Embedded</Link>
               </div>
             </div>
           )}
         </div>
 
-        <Link href="/#projects" onClick={(e) => { 
-          setMobileMenuOpen(false); 
-          if (typeof window !== 'undefined' && window.location.pathname === '/') {
-            e.preventDefault();
-            document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); 
-          }
-        }} className={activeSection === 'projects' ? 'active' : ''}>Projects</Link>
-        <Link href="/#why-choose-us" onClick={(e) => { 
-          setMobileMenuOpen(false); 
-          if (typeof window !== 'undefined' && window.location.pathname === '/') {
-            e.preventDefault();
-            document.getElementById('why-choose-us')?.scrollIntoView({ behavior: 'smooth' }); 
-          }
-        }} className={activeSection === 'why-choose-us' ? 'active' : ''}>Why Choose Us</Link>
+        <Link href="/#projects" className={activeSection === 'projects' ? 'active' : ''}>Projects</Link>
+        <Link href="/#why-choose-us" className={activeSection === 'why-choose-us' ? 'active' : ''}>Why Choose Us</Link>
         
         <div 
           className="nav-dropdown-wrapper" 
-          style={{ display: 'inline-block', position: 'relative' }}
           onMouseEnter={() => setDropdownOpen('learning')}
           onMouseLeave={() => setDropdownOpen('')}
         >
           <Link 
             href="/#learning" 
-            onClick={(e) => {
-              if (window.innerWidth <= 900) {
-                e.preventDefault();
-                setDropdownOpen(dropdownOpen === 'learning' ? '' : 'learning');
-              } else {
-                setMobileMenuOpen(false);
-                if (window.location.pathname === '/') {
-                  e.preventDefault();
-                  document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }
-            }} 
             className={activeSection === 'learning' ? 'active' : ''}
           >
-            <span style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>Learning <span className="mobile-chevron">▼</span></span>
+            <span>Learning <span className="mobile-chevron">▼</span></span>
           </Link>
           {dropdownOpen === 'learning' && (
-            <div className="nav-dropdown" style={{ display: 'flex', flexDirection: 'column' }}>
-              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Learning Home</Link>
-              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Courses</Link>
-              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Internships</Link>
-              <Link href="/#learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Workshops</Link>
-              <Link href="/certificate" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Verify Certificates</Link>
+            <div className="nav-dropdown">
+              <Link href="/#learning" className="dropdown-link">Learning Home</Link>
+              <Link href="/#learning" className="dropdown-link">Courses</Link>
+              <Link href="/#learning" className="dropdown-link">Internships</Link>
+              <Link href="/certificate" className="dropdown-link">Verify Certificates</Link>
             </div>
           )}
         </div>
 
         <div 
           className="portal-menu-wrapper" 
-          style={{ display: 'inline-block', position: 'relative' }}
           onMouseEnter={() => setDropdownOpen('portal')}
           onMouseLeave={() => setDropdownOpen('')}
         >
           <Link 
             href="/portal" 
-            onClick={(e) => {
-              if (window.innerWidth <= 900 && user) {
-                e.preventDefault();
-                setDropdownOpen(dropdownOpen === 'portal' ? '' : 'portal');
-              } else {
-                setMobileMenuOpen(false);
-              }
-            }}
-            style={{ opacity: 1, color: '#000', background: 'var(--acid)', padding: '6px 16px', borderRadius: '30px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+            className="portal-btn-desktop"
           >
             Customer Portal {user ? <CheckCircle size={14} strokeWidth={2} /> : ''}
           </Link>
           {dropdownOpen === 'portal' && user && (
-            <div className="portal-dropdown" style={{ display: 'flex', flexDirection: 'column' }}>
-              <Link href="/portal" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Dashboard</Link>
-              <Link href="/portal/projects" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>My Projects</Link>
-              <Link href="/portal/learning" className="dropdown-link" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(''); }}>Learning</Link>
+            <div className="portal-dropdown">
+              <Link href="/portal" className="dropdown-link">Dashboard</Link>
+              <Link href="/portal/projects" className="dropdown-link">My Projects</Link>
+              <Link href="/portal/learning" className="dropdown-link">Learning</Link>
             </div>
           )}
         </div>
       </nav>
+
+      {/* Mobile Menu Toggle button */}
+      <button className="menu-toggle-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        {mobileMenuOpen ? <X size={24} color="#fff" /> : <Menu size={24} color="#fff" />}
+      </button>
+
+      {/* Premium Glassmorphism Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="mobile-menu-overlay"
+          >
+            <motion.div 
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="mobile-menu-panel"
+            >
+              <div className="mobile-menu-header">
+                <Image src="/logo-nav.png" alt="CS Vertex Logo" width={120} height={40} style={{ objectFit: 'contain' }} />
+                <button onClick={() => setMobileMenuOpen(false)} className="close-btn"><X size={24} color="#fff" /></button>
+              </div>
+
+              <div className="mobile-menu-links">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
+                  <Home size={20} className="mobile-icon" /> Home
+                </Link>
+                <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
+                  <Briefcase size={20} className="mobile-icon" /> About
+                </Link>
+                <Link href="/#services" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
+                  <Zap size={20} className="mobile-icon" /> Services
+                </Link>
+                <Link href="/#projects" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
+                  <Shield size={20} className="mobile-icon" /> Projects
+                </Link>
+                <Link href="/#why-choose-us" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
+                  <HelpCircle size={20} className="mobile-icon" /> Why Choose Us
+                </Link>
+                <Link href="/#learning" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
+                  <span className="mobile-icon">🎓</span> Learning
+                </Link>
+              </div>
+
+              {/* Bottom Sticky Action Bar */}
+              <div className="mobile-bottom-actions">
+                <Link href="/portal" className="mobile-portal-btn" onClick={() => setMobileMenuOpen(false)}>
+                  <User size={18} /> Customer Portal
+                </Link>
+                <Link href="/#search" className="mobile-search-btn" onClick={() => setMobileMenuOpen(false)}>
+                  <Search size={18} />
+                </Link>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <style>{`
-        @keyframes dropdownFade {
-          from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-          to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .site-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          position: sticky;
+          top: 0;
+          z-index: 9999;
+          height: clamp(70px, 8vh, 100px);
+          min-height: 70px;
+          padding: 0 4vw;
+          border-bottom: 1px solid var(--line);
+          background: rgba(5, 5, 5, 0.85);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
-        .portal-dropdown, .nav-dropdown {
+
+        .brand a {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+
+        .desktop-nav {
+          display: flex;
+          gap: 36px;
+          align-items: center;
+          margin: auto;
+        }
+        
+        .desktop-nav > a, .nav-dropdown-wrapper > a {
+          font-family: var(--mono);
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          opacity: 0.62;
+          transition: 0.3s;
+          padding: 8px 0;
+          position: relative;
+        }
+
+        .desktop-nav > a:hover, .nav-dropdown-wrapper > a:hover, .desktop-nav > a.active, .nav-dropdown-wrapper > a.active {
+          opacity: 1;
+          color: var(--acid);
+        }
+
+        .desktop-nav > a.active::after, .nav-dropdown-wrapper > a.active::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: var(--acid);
+          box-shadow: 0 0 8px var(--acid);
+        }
+
+        .nav-dropdown-wrapper, .portal-menu-wrapper {
+          position: relative;
+          display: inline-block;
+        }
+
+        .nav-dropdown, .portal-dropdown {
           position: absolute;
           top: 100%;
           left: 50%;
@@ -254,13 +308,15 @@ export function Header() {
           border-radius: 12px;
           padding: 8px;
           min-width: 200px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-          animation: dropdownFade 0.2s ease-out;
+          box-shadow: var(--shadow-md);
+          display: flex;
+          flex-direction: column;
           z-index: 50;
+          animation: dropdownFade 0.2s ease-out;
         }
+
         .mega-dropdown {
-          display: flex !important;
-          flex-direction: row !important;
+          flex-direction: row;
           gap: 40px;
           padding: 30px;
           width: max-content;
@@ -270,12 +326,9 @@ export function Header() {
           flex-direction: column;
           gap: 10px;
         }
-        .desktop-nav a { display: flex; align-items: center; }
-        .mobile-chevron { display: none; }
-        .menu-toggle { display: none; }
         .mega-title {
           font-size: 11px;
-          font-family: var(--mono, monospace);
+          font-family: var(--mono);
           color: var(--acid);
           text-transform: uppercase;
           letter-spacing: 0.1em;
@@ -283,6 +336,7 @@ export function Header() {
           border-bottom: 1px solid #333;
           padding-bottom: 5px;
         }
+
         .dropdown-link {
           padding: 8px 12px;
           color: #eee;
@@ -293,134 +347,167 @@ export function Header() {
           white-space: nowrap;
         }
         .dropdown-link:hover {
-          background: rgba(212, 255, 62, 0.1);
+          background: rgba(255, 90, 42, 0.1);
           color: var(--acid);
           padding-left: 16px;
         }
-        .about-link {
-          border-left: 0px solid transparent;
-          transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+        .portal-btn-desktop {
+          opacity: 1 !important;
+          color: #000 !important;
+          background: var(--acid) !important;
+          padding: 6px 16px !important;
+          border-radius: 30px !important;
+          font-weight: 700 !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 5px !important;
+          font-size: 13px !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.05em !important;
+          transition: 0.3s;
         }
-        .about-link:hover {
-          border-left: 3px solid #FF6A2A;
-          color: #FF6A2A;
-          padding-left: 16px;
-          background: rgba(255, 106, 42, 0.1);
-          transform: translateX(4px);
+        .portal-btn-desktop:hover {
+          background: var(--acid-hover) !important;
+          box-shadow: var(--glow-acid);
         }
-        @media(max-width:900px) {
+
+        .menu-toggle-btn {
+          display: none;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          z-index: 9998;
+        }
+
+        @keyframes dropdownFade {
+          from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+          to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* --- PREMIUM MOBILE MENU --- */
+        @media (max-width: 900px) {
           .desktop-nav {
             display: none;
           }
-          .mobile-chevron { display: inline-block; font-size: 10px; }
-          .desktop-nav.mobile-open {
-            display: flex !important;
-            flex-direction: column;
-            align-items: flex-start;
-            position: absolute;
-            top: 100px; /* Adjusted for 100px header */
+          .menu-toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          
+          .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
             left: 0;
-            width: 100%;
-            height: calc(100vh - 100px);
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9998;
+            display: flex;
+            justify-content: flex-end;
+          }
+
+          .mobile-menu-panel {
+            width: 85vw;
+            max-width: 400px;
+            height: 100vh;
+            background: rgba(15, 15, 15, 0.95);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+          }
+
+          .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+          }
+
+          .close-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+          }
+
+          .mobile-menu-links {
+            padding: 30px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             overflow-y: auto;
-            background: #050505;
-            padding: 0 4vw 80px 4vw;
-            border-bottom: 1px solid #333;
-            z-index: 49;
-            -webkit-overflow-scrolling: touch;
+            flex-grow: 1;
           }
-          .desktop-nav.mobile-open > a, 
-          .desktop-nav.mobile-open .nav-dropdown-wrapper > a,
-          .desktop-nav.mobile-open .portal-menu-wrapper > a {
-            width: 100%;
-            text-align: left;
-            font-size: 14px;
-            padding: 20px 0;
-            border-bottom: 1px solid #222;
-            color: #fff;
+
+          .mobile-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 18px;
             font-weight: 500;
-            letter-spacing: 0.1em;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
           }
-          .desktop-nav.mobile-open .portal-menu-wrapper {
-            width: 100%;
-            border-bottom: none;
-            padding-top: 15px;
-          }
-          .desktop-nav.mobile-open .nav-dropdown-wrapper {
-            width: 100%;
-            display: block !important;
-          }
-          .desktop-nav.mobile-open .nav-dropdown, 
-          .desktop-nav.mobile-open .portal-dropdown {
-            position: static !important;
-            transform: none !important;
-            left: auto !important;
-            box-shadow: none !important;
-            border: none !important;
-            background: transparent !important;
-            padding: 10px 0 10px 15px !important;
-            min-width: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 12px !important;
-            animation: none !important;
-            border-left: 2px solid #333 !important;
-            margin: 0 !important;
-          }
-          .desktop-nav.mobile-open .nav-dropdown a, 
-          .desktop-nav.mobile-open .portal-dropdown a {
-            border-bottom: none !important;
-            padding: 8px 12px !important;
-            font-size: 13px !important;
-            color: #aaa;
-            letter-spacing: 0.05em;
-          }
-          .desktop-nav.mobile-open .nav-dropdown a:hover {
+
+          .mobile-link:hover {
             color: var(--acid);
+            transform: translateX(10px);
           }
-          .desktop-nav.mobile-open .mega-dropdown {
-            width: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            padding: 10px 0 10px 20px !important;
+
+          .mobile-icon {
+            color: var(--acid);
+            opacity: 0.8;
           }
-          .desktop-nav.mobile-open .mega-col {
-            gap: 12px !important;
+
+          .mobile-bottom-actions {
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 12px;
+            background: rgba(0,0,0,0.2);
           }
-          .desktop-nav.mobile-open .mega-title {
-            margin-bottom: 5px !important;
+
+          .mobile-portal-btn {
+            flex-grow: 1;
+            background: var(--acid);
+            color: #000;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 13px;
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
           }
-          header.site-header .menu-toggle {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 4px !important;
-            padding: 8px !important;
-            background: transparent !important;
-            border: none !important;
-            cursor: pointer !important;
-            margin-left: auto; /* push to right */
-            z-index: 100 !important;
+
+          .mobile-search-btn {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
           }
-          header.site-header .menu-toggle span {
-            display: block !important;
-            width: 20px !important;
-            height: 2px !important;
-            background: #fff !important;
-            transition: all 0.3s ease !important;
-            margin: 0 !important;
-          }
-        }
-        @media(max-width: 768px) {
-          .brand a img { width: 140px !important; height: auto !important; }
         }
       `}</style>
-      
-
-      <button className="menu-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{ outline: 'none' }}>
-        <span style={{ transform: mobileMenuOpen ? 'translateY(6px) rotate(45deg)' : 'none' }}></span>
-        <span style={{ opacity: mobileMenuOpen ? 0 : 1 }}></span>
-        <span style={{ transform: mobileMenuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none' }}></span>
-      </button>
     </header>
   )
 }

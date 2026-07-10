@@ -706,7 +706,7 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
 
         /* ── Mobile Layout ── */
         @media (max-width: 900px) {
-           .tmc-panel { height: 95vh; max-height: unset; border-radius: 16px; }
+           .tmc-panel { height: 90vh; max-height: unset; border-radius: 30px; }
            .tmc-header { flex-direction: column; text-align: center; padding: 40px 20px 30px; gap: 20px; }
            .tmc-stats-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
            .tmc-content-grid { flex-direction: column; gap: 40px; }
@@ -737,6 +737,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
             alt={member.name}
             fill
             quality={90}
+            loading="lazy"
             style={{
               objectFit: 'cover',
               objectPosition: 'center top',
@@ -795,9 +796,33 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
           border: 1px solid rgba(255,255,255,0.06);
           border-radius: 20px;
           overflow: hidden;
-          transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1),
-                      box-shadow 0.35s ease,
-                      border-color 0.3s ease;
+          transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                      box-shadow 0.4s ease,
+                      border-color 0.4s ease;
+          position: relative;
+        }
+        .tmc-card:hover {
+          transform: translateY(-10px) scale(1.02);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255,107,44,0.15);
+          border-color: rgba(255,107,44,0.5);
+          z-index: 2;
+        }
+        .tmc-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 20px;
+          padding: 2px;
+          background: linear-gradient(135deg, transparent, rgba(255,107,44,0.5), transparent);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.4s ease;
+        }
+        .tmc-card:hover::after {
+          opacity: 1;
+        }
           box-shadow: 0 8px 30px rgba(0,0,0,0.4);
           height: 100%;
         }
