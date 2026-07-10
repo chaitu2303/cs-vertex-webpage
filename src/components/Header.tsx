@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { CheckCircle, Home, Search, User, Menu, X, Briefcase, Zap, Shield, HelpCircle } from 'lucide-react'
+import { CheckCircle, Home, Search, User, Menu, X, Briefcase, Zap, Shield, HelpCircle, BookOpen, FileText, Award } from 'lucide-react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -217,14 +217,22 @@ export function Header() {
                   <HelpCircle size={20} className="mobile-icon" /> Why Choose Us
                 </Link>
                 <Link href="/#learning" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
-                  <span className="mobile-icon">🎓</span> Learning
+                  <BookOpen size={20} className="mobile-icon" /> Learning
                 </Link>
+                <div style={{ paddingLeft: '36px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <Link href="/announcements" onClick={() => setMobileMenuOpen(false)} className="mobile-link" style={{ fontSize: '15px' }}>
+                    <FileText size={16} className="mobile-icon" /> Notice Board
+                  </Link>
+                  <Link href="/certificate" onClick={() => setMobileMenuOpen(false)} className="mobile-link" style={{ fontSize: '15px' }}>
+                    <Award size={16} className="mobile-icon" /> Verify Certificates
+                  </Link>
+                </div>
               </div>
 
               {/* Bottom Sticky Action Bar */}
               <div className="mobile-bottom-actions">
                 <Link href="/portal" className="mobile-portal-btn" onClick={() => setMobileMenuOpen(false)}>
-                  <User size={18} /> Customer Portal
+                  <User size={18} /> {user ? 'Customer Dashboard' : 'Customer Sign In'}
                 </Link>
                 <Link href="/#search" className="mobile-search-btn" onClick={() => setMobileMenuOpen(false)}>
                   <Search size={18} />
@@ -414,7 +422,7 @@ export function Header() {
           .mobile-menu-panel {
             width: 85vw;
             max-width: 400px;
-            height: 100vh;
+            height: 100dvh;
             background: rgba(15, 15, 15, 0.95);
             border-left: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
