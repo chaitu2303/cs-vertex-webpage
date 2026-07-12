@@ -13,14 +13,29 @@ export default function ResetPassword() {
   const supabase = createClient()
 
   useEffect(() => {
-    // Listen for recovery state or session establishment
+    // Handle implicit flow hash manually since SSR client may ignore it
+    const hash = window.location.hash
+    if (hash && hash.includes('access_token=')) {
+      const params = new URLSearchParams(hash.substring(1))
+      const access_token = params.get('access_token')
+      const refresh_token = params.get('refresh_token')
+      
+      if (access_token && refresh_token) {
+        supabase.auth.setSession({ access_token, refresh_token }).then(({ error }) => {
+          if (!error) {
+            window.history.replaceState(null, '', window.location.pathname)
+            setStatus('idle')
+          }
+        })
+      }
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
         setStatus('idle')
       } else if (session) {
         setStatus('idle')
       } else {
-        // Wait a brief moment to allow tokens to be processed and cookies set
         const timer = setTimeout(() => {
           supabase.auth.getSession().then(({ data }) => {
             if (!data.session) {
