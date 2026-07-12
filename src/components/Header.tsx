@@ -245,7 +245,8 @@ export function Header() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          width: 100%;
+          width: 100% !important;
+          max-width: 100vw;
           position: sticky;
           top: 0;
           z-index: 9999;
@@ -256,6 +257,7 @@ export function Header() {
           background: rgba(5, 5, 5, 0.85);
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
+          box-sizing: border-box;
         }
 
         .brand a {
@@ -385,8 +387,8 @@ export function Header() {
           cursor: pointer;
           min-width: 48px;
           min-height: 48px;
-          margin-left: auto;
           z-index: 9998;
+          padding: 0;
         }
 
         @keyframes dropdownFade {
@@ -400,11 +402,10 @@ export function Header() {
             display: none;
           }
           .menu-toggle-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: auto;
-          }
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
           
           .mobile-menu-overlay {
             position: fixed;

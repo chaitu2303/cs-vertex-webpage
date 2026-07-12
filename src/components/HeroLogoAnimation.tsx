@@ -21,6 +21,7 @@ export function HeroLogoAnimation() {
   const mouseRef = useRef({ x: 0, y: 0 })
   const tiltRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const frameRef = useRef<number>(0)
 
   // Mouse tilt effect
@@ -43,6 +44,14 @@ export function HeroLogoAnimation() {
       window.removeEventListener("mousemove", onMouseMove)
       window.removeEventListener("mouseleave", onMouseLeave)
     }
+  }, [])
+
+  // Mobile check to completely unmount
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 900)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
   // Canvas particle system
@@ -300,6 +309,8 @@ export function HeroLogoAnimation() {
     rafId = requestAnimationFrame(update)
     return () => cancelAnimationFrame(rafId)
   }, [])
+
+  if (isMobile) return null
 
   return (
     <div
