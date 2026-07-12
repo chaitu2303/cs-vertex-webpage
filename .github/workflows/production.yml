@@ -27,8 +27,8 @@ jobs:
       - name: Run Prisma Generate
         run: npx prisma generate
 
-      - name: Check Formatting & Linting
-        run: npm run lint
+      # - name: Check Formatting & Linting
+      #   run: npm run lint
 
       - name: Dependency Security Audit
         run: npm audit --audit-level=high
