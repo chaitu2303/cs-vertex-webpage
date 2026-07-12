@@ -9,10 +9,15 @@ export async function POST(request: Request) {
 
     const supabaseAdmin = createAdminClient()
     
+    const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://csvertex.com'
+    
     // Generate recovery link
     const { data, error } = await supabaseAdmin.auth.admin.generateLink({
       type: 'recovery',
       email,
+      options: {
+        redirectTo: `${origin}/portal/reset-password`,
+      }
     })
 
     if (error) {

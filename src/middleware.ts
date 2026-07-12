@@ -103,13 +103,17 @@ export async function middleware(request: NextRequest) {
     }
 
     if (user && isAuthPage) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/portal'
-      const redirectResponse = NextResponse.redirect(url)
-      supabaseResponse.cookies.getAll().forEach(cookie => {
-        redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
-      })
-      return redirectResponse
+      // EXCEPTION: If the user is on the reset-password page, do NOT redirect them to the portal.
+      // They might be processing a recovery token from an email while already having a stale session.
+      if (!pathname.startsWith('/portal/reset-password')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/portal'
+        const redirectResponse = NextResponse.redirect(url)
+        supabaseResponse.cookies.getAll().forEach(cookie => {
+          redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+        })
+        return redirectResponse
+      }
     }
 
     return supabaseResponse
