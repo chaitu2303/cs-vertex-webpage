@@ -544,7 +544,7 @@ export function HeroSection() {
 
         @media (max-width: 900px) {
           .hero-section-wrapper {
-            padding-top: 100px;
+            padding-top: 40px;
             min-height: auto;
             display: flex;
             align-items: flex-start;
@@ -560,13 +560,7 @@ export function HeroSection() {
             font-size: 48px;
           }
           .hero-mockups-wrapper {
-            height: 350px;
-            margin-top: 10px;
-          }
-          .mockup-dashboard {
-            width: 90%;
-            margin-left: -45%;
-            margin-top: -10%;
+            display: none;
           }
           .system-nominal { left: 0%; top: 5%; transform: scale(0.9); }
           .deploy-status { right: 0%; bottom: 5%; transform: scale(0.9); }
