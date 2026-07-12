@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { signup } from '../actions'
 import Link from 'next/link'
-import { X } from 'lucide-react'
+import { X, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 
 import { createClient } from '@/utils/supabase/client'
@@ -11,6 +11,8 @@ import { createClient } from '@/utils/supabase/client'
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const supabase = createClient()
 
   async function handleGoogleLogin() {
@@ -80,11 +82,29 @@ export default function SignupPage() {
           <div className="auth-grid">
             <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#ccc', marginBottom: '8px' }}>Password</label>
-              <input name="password" type="password" required style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+              <div style={{ position: 'relative' }}>
+                <input name="password" type={showPassword ? "text" : "password"} required style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px', paddingRight: '45px' }} />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#888', cursor: 'pointer', padding: 0, display: 'flex' }}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#ccc', marginBottom: '8px' }}>Confirm Password</label>
-              <input name="confirm_password" type="password" required style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+              <div style={{ position: 'relative' }}>
+                <input name="confirm_password" type={showConfirmPassword ? "text" : "password"} required style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px', paddingRight: '45px' }} />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#888', cursor: 'pointer', padding: 0, display: 'flex' }}
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
           </div>
 

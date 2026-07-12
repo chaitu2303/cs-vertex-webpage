@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { login } from '../actions'
 import Link from 'next/link'
-import { X } from 'lucide-react'
+import { X, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 
 import { createClient } from '@/utils/supabase/client'
@@ -78,10 +78,11 @@ export default function LoginPage() {
                   fontSize: '11px',
                   fontFamily: 'var(--mono)',
                   userSelect: 'none',
-                  padding: '4px'
+                  padding: 0,
+                  display: 'flex'
                 }}
               >
-                {showPassword ? "HIDE" : "SHOW"}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             <div style={{ marginTop: '10px', textAlign: 'right' }}>
