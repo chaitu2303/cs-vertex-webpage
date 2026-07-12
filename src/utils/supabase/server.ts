@@ -41,9 +41,14 @@ export const getCachedUser = cache(async () => {
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 export function createAdminClient() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey) {
+    throw new Error('CRITICAL AUTH ERROR: SUPABASE_SERVICE_ROLE_KEY is not set in environment variables. Admin operations (like generating signup/reset links) will fail.');
+  }
+
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    serviceRoleKey,
     {
       auth: {
         autoRefreshToken: false,

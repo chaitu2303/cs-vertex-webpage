@@ -34,8 +34,6 @@ export async function login(formData: FormData) {
 import { sendWelcomeEmail, sendVerificationEmail, sendAdminNotificationNewUser } from '@/lib/email'
 
 export async function signup(formData: FormData) {
-  const supabaseAdmin = createAdminClient()
-
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -45,6 +43,7 @@ export async function signup(formData: FormData) {
 
   let authData;
   try {
+    const supabaseAdmin = createAdminClient()
     // Generate signup link (this creates the user without sending the default Supabase email)
     const { data: resultData, error } = await supabaseAdmin.auth.admin.generateLink({
       type: 'signup',
@@ -58,14 +57,16 @@ export async function signup(formData: FormData) {
     })
     
     if (error) {
-      if (error.message.includes('User already registered')) {
+      console.error('Supabase Admin Auth Error during Signup:', error)
+      if (error.message.includes('User already registered') || error.message.includes('already exists')) {
         return { error: 'An account with this email already exists.' }
       }
-      return { error: error.message }
+      return { error: 'Authentication service configuration error. Please contact support.' }
     }
     authData = resultData;
   } catch (err: any) {
-    return { error: err.message || 'Network error: Failed to connect to the authentication server.' }
+    console.error('Critical Auth Error during Signup:', err.message || err)
+    return { error: 'Service misconfiguration detected on server. Admin operations failed.' }
   }
 
   // Create Customer profile in Prisma

@@ -58,39 +58,37 @@ export default function SignupPage() {
         </Link>
         <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px', color: '#fff' }}>Create Account</h1>
         <p style={{ color: '#888', marginBottom: '30px', fontSize: '14px' }}>Register to request quotes and track your projects.</p>
-        
-        {error && <div style={{ padding: '12px', background: 'rgba(255,0,0,0.1)', color: '#ff4444', marginBottom: '20px', borderRadius: '6px', fontSize: '13px' }}>{error}</div>}
 
         <form id="signup-form" action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <div style={{ flex: 1 }}>
+          <div className="auth-grid">
+            <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#ccc', marginBottom: '8px' }}>Full Name</label>
-              <input name="name" required style={{ width: '100%', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+              <input name="name" required style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
             </div>
-            <div style={{ flex: 1 }}>
+            <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#ccc', marginBottom: '8px' }}>Company</label>
-              <input name="company" style={{ width: '100%', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+              <input name="company" style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
             </div>
           </div>
 
           <div>
             <label style={{ display: 'block', fontSize: '12px', color: '#ccc', marginBottom: '8px' }}>Email Address</label>
-            <input name="email" type="email" required style={{ width: '100%', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+            <input name="email" type="email" required style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
           </div>
           
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <div style={{ flex: 1 }}>
+          <div className="auth-grid">
+            <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#ccc', marginBottom: '8px' }}>Password</label>
-              <input name="password" type="password" required style={{ width: '100%', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+              <input name="password" type="password" required style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
             </div>
-            <div style={{ flex: 1 }}>
+            <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#ccc', marginBottom: '8px' }}>Confirm Password</label>
-              <input name="confirm_password" type="password" required style={{ width: '100%', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
+              <input name="confirm_password" type="password" required style={{ width: '100%', minHeight: '48px', padding: '12px', background: '#000', border: '1px solid #333', color: '#fff', borderRadius: '6px' }} />
             </div>
           </div>
 
-          <button type="submit" disabled={loading} style={{ padding: '14px', background: 'var(--acid)', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', opacity: loading ? 0.7 : 1 }}>
+          <button type="submit" disabled={loading} style={{ padding: '14px', minHeight: '52px', background: 'var(--acid)', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', opacity: loading ? 0.7 : 1 }}>
             {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>

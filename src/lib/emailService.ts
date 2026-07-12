@@ -3,6 +3,9 @@ import { prisma } from './prisma';
 import { emailTemplates } from './emailTemplates';
 
 // Setup Resend
+if (!process.env.RESEND_API_KEY) {
+  console.warn('WARNING: RESEND_API_KEY is not defined. Emails will fail to send in production.');
+}
 const resend = new Resend(process.env.RESEND_API_KEY || 're_mock_key');
 
 interface SendEmailOptions {
@@ -59,6 +62,8 @@ class EmailService {
     } catch (dbErr) {
       console.error('Failed to create EmailLog:', dbErr);
     }
+    
+    console.log(`[EmailService] Queueing email: "${options.subject}" to ${options.to}`);
 
     // 2. Retry Logic
     let attempt = 0;
@@ -82,6 +87,8 @@ class EmailService {
             data: { status: 'SENT', retries: attempt, resendId: data?.id }
           });
         }
+        
+        console.log(`[EmailService] SUCCESS: Email "${options.subject}" sent to ${options.to} (Message ID: ${data?.id})`);
         return true;
       } catch (error: any) {
         attempt++;
