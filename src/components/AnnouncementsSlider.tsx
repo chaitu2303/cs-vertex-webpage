@@ -227,14 +227,6 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
                            <Tag size={14} />
                            <span>{ann.category}</span>
                         </div>
-                        <div className="nb-meta-item">
-                           <Clock size={14} />
-                           <span>{readTime} min read</span>
-                        </div>
-                        <div className="nb-meta-item">
-                           <Eye size={14} />
-                           <span>{views} Views</span>
-                        </div>
                       </div>
 
                       {ann.title && <h3 className="nb-card-title">{ann.title}</h3>}
