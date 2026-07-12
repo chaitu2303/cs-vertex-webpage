@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Mail } from 'lucide-react'
 import { Linkedin, Instagram } from '@/components/BrandIcons'
-import { LiveVisitorCounter } from '@/components/LiveVisitorCounter'
 
 export default function Footer() {
   return (
@@ -71,7 +70,6 @@ export default function Footer() {
             © {new Date().getFullYear()} CS Vertex. Engineered with precision.
           </p>
           <div style={{ display: 'flex', gap: '20px', fontSize: '10px', fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#555', alignItems: 'center' }}>
-            <LiveVisitorCounter />
             <span>MSME Registered Enterprise</span>
           </div>
         </div>

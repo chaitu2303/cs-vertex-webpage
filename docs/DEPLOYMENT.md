@@ -6,7 +6,7 @@ This platform is designed to be deployed seamlessly on **Vercel** with a managed
 1. A Vercel Account linked to your GitHub repository.
 2. A managed PostgreSQL Database (Vercel Postgres, Supabase, Neon, or PlanetScale).
 3. Cloudinary Account for Media Storage.
-4. Brevo Account for SMTP Emails.
+4. Resend Account for Transactional Emails.
 
 ## Deployment Steps
 
@@ -31,6 +31,6 @@ This platform is designed to be deployed seamlessly on **Vercel** with a managed
 
 ## Post-Deployment Checklist
 - [ ] Submit a test Lead Form (`/contact`).
-- [ ] Receive the confirmation email via Brevo.
+- [ ] Receive the confirmation email via Resend.
 - [ ] Log into `/admin/login` using your secure credentials.
 - [ ] Upload an image in the Testimonial or Team section to test Cloudinary uploads.

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { 
   LayoutDashboard, Layers, Users, BookOpen, Clock, 
   CheckCircle, FileText, FileImage, DollarSign, Briefcase, 
-  Settings, LogOut, Menu, X, Search, Bell
+  Settings, LogOut, Menu, X, Search, Bell, Mail
 } from 'lucide-react'
 import { NotificationsPopover } from '@/components/admin/NotificationsPopover'
 
@@ -25,6 +25,7 @@ export default function AdminLayoutClient({ children, hasSession }: { children: 
     { label: 'Clients', path: '/admin/clients', icon: Users },
     { label: 'Quotes & Leads', path: '/admin/quotes', icon: DollarSign },
     { label: 'Recruitment', path: '/admin/recruitment', icon: Briefcase },
+    { label: 'Email Logs', path: '/admin/email-logs', icon: Mail },
     { label: 'Settings', path: '/admin/settings', icon: Settings },
   ]
 

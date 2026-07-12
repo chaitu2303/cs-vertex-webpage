@@ -112,7 +112,7 @@ export async function POST(request: Request) {
         html: emailHtml
       })
     } catch (emailErr) {
-      console.error('Error sending confirmation email via Brevo:', emailErr)
+      console.error('Error sending confirmation email via Resend:', emailErr)
       // We don't want to fail the submission if email fails
     }
 

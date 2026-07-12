@@ -544,10 +544,11 @@ export function HeroSection() {
 
         @media (max-width: 900px) {
           .hero-section-wrapper {
-            padding-top: 10px;
-            min-height: 100dvh;
+            padding-top: 100px;
+            min-height: auto;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            padding-bottom: 40px;
           }
           .hero-content-grid {
             grid-template-columns: 1fr;
@@ -563,9 +564,9 @@ export function HeroSection() {
             margin-top: 10px;
           }
           .mockup-dashboard {
-            width: 100%;
-            margin-left: -50%;
-            margin-top: -30%;
+            width: 90%;
+            margin-left: -45%;
+            margin-top: -10%;
           }
           .system-nominal { left: 0%; top: 5%; transform: scale(0.9); }
           .deploy-status { right: 0%; bottom: 5%; transform: scale(0.9); }

@@ -38,7 +38,7 @@ jobs:
         env:
           DATABASE_URL: "file:./dev.db" # Mock DB for build testing
           NEXT_PUBLIC_SITE_URL: "https://csvertex.com"
-          BREVO_API_KEY: "dummy-key-for-build"
+          RESEND_API_KEY: "dummy-key-for-build"
 
   deploy:
     name: Deploy to Production

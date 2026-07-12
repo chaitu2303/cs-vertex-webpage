@@ -142,6 +142,27 @@ export const emailTemplates = {
     <p>This code is valid for 10 minutes. Do not share it with anyone.</p>
   `, "Your verification code"),
 
+  clientVerifyEmail: (link: string) => baseLayout(`
+    <h2>Verify Your Email</h2>
+    <p>Please verify your email address to complete your registration with CS Vertex.</p>
+    <center><a href="${link}" class="btn">Verify Email</a></center>
+    <p>If you did not sign up, please ignore this email.</p>
+  `, "Verify your email address"),
+
+  clientPasswordChanged: () => baseLayout(`
+    <h2>Password Changed Successfully</h2>
+    <p>Your CS Vertex account password has been changed successfully.</p>
+    <p>If you did not make this change, please contact our support team immediately.</p>
+  `, "Your password was changed"),
+
+  clientFeedbackThankYou: (name: string) => baseLayout(`
+    <h2>Thank You for Your Feedback!</h2>
+    <p>Hi ${name},</p>
+    <p>We appreciate you taking the time to share your feedback with us.</p>
+    <p>Your insights help us continuously improve CS Vertex to better serve you.</p>
+  `, "We value your feedback"),
+
+
   clientNewsletter: (subject: string, htmlContent: string) => baseLayout(`
     ${htmlContent}
   `, subject),

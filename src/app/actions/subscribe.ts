@@ -28,7 +28,7 @@ export async function subscribeEmail(email: string): Promise<{ ok: boolean; mess
       return { ok: true, message: "You're already on the list! We'll notify you at launch." }
     }
 
-    // --- Send Welcome Email via Brevo ---
+    // --- Send Welcome Email via Resend ---
     try {
       await sendEmail({
         to: cleanEmail,
@@ -61,7 +61,7 @@ export async function subscribeEmail(email: string): Promise<{ ok: boolean; mess
         `
       })
     } catch (emailErr) {
-      console.error('[subscribeEmail] Brevo error:', emailErr)
+      console.error('[subscribeEmail] Resend error:', emailErr)
       // We don't fail the UI if the email fails to send (e.g. if domain isn't verified yet)
     }
 

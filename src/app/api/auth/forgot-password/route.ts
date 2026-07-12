@@ -77,7 +77,7 @@ export async function POST(request: Request) {
       </div>
     `;
 
-    // Send Mail via Brevo
+    // Send Mail via Resend
     await sendEmail({
       to: normalizedEmail,
       subject: 'Reset Your CS Vertex Password',

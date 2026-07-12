@@ -9,13 +9,10 @@ The platform requires the following environment variables to function correctly 
 `JWT_SECRET` - A strong, random string used to sign JSON Web Tokens for the Admin Portal.
 (e.g., `openssl rand -base64 32`)
 
-## Brevo SMTP (Emails)
-`SMTP_HOST` = smtp-relay.brevo.com
-`SMTP_PORT` = 587
-`SMTP_USER` = your-brevo-login-email
-`SMTP_PASS` = your-brevo-smtp-key
-`MAIL_FROM` = hello@csvertex.com
-`MAIL_FROM_NAME` = "CS Vertex"
+## Resend (Emails)
+`RESEND_API_KEY` = re_xxxxxxxxxxxxx
+`EMAIL_FROM` = CS Vertex <hello@csvertex.com>
+`EMAIL_REPLY_TO` = hello@csvertex.com
 
 ## Cloudinary (Media Uploads)
 `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` = Your Cloud Name

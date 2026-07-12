@@ -753,6 +753,14 @@ export function AnnouncementsSlider({ announcements }: { announcements: any[] })
           .nb-cta-btn { width: 100%; justify-content: center; }
           .lb-btn.primary span { display: none; }
           .nb-meta-grid { gap: 12px; }
+          
+          .nb-lightbox-nav {
+            top: auto;
+            bottom: 30px;
+            transform: none;
+          }
+          .nb-lightbox-nav.prev { left: 20%; }
+          .nb-lightbox-nav.next { right: 20%; }
         }
       `}</style>
     </section>

@@ -21,7 +21,7 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
       return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
     }
 
-    // Send email using Brevo
+    // Send email using Resend
     await sendEmail({
       to: lead.email,
       subject,

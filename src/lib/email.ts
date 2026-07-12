@@ -1,12 +1,7 @@
 import EmailService from './emailService';
 
 export async function sendVerificationEmail(to: string, actionLink: string) {
-  // Mapping verification to a raw send for now since we didn't add it to templates yet, or we can use raw HTML
-  return EmailService.sendRaw(to, 'Verify Your CS Vertex Account', `
-    <h2>Verify Your Email</h2>
-    <p>Please verify your email address by clicking the link below:</p>
-    <a href="${actionLink}">${actionLink}</a>
-  `);
+  return EmailService.sendVerifyEmail(to, actionLink);
 }
 
 export async function sendWelcomeEmail(to: string) {
@@ -18,7 +13,7 @@ export async function sendPasswordResetEmail(to: string, link: string) {
 }
 
 export async function sendPasswordChangedEmail(to: string) {
-  return EmailService.sendRaw(to, 'Your Password Was Changed', '<p>Your password was changed successfully.</p>');
+  return EmailService.sendPasswordChanged(to);
 }
 
 export async function sendAdminNotificationNewUser(email: string, name: string, ip: string = 'Unknown', role: string = 'Customer') {

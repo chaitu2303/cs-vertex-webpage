@@ -6,7 +6,7 @@ Welcome to the CS Vertex platform repository. This Next.js (Turbopack) applicati
 - **Framework**: Next.js 16 (App Router)
 - **Styling**: Tailwind CSS V4 + Vanilla CSS + Framer Motion
 - **Database**: Prisma ORM (SQLite for Dev, PostgreSQL intended for Prod)
-- **Email**: Brevo SMTP via Nodemailer (`src/lib/emailService.ts`)
+- **Email**: Resend (`src/lib/emailService.ts`)
 - **PWA**: Fully installable Progressive Web App with offline caching
 
 ## Prerequisites

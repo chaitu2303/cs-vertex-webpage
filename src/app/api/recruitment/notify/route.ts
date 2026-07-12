@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         `
       })
     } catch (emailErr) {
-      console.error('Error sending confirmation email via Brevo:', emailErr)
+      console.error('Error sending confirmation email via Resend:', emailErr)
     }
 
     return NextResponse.json({ success: true, notification })

@@ -526,7 +526,7 @@ export default function NotifyMeCRMPage() {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
                       <button type="submit" disabled={sendingEmail} style={{ padding: '10px 20px', background: 'var(--acid)', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Mail size={16} /> {sendingEmail ? 'Sending...' : 'Send Email via Brevo'}
+                        <Mail size={16} /> {sendingEmail ? 'Sending...' : 'Send Email'}
                       </button>
                     </div>
                   </form>

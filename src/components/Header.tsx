@@ -403,6 +403,8 @@ export function Header() {
             display: flex;
             align-items: center;
             justify-content: center;
+            position: absolute;
+            right: 20px;
           }
           
           .mobile-menu-overlay {

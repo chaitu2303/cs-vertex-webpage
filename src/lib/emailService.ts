@@ -42,9 +42,7 @@ class EmailService {
    * Core send function with retries and logging.
    */
   public static async sendWithRetry(options: SendEmailOptions, maxRetries = 3): Promise<boolean> {
-    const fromName = process.env.MAIL_FROM_NAME || 'CS Vertex';
-    const fromEmail = process.env.MAIL_FROM_EMAIL || 'hello@csvertex.com';
-    const sender = `${fromName} <${fromEmail}>`;
+    const sender = process.env.EMAIL_FROM || 'CS Vertex <hello@csvertex.com>';
 
     // 1. Create DB log entry
     let logEntry;
@@ -71,7 +69,7 @@ class EmailService {
           to: Array.isArray(options.to) ? options.to : [options.to],
           subject: options.subject,
           html: options.html,
-          replyTo: options.replyTo || process.env.REPLY_TO || fromEmail,
+          replyTo: options.replyTo || process.env.EMAIL_REPLY_TO || 'hello@csvertex.com',
         });
 
         if (error) {
@@ -81,7 +79,7 @@ class EmailService {
         if (logEntry) {
           await prisma.emailLog.update({
             where: { id: logEntry.id },
-            data: { status: 'SENT', retries: attempt }
+            data: { status: 'SENT', retries: attempt, resendId: data?.id }
           });
         }
         return true;
@@ -145,6 +143,33 @@ class EmailService {
       subject: 'Reset your CS Vertex Password',
       html: emailTemplates.clientPasswordReset(name, link),
       templateName: 'clientPasswordReset'
+    });
+  }
+
+  public static async sendVerifyEmail(to: string, link: string) {
+    return this.queueEmail({
+      to,
+      subject: 'Verify Your Email - CS Vertex',
+      html: emailTemplates.clientVerifyEmail(link),
+      templateName: 'clientVerifyEmail'
+    });
+  }
+
+  public static async sendPasswordChanged(to: string) {
+    return this.queueEmail({
+      to,
+      subject: 'Password Changed Successfully - CS Vertex',
+      html: emailTemplates.clientPasswordChanged(),
+      templateName: 'clientPasswordChanged'
+    });
+  }
+
+  public static async sendFeedbackThankYou(to: string, name: string) {
+    return this.queueEmail({
+      to,
+      subject: 'Thank You for Your Feedback - CS Vertex',
+      html: emailTemplates.clientFeedbackThankYou(name),
+      templateName: 'clientFeedbackThankYou'
     });
   }
 

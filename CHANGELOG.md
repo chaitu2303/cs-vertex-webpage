@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 - Secure environment configuration and Next.js strict headers.
 - GitHub Actions CI/CD pipelines.
 - Prisma Database (`EmailLog`) schema.
-- Brevo SMTP Email Infrastructure with exponential backoff queuing.
+- Resend Email Infrastructure with exponential backoff queuing.
 
 ### Secured
 - Verified `.gitignore` prevents SQLite (`*.db`) leakage.
